@@ -7,7 +7,7 @@ on: # Events that trigger the workflow.
       - main # The 'main' branch.you can change branch as you need
 
 env:
-  azure_webApp_name: BeeHappy-Web
+  azure_webApp_name: BeeHappy
   azure_webApp_packagePath: "./publish"
 
 jobs: # Defines the jobs in the workflow.
