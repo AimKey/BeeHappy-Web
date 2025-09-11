@@ -39,7 +39,7 @@ jobs: # Defines the jobs in the workflow.
         working-directory: ./BeeHappy
 
       - name: Build # Builds the project.
-        run: dotnet build ./Absolute-cinema.sln --configuration Release --no-restore
+        run: dotnet build ./BeeHappy.sln --configuration Release --no-restore
 
       - name: Publish # Publishes the project's build artifacts.
         run: dotnet publish ./BeeHappy.sln --configuration Release --no-build --output "${{env.azure_webApp_packagePath}}"
