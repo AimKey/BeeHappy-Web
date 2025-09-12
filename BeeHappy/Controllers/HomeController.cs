@@ -19,7 +19,7 @@ namespace BeeHappy.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Message = "DB not configured"
+            ViewBag.Message = "DB not configured";
             try
             {
                 // var items = await _testObjectService.GetAllTestObjects();
