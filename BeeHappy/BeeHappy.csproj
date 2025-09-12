@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -18,20 +18,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ViewComponents\" />
+		<Folder Include="ViewComponents\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BusinessObjects\BusinessObjects.csproj" />
-	  <ProjectReference Include="..\CommonObjects\CommonObjects.csproj" />
-	  <ProjectReference Include="..\DataAccessObjects\DataAccessObjects.csproj" />
-	  <ProjectReference Include="..\Repositories\Repositories.csproj" />
-	  <ProjectReference Include="..\Services\Services.csproj" />
+		<ProjectReference Include="..\BusinessObjects\BusinessObjects.csproj" />
+		<ProjectReference Include="..\CommonObjects\CommonObjects.csproj" />
+		<ProjectReference Include="..\DataAccessObjects\DataAccessObjects.csproj" />
+		<ProjectReference Include="..\Repositories\Repositories.csproj" />
+		<ProjectReference Include="..\Services\Services.csproj" />
 	</ItemGroup>
 
-	<Target Name="Tailwind" BeforeTargets="Build">
+	<Target Name="Tailwind" BeforeTargets="Build"
+			Condition=" '$(DOTNET_ENVIRONMENT)' == 'Development' OR '$(ASPNETCORE_ENVIRONMENT)' == 'Development' ">
 		<Exec Command="npm run css:build" />
-		<!--    <Exec Command="npm run css:watch"/> This need to run manually by the devs-->
 	</Target>
 
 </Project>

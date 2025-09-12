@@ -10,9 +10,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd34f25f-aa9c-4676-9f8b-dd937d331994" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/BeeHappy/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/.gitignore" afterDir="false" />
-    </list>
+    <list default="true" id="bd34f25f-aa9c-4676-9f8b-dd937d331994" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -123,7 +121,7 @@
       <option name="presentableId" value="Default" />
       <updated>1757518812583</updated>
       <workItem from="1757518814530" duration="1957000" />
-      <workItem from="1757520885352" duration="6465000" />
+      <workItem from="1757520885352" duration="6737000" />
     </task>
     <servers />
   </component>

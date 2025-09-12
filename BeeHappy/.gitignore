@@ -60,3 +60,6 @@ node_modules
 .idea
 .vs
 .vscode
+
+# Local publish
+publish
