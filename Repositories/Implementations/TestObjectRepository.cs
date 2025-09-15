@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Repositories.Implementations
 {
-    public class TestObjectRepository(BeeHappyContext context) : GenericRepository<TestObject>(context), ITestObjectRepository
+    public class TestObjectRepository(MongoDBContext context) : GenericRepository<TestObject>(context), ITestObjectRepository
     {
     }
 }

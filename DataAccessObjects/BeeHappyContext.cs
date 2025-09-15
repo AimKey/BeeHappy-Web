@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace DataAccessObjects
 {
@@ -45,8 +46,8 @@ namespace DataAccessObjects
 
             modelBuilder.Entity<TestObject>().HasData(
                 [
-                    new TestObject { Id = 1, UserName = "User 1" },
-                    new TestObject { Id = 2, UserName = "User 2" },
+                    new TestObject { Id = ObjectId.GenerateNewId().ToString(), UserName = "User 1" },
+                    new TestObject { Id = ObjectId.GenerateNewId().ToString(), UserName = "User 2" },
                 ]
             );
         }

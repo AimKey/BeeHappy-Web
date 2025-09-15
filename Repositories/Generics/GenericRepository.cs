@@ -1,81 +1,70 @@
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using BusinessObjects;
 using DataAccessObjects;
-using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
-namespace Repositories.Generics;
-
-public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+namespace Repositories.Generics
 {
-    internal BeeHappyContext context;
-    internal DbSet<TEntity> dbSet;
-
-    public GenericRepository(BeeHappyContext context)
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : MongoEntity
     {
-        this.context = context;
-        dbSet = context.Set<TEntity>();
-    }
+        private readonly IMongoCollection<TEntity> _collection;
 
-    public virtual IEnumerable<TEntity> Get(
-        Expression<Func<TEntity, bool>> filter = null,
-        Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
-        string includeProperties = "")
-    {
-        IQueryable<TEntity> query = dbSet;
-
-        if (filter != null)
+        public GenericRepository(MongoDBContext context)
         {
-            query = query.Where(filter);
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            _collection = context.Database.GetCollection<TEntity>(typeof(TEntity).Name);
         }
 
-        foreach (var includeProperty in includeProperties.Split
-                     (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+        public Task<List<TEntity>> GetAllAsync(CancellationToken ct = default)
+            => GetAsync(filter: null, ct);
+
+        public Task<List<TEntity>> GetAsync(
+            Expression<Func<TEntity, bool>>? filter,
+            CancellationToken ct = default)
         {
-            query = query.Include(includeProperty);
+            var f = filter ?? (_ => true);
+            return _collection.Find(f).ToListAsync(ct);
         }
 
-        if (orderBy != null)
+        public Task<TEntity> GetByIdAsync(string id, CancellationToken ct = default)
+            => _collection.Find(x => x.Id == id).FirstOrDefaultAsync(ct);
+
+        public Task InsertAsync(TEntity entity, CancellationToken ct = default)
         {
-            return orderBy(query).ToList();
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            return _collection.InsertOneAsync(entity, cancellationToken: ct);
         }
-        else
+
+        public async Task<bool> ReplaceAsync(TEntity entity, bool upsert = false, CancellationToken ct = default)
         {
-            return query.ToList();
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            var replaceOpts = new ReplaceOptions { IsUpsert = upsert };
+            var result = await _collection.ReplaceOneAsync(x => x.Id == entity.Id, entity,
+                replaceOpts, ct);
+            return result.IsAcknowledged && (result.ModifiedCount > 0 || (upsert && result.UpsertedId != null));
         }
-    }
 
-    public virtual TEntity GetByID(object id)
-    {
-        return dbSet.Find(id);
-    }
-
-    public virtual void Insert(TEntity entity)
-    {
-        dbSet.Add(entity);
-    }
-
-    public virtual void Delete(object id)
-    {
-        TEntity entityToDelete = dbSet.Find(id);
-        Delete(entityToDelete);
-    }
-
-    public virtual void Delete(TEntity entityToDelete)
-    {
-        if (context.Entry(entityToDelete).State == EntityState.Detached)
+        public async Task<bool> DeleteByIdAsync(string id, CancellationToken ct = default)
         {
-            dbSet.Attach(entityToDelete);
+            var result = await _collection.DeleteOneAsync(x => x.Id == id, ct);
+            return result.DeletedCount > 0;
         }
-        dbSet.Remove(entityToDelete);
-    }
 
-    public virtual void Update(TEntity entityToUpdate)
-    {
-        dbSet.Attach(entityToUpdate);
-        context.Entry(entityToUpdate).State = EntityState.Modified;
-    }
+        public async Task<bool> DeleteAsync(TEntity entity, CancellationToken ct = default)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            var result = await DeleteByIdAsync(entity.Id, ct);
+            return result;
+        }
 
-    public virtual void Save()
-    {
-        context.SaveChanges();
+        public Task<long> CountAsync(
+            Expression<Func<TEntity, bool>>? filter = null,
+            CancellationToken ct = default)
+        {
+            var f = filter ?? (_ => true);
+            return _collection.CountDocumentsAsync(f, cancellationToken: ct);
+        }
     }
 }

@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using BeeHappy.Models;
+using BusinessObjects;
+using DataAccessObjects;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Services.Implementations;
 using Services.Interfaces;
 
@@ -10,24 +13,29 @@ namespace BeeHappy.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ITestObjectService _testObjectService;
+        private readonly MongoDBContext _mongoDbContext;
 
-        public HomeController(ILogger<HomeController> logger, ITestObjectService testObjectService)
+        public HomeController(ILogger<HomeController> logger, ITestObjectService testObjectService, MongoDBContext mongoDbContext)
         {
             _logger = logger;
             _testObjectService = testObjectService;
+            _mongoDbContext = mongoDbContext;
         }
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Message = "DB not configured";
+            // Test MongoDB connection
             try
             {
-                // var items = await _testObjectService.GetAllTestObjects();
-                // ViewBag.Message = "Default items found: " + items.Count + " (2 is good)";
+                var collection = _mongoDbContext.Database.GetCollection<TestObject>("TestObject");
+                // var mongoItems = await collection.Find(_ => true).ToListAsync();
+                var mongoItems = await _testObjectService.GetAllTestObjects();
+                ViewBag.Message += " | MongoDB items found: " + mongoItems.Count;
+                ViewBag.Items = mongoItems;
             }
             catch (Exception e)
             {
-                ViewBag.Message = "Error: " + e.Message;
+                ViewBag.Message += " | MongoDB Error: " + e.Message;
             }
             return View();
         }

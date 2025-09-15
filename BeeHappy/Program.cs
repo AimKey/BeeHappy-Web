@@ -1,6 +1,6 @@
-
 using DataAccessObjects;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using MongoDB.Driver;
 using Repositories.Generics;
 using Repositories.Implementations;
 using Repositories.Interfaces;
@@ -12,7 +12,7 @@ public class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
+
         // Add our repos
         SetupRepos(builder);
         // Add our services
@@ -20,6 +20,8 @@ public class Program
 
         // Configure database
         builder.Services.AddSqlServer<BeeHappyContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+        builder.Services.AddScoped<MongoDBContext>();
+
 
         // Allow page to access the session directly
         builder.Services.AddHttpContextAccessor();
@@ -89,7 +91,6 @@ public class Program
 
     private static void SetupRepos(WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
         builder.Services.AddScoped<ITestObjectRepository, TestObjectRepository>();
     }
 }

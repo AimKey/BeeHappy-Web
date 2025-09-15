@@ -22,9 +22,6 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-# Build output (all projects)
-**/bin/
-**/obj/
 
 # .NET Core
 project.lock.json

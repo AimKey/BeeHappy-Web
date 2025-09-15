@@ -1,5 +1,7 @@
-﻿@{
+﻿@using BusinessObjects
+@{
     ViewData["Title"] = "Home Page";
+    List<TestObject>? testObjects = ViewBag.Items as List<TestObject>;
 }
 
 <div class="text-center">
@@ -8,5 +10,14 @@
     <h1 class="animate-pulse text-xl text-red-500">
         This is a line rendered by tailwind css
     </h1>
-    <h2 class="text-xl text-blue-500 animate-pulse font-bold">@ViewBag.Message</h2>
+    <h2 class="text-xl text-blue-500 animate-bounce font-bold">@ViewBag.Message</h2>
+    <ul>
+        @if (testObjects != null)
+        {
+            foreach (var item in testObjects)
+            {
+                <li>@item.Id - @item.UserName</li>
+            }
+        }
+    </ul>
 </div>
