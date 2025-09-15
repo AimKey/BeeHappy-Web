@@ -1,0 +1,10 @@
+{
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=BeeHappy;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True",
+    "MongoDB": "mongodb+srv://kiet:mkzeros24@beehappycluster.siaegdg.mongodb.net/?retryWrites=true&w=majority&appName=BeeHappyCluster"
+  },
+  "MongoDBSettings": {
+    "DatabaseName": "TestObjects"
+  }
+}

@@ -5,13 +5,10 @@ using Services.Implementations;
 
 namespace Services.Interfaces;
 
-public class TestObjectService(IUnitOfWork uow) : ITestObjectService
+public class TestObjectService(ITestObjectRepository testObjectRepository) : ITestObjectService
 {
     public async Task<List<TestObject>> GetAllTestObjects()
     {
-        var testObjectRepository = uow.Repository<TestObject>();
-        await uow.SaveChangesAsync();
-        var list = testObjectRepository.Get();
-        return list.ToList();
+        return await testObjectRepository.GetAllAsync();
     }
 }
