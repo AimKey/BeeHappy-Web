@@ -30,7 +30,7 @@
 		<ProjectReference Include="..\Services\Services.csproj" />
 	</ItemGroup>
 
-	<Target Name="Tailwind" BeforeTargets="Build" Condition=" '$(DOTNET_ENVIRONMENT)' == 'Development' OR '$(ASPNETCORE_ENVIRONMENT)' == 'Development' ">
+	<Target Name="Tailwind" BeforeTargets="Build">
 		<Exec Command="npm run css:build" />
 	</Target>
 

@@ -10,3 +10,4 @@ E:\FPT\2025_Fall\EXE202\projects\BeeHappy\BusinessObjects\obj\Release\net8.0\Bus
 E:\FPT\2025_Fall\EXE202\projects\BeeHappy\BusinessObjects\obj\Release\net8.0\refint\BusinessObjects.dll
 E:\FPT\2025_Fall\EXE202\projects\BeeHappy\BusinessObjects\obj\Release\net8.0\BusinessObjects.pdb
 E:\FPT\2025_Fall\EXE202\projects\BeeHappy\BusinessObjects\obj\Release\net8.0\ref\BusinessObjects.dll
+E:\FPT\2025_Fall\EXE202\projects\BeeHappy\BusinessObjects\obj\Release\net8.0\BusinessObjects.csproj.AssemblyReference.cache

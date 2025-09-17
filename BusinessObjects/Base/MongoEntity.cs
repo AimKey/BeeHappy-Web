@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace BusinessObjects;
+namespace BusinessObjects.Base;
 
 /// <summary>
 /// This class make sure that all entities have an Id field of type ObjectId for MongoDB.

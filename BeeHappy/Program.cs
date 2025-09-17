@@ -87,10 +87,22 @@ public class Program
     private static void SetupServices(WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<ITestObjectService, TestObjectService>();
+        builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+        builder.Services.AddScoped<IBadgeService, BadgeService>();
+        builder.Services.AddScoped<IEmoteService, EmoteService>();
+        builder.Services.AddScoped<IEmoteSetService, EmoteSetService>();
+        builder.Services.AddScoped<IPaintService, PaintService>();
+        builder.Services.AddScoped<IUserService, UserService>();
     }
 
     private static void SetupRepos(WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<ITestObjectRepository, TestObjectRepository>();
+        builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+        builder.Services.AddScoped<IBadgeRepository, BadgeRepository>();
+        builder.Services.AddScoped<IEmoteRepository, EmoteRepository>();
+        builder.Services.AddScoped<IEmoteSetRepository, EmoteSetRepository>();
+        builder.Services.AddScoped<IPaintRepository, PaintRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
     }
 }

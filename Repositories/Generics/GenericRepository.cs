@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using BusinessObjects;
+using BusinessObjects.Base;
 using DataAccessObjects;
 using MongoDB.Driver;
 
@@ -10,11 +10,15 @@ namespace Repositories.Generics
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : MongoEntity
     {
         private readonly IMongoCollection<TEntity> _collection;
-
+        
         public GenericRepository(MongoDBContext context)
         {
             if (context == null) throw new ArgumentNullException(nameof(context));
             _collection = context.Database.GetCollection<TEntity>(typeof(TEntity).Name);
+        }
+
+        public GenericRepository()
+        {
         }
 
         public Task<List<TEntity>> GetAllAsync(CancellationToken ct = default)
