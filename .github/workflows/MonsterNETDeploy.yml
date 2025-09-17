@@ -1,5 +1,9 @@
 name: Build, publish and deploy to MonsterASP.NET
-on: [push]
+on: # Events that trigger the workflow.
+  workflow_dispatch: # Allows manual triggering of the workflow.
+  push: # Triggers the workflow on a push event.
+    branches: # Specifies which branches will trigger the workflow.
+      - main # The 'main' branch.you can change branch as you need
 
 jobs:
   build_and_deploy:
