@@ -29,12 +29,12 @@ namespace Test.Integration.Repositories
             _fx.DropDatabase();
         }
 
-        private static string NewId() => ObjectId.GenerateNewId().ToString();
+        private static ObjectId NewId() => ObjectId.GenerateNewId();
 
         // small helper (reuse your generator)
         private static Dummy MakeDummy(string name, int qty) => new Dummy
         {
-            Id = ObjectId.GenerateNewId().ToString(),
+            Id = ObjectId.GenerateNewId(),
             DummyName = name,
             DummyQuantity = qty
         };
