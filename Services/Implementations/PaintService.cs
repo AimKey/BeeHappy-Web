@@ -1,4 +1,5 @@
 using BusinessObjects;
+using MongoDB.Bson;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -16,7 +17,7 @@ namespace Services.Implementations
             return await paintRepository.GetAsync(filter, ct);
         }
 
-        public async Task<Paint?> GetPaintByIdAsync(string id, CancellationToken ct = default)
+        public async Task<Paint?> GetPaintByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await paintRepository.GetByIdAsync(id, ct);
         }
@@ -31,7 +32,7 @@ namespace Services.Implementations
             return await paintRepository.ReplaceAsync(paint, upsert, ct);
         }
 
-        public async Task<bool> DeletePaintByIdAsync(string id, CancellationToken ct = default)
+        public async Task<bool> DeletePaintByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await paintRepository.DeleteByIdAsync(id, ct);
         }

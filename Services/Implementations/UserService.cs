@@ -1,4 +1,5 @@
 using BusinessObjects;
+using MongoDB.Bson;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -16,7 +17,7 @@ namespace Services.Implementations
             return await userRepository.GetAsync(filter, ct);
         }
 
-        public async Task<User?> GetUserByIdAsync(string id, CancellationToken ct = default)
+        public async Task<User?> GetUserByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await userRepository.GetByIdAsync(id, ct);
         }
@@ -31,7 +32,7 @@ namespace Services.Implementations
             return await userRepository.ReplaceAsync(user, upsert, ct);
         }
 
-        public async Task<bool> DeleteUserByIdAsync(string id, CancellationToken ct = default)
+        public async Task<bool> DeleteUserByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await userRepository.DeleteByIdAsync(id, ct);
         }

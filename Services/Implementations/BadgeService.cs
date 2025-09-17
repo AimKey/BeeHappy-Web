@@ -1,4 +1,5 @@
 using BusinessObjects;
+using MongoDB.Bson;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -16,7 +17,7 @@ namespace Services.Implementations
             return await badgeRepository.GetAsync(filter, ct);
         }
 
-        public async Task<Badge?> GetBadgeByIdAsync(string id, CancellationToken ct = default)
+        public async Task<Badge?> GetBadgeByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await badgeRepository.GetByIdAsync(id, ct);
         }
@@ -31,7 +32,7 @@ namespace Services.Implementations
             return await badgeRepository.ReplaceAsync(badge, upsert, ct);
         }
 
-        public async Task<bool> DeleteBadgeByIdAsync(string id, CancellationToken ct = default)
+        public async Task<bool> DeleteBadgeByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await badgeRepository.DeleteByIdAsync(id, ct);
         }

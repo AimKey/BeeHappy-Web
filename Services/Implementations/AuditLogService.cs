@@ -1,4 +1,5 @@
 using BusinessObjects;
+using MongoDB.Bson;
 using Repositories.Interfaces;
 using Services.Interfaces;
 using System.Linq.Expressions;
@@ -17,7 +18,7 @@ namespace Services.Implementations
             return await auditLogRepository.GetAsync(filter, ct);
         }
 
-        public async Task<AuditLog?> GetAuditLogByIdAsync(string id, CancellationToken ct = default)
+        public async Task<AuditLog?> GetAuditLogByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await auditLogRepository.GetByIdAsync(id, ct);
         }
@@ -32,7 +33,7 @@ namespace Services.Implementations
             return await auditLogRepository.ReplaceAsync(auditLog, upsert, ct);
         }
 
-        public async Task<bool> DeleteAuditLogByIdAsync(string id, CancellationToken ct = default)
+        public async Task<bool> DeleteAuditLogByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await auditLogRepository.DeleteByIdAsync(id, ct);
         }
