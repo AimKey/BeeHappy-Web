@@ -18,6 +18,17 @@ jobs:
           
       - name: Install dependencies
         run: dotnet restore
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: ./BeeHappy/package-lock.json
+          
+      - name: Setup node_modules # Setup the node_modules (including tailwind)
+        run: npm ci # This command is used in automated environment. Read more here: https://stackoverflow.com/questions/52499617/what-is-the-difference-between-npm-install-and-npm-ci
+        working-directory: ./BeeHappy
         
       - name: Build
         run: dotnet build --configuration Release --no-restore
