@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BusinessObjects.Base;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 

@@ -12,14 +12,16 @@ namespace BeeHappy.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ITestObjectService _testObjectService;
-        private readonly MongoDBContext _mongoDbContext;
+        private readonly IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger, ITestObjectService testObjectService, MongoDBContext mongoDbContext)
+        public HomeController(
+            ILogger<HomeController> logger,
+            ITestObjectService testObjectService,
+            IUserService userService,
+            MongoDBContext mongoDbContext)
         {
             _logger = logger;
-            _testObjectService = testObjectService;
-            _mongoDbContext = mongoDbContext;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index()
@@ -27,17 +29,38 @@ namespace BeeHappy.Controllers
             // Test MongoDB connection
             try
             {
-                var collection = _mongoDbContext.Database.GetCollection<TestObject>("TestObject");
-                // var mongoItems = await collection.Find(_ => true).ToListAsync();
-                var mongoItems = await _testObjectService.GetAllTestObjects();
-                ViewBag.Message += " | MongoDB items found: " + mongoItems.Count;
-                ViewBag.Items = mongoItems;
+                var users = await _userService.GetAllUsersAsync();
+                ViewBag.Message += "Current user in DB: " + users.Count;
+                ViewBag.Items = users;
             }
             catch (Exception e)
             {
-                ViewBag.Message += " | MongoDB Error: " + e.Message;
+                ViewBag.Message += "MongoDB Error: " + e.Message;
             }
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateDummyUser(User u)
+        {
+            try
+            {
+                // Set default values for required fields
+                u.CreatedAt = DateTime.UtcNow;
+                u.UpdatedAt = DateTime.UtcNow;
+                u.Roles = new List<string>();
+                u.Badges = new List<MongoDB.Bson.ObjectId>();
+                u.Paints = new List<MongoDB.Bson.ObjectId>();
+                u.IsPremium = false;
+
+                await _userService.InsertUserAsync(u);
+                TempData["SuccessMessage"] = "User created successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error creating user: " + ex.Message;
+            }
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()

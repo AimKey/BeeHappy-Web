@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using BusinessObjects;
+using BusinessObjects.Base;
 
 namespace Repositories.Generics
 {

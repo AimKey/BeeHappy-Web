@@ -1,4 +1,4 @@
-﻿using BusinessObjects;
+﻿using BusinessObjects.Base;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
