@@ -1,3 +1,0 @@
-E:\FPT\2025_Fall\EXE202\projects\BeeHappy\publish\BusinessObjects.dll
-E:\FPT\2025_Fall\EXE202\projects\BeeHappy\publish\BusinessObjects.deps.json
-E:\FPT\2025_Fall\EXE202\projects\BeeHappy\publish\BusinessObjects.pdb
