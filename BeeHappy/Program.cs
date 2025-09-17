@@ -35,7 +35,7 @@ public class Program
         });
         // Configure authentication with cookies
         // Cookie Authentication setup
-        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        _ = builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
                 options.LoginPath = "/Account/Login"; // redirect if not logged in
