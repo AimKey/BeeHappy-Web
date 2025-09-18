@@ -19,7 +19,6 @@ public class Program
         SetupServices(builder);
 
         // Configure database
-        builder.Services.AddSqlServer<BeeHappyContext>(builder.Configuration.GetConnectionString("LocalMongoDB"));
         builder.Services.AddScoped<MongoDBContext>();
 
         // Allow page to access the session directly

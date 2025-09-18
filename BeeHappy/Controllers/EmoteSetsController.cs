@@ -9,7 +9,6 @@ namespace BeeHappy.Controllers
     public class EmoteSetsController(IUserService userService,
                                      IEmoteSetService emoteSetService) : Controller
     {
-
         // Get all emote sets of the current user
         public async Task<IActionResult> Index()
         {
@@ -18,8 +17,8 @@ namespace BeeHappy.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
-            var userEmoteSets = await emoteSetService.GetEmoteSetsAsync(es => es.OwnerId == currentUser.Id);
-            return View();
+            var userEmoteSets = await emoteSetService.GetEmoteSetsOfUserAsync(currentUser.Id);
+            return View(userEmoteSets);
         }
 
         // GET: EmoteSetsController/Details/5

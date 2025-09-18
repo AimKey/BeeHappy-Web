@@ -14,7 +14,7 @@ public class MongoDBContext
     /// <param name="configuration"></param>
     public MongoDBContext(IConfiguration configuration)
     {
-        var mongoConn = configuration.GetConnectionString("MongoDB");
+        var mongoConn = configuration.GetConnectionString("LocalMongoDB");
         _client = new MongoClient(mongoConn);
         var dbName = configuration.GetSection("MongoDBSettings:DatabaseName").Value;
         Database = _client.GetDatabase(dbName);

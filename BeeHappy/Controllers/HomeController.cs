@@ -49,6 +49,7 @@ namespace BeeHappy.Controllers
                 u.CreatedAt = DateTime.UtcNow;
                 u.UpdatedAt = DateTime.UtcNow;
                 u.Roles = new List<string>();
+                u.Roles.Add("User");
                 u.Badges = new List<MongoDB.Bson.ObjectId>();
                 u.Paints = new List<MongoDB.Bson.ObjectId>();
                 u.IsPremium = false;

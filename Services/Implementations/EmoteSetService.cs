@@ -7,6 +7,12 @@ namespace Services.Implementations
 {
     public class EmoteSetService(IEmoteSetRepository emoteSetRepository) : IEmoteSetService
     {
+        public async Task<List<EmoteSet>> GetEmoteSetsOfUserAsync(ObjectId userId)
+        {
+            var sets = await GetEmoteSetsAsync(es => es.OwnerId == userId);
+            return sets;
+        }
+
         public async Task<List<EmoteSet>> GetAllEmoteSetsAsync(CancellationToken ct = default)
         {
             return await emoteSetRepository.GetAllAsync(ct);

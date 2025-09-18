@@ -15,5 +15,6 @@ namespace BusinessObjects
         public List<string> Tags { get; set; }
         public List<ObjectId> Emotes { get; set; }
         public int Capacity { get; set; }
+        public bool IsActive { get; set; }
     }
 }
