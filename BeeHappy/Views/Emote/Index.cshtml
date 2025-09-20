@@ -1,0 +1,52 @@
+﻿@using BeeHappy.ViewModels
+@model IEnumerable<EmoteViewModel>
+
+@{
+    ViewData["Title"] = "Emote List";
+}
+
+<h2>Emote List</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">+ Create New Emote</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Tags</th>
+            <th>Visibility</th>
+            <th>Status</th>
+            <th>Overlay</th>
+            <th>Files</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emote in Model)
+        {
+            <tr>
+                <td>@emote.Name</td>
+                <td>@string.Join(", ", emote.Tags ?? new List<string>())</td>
+                <td>@string.Join(", ", emote.Visibility ?? new List<string>())</td>
+                <td>@string.Join(", ", emote.Status ?? new List<string>())</td>
+                <td>@(emote.IsOverlaying ? "Yes" : "No")</td>
+                <td>
+                    @if (emote.Files != null)
+                    {
+                        foreach (var file in emote.Files)
+                        {
+                            <img src="@file.Url" alt="@emote.Name" width="50" style="margin:5px;" />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@emote.Id" class="btn btn-sm btn-warning">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@emote.Id" class="btn btn-sm btn-info">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@emote.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
