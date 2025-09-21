@@ -1,0 +1,542 @@
+﻿@using CommonObjects.DTOs.EmoteSetDTOs
+@using CommonObjects.ViewModels.EmoteSetVMs
+@model IEnumerable<EmoteSetPreviewVM>
+@{
+    ViewData["Title"] = "Bộ emote";
+    var activeSet = Model?.FirstOrDefault(m => m.IsActive);
+    var activeSetName = activeSet?.EmoteSetName ?? "Không có";
+    var activeSetId = activeSet?.EmoteSetId.ToString() ?? ""; // adjust property name to your Id
+}
+<partial name="_Notification" />
+<div class="flex h-full w-full">
+    @* Side bar stuff *@
+    <div class="min-h-screen w-1/3 border border-sky-300">
+        This is a side bar
+    </div>
+    @* // Main stuff *@
+    <div class="px-6 py-4">
+        <h2 class="text-xl font-semibold text-white">Quản lý bộ emote</h2>
+
+        <div class="flex w-full items-center justify-between py-4">
+            @* Left side: Activated selector (button opens modal) *@
+            <div class="flex items-center gap-2">
+                <span class="font-semibold">Đang kích hoạt:</span>
+
+                <button id="open-activate-modal"
+                        type="button"
+                        class="flex cursor-pointer items-center gap-2 rounded-md border border-transparent bg-zinc-800/60 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-200 ease-in-out hover:border hover:border-sky-400 focus:border-sky-500 focus:ring focus:ring-sky-200">
+                    <i class="fas fa-bolt"></i>
+                    <span id="current-active-name">@activeSetName</span>
+                </button>
+            </div>
+
+            @* Right side: Create button (your existing one) *@
+                <button id="open-create-modal" class="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm
+                       font-semibold text-black transition-all duration-200 ease-in-out hover:shadow-lg active:scale-95">
+                <i class="fas fa-plus"></i>
+                Tạo bộ mới
+            </button>
+        </div>
+
+        @* ---------- Modal: Activate Set ---------- *@
+        <div id="activate-modal" class="fixed inset-0 z-50 hidden">
+            <!-- overlay -->
+            <div class="absolute inset-0 bg-black/50"></div>
+
+            <!-- panel -->
+            <div class="absolute inset-0 flex items-center justify-center p-4">
+                <div class="w-full max-w-xl rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-100 shadow-2xl">
+                    <div class="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+                        <h3 class="text-lg font-semibold">Kích hoạt bộ emote</h3>
+                        <button type="button" id="close-activate-modal"
+                                class="cursor-pointer rounded-md p-2 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div class="p-4">
+                        <!-- Quick search -->
+                        <div class="mb-3">
+                            <label for="set-search" class="sr-only">Tìm kiếm bộ</label>
+                            <div class="relative">
+                                <i class="fas fa-search absolute top-1/2 left-3 -translate-y-1/2 text-zinc-400"></i>
+                                <input id="set-search" type="text" placeholder="Tìm kiếm bộ…"
+                                       class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950 py-2 pr-3 pl-10
+                                          text-sm outline-none focus:border-sky-500 focus:ring focus:ring-sky-900/40" />
+                            </div>
+                        </div>
+
+                        <!-- List -->
+                        <div id="set-list"
+                             class="max-h-80 divide-y divide-zinc-800 overflow-auto rounded-md border border-zinc-800">
+                            @if (Model != null)
+                            {
+                                foreach (var s in Model)
+                                {
+                                    var isActive = s.IsActive;
+                                    var name = s.EmoteSetName ?? "(no name)";
+                                    var id = s.EmoteSetId; // adjust to your id property
+                                    <label class="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-zinc-800/50"
+                                           data-name="@name.ToLowerInvariant()">
+                                        <input type="radio"
+                                               name="activate-set"
+                                               value="@id"
+                                               class="h-4 w-4 accent-sky-500"
+                                        @(isActive ? "checked" : "") />
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-center gap-2">
+                                                <span class="truncate font-medium">@name</span>
+                                                @if (isActive)
+                                                {
+                                                    <span class="rounded bg-sky-700/30 px-2 py-0.5 text-xs text-sky-300">hiện tại</span>
+                                                }
+                                            </div>
+                                            <div class="text-xs text-zinc-400">
+                                                @s.EmoteCount/@(s.EmoteCapacity == 0 ? 1 : s.EmoteCapacity) emote
+                                            </div>
+                                        </div>
+                                    </label>
+                                }
+                            }
+                            else
+                            {
+                                <div class="p-4 text-zinc-400">Không có bộ nào khả dụng.</div>
+                            }
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="mt-4 flex items-center justify-end gap-2">
+                            <button type="button" id="cancel-activate"
+                                    class="cursor-pointer rounded-md border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-200 hover:bg-zinc-800">
+                                Hủy
+                            </button>
+
+                            <button type="button" id="confirm-activate"
+                                    class="cursor-pointer rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white opacity-50
+                                       transition-colors hover:bg-sky-500 disabled:cursor-not-allowed"
+                                    disabled>
+                                <i class="fas fa-bolt mr-2"></i> Kích hoạt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* --------- Emote Set grid --------- *@
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            @if (Model != null)
+            {
+                foreach (var set in Model)
+                {
+                    var totalSlots = 10;
+                    var thumbnails = set.Emotes ?? new List<EmoteSetEmotePreviewVM>();
+                    var used = set.EmoteCount;
+                    var capacity = set.EmoteCapacity == 0 ? 1 : set.EmoteCapacity;
+                    var percent = (int)Math.Round((double)Math.Min(used, capacity) * 100 / capacity);
+                    var borderColor = set.IsActive ? "border-sky-500" : "border-zinc-800";
+                    var activeBorderColor = set.IsActive ? "border-yellow-700" : "border-stone-700";
+                    <a asp-action="Details" asp-route-id="@set.EmoteSetId" class="cursor-pointer rounded-lg border bg-zinc-900/60 p-3 transition-all duration-100 ease-in
+            @(set.IsActive ? "border-sky-500 hover:border-sky-400" : "border-zinc-800 hover:border-stone-700")">
+
+                        <div class="mb-3 truncate text-sm font-medium text-zinc-200">@set.EmoteSetName</div>
+
+                        <div class="mb-3 grid grid-cols-5 gap-2">
+                            @for (var i = 0; i < totalSlots; i++)
+                            {
+                                if (i < thumbnails.Count)
+                                {
+                                    var emote = thumbnails[i];
+                                    <div class="aspect-square w-full overflow-hidden rounded-md bg-zinc-800">
+                                        <img src="@emote.Url" alt="emote" class="h-full w-full object-cover" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="aspect-square w-full rounded-md border border-zinc-800 bg-zinc-800/70"></div>
+                                }
+                            }
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="h-2 w-full overflow-hidden rounded-full bg-zinc-800">
+                                <div class="h-full bg-blue-500" style="width:@percent%"></div>
+                            </div>
+                            <div class="text-xs text-zinc-400">
+                                @used/@capacity (@percent%)
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+            else
+            {
+                <div class="text-zinc-400">Không có bộ emote nào để hiển thị.</div>
+            }
+        </div>
+    </div>
+
+</div>
+
+@* ---------- Modal: Create New Emote Set ---------- *@
+<div id="create-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300 ease-in-out">
+    <!-- overlay -->
+    <div class="absolute inset-0 bg-black/50 transition-opacity duration-300 ease-in-out"></div>
+
+    <!-- panel -->
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-xl translate-y-4 scale-95 transform rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-100 shadow-2xl transition-all duration-300 ease-in-out">
+            <div class="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+                        <h3 class="text-lg font-semibold">Tạo bộ emote mới</h3>
+                <button type="button" id="close-create-modal"
+                        class="cursor-pointer rounded-md p-2 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form asp-action="Create" asp-controller="EmoteSets" method="post" class="p-4">
+                @Html.AntiForgeryToken()
+                <!-- Name Field -->
+                <div class="mb-4">
+                    <label for="Name" class="mb-2 block text-sm font-medium text-zinc-300">Tên bộ emote</label>
+                    <input type="text"
+                           id="Name"
+                           name="Name"
+                           required
+                           class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 focus:ring focus:ring-blue-900/40"
+                           placeholder="Nhập tên bộ emote" />
+                </div>
+
+                <!-- Tags Field -->
+                <div class="mb-4">
+                    <label for="TagsString" class="mb-2 block text-sm font-medium text-zinc-300">Tags</label>
+                    <div class="relative">
+                        <input type="text"
+                               id="TagsString"
+                               name="TagsString"
+                               class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 focus:ring focus:ring-blue-900/40"
+                               placeholder="Nhập thẻ và nhấn phím cách để thêm" />
+                        <!-- Tags display container -->
+                        <div id="tags-display" class="mt-2 flex flex-wrap gap-2"></div>
+                    </div>
+                    <p class="mt-1 text-xs text-zinc-500">Nhập thẻ và nhấn phím cách để thêm. Tối đa 6 thẻ được phép.</p>
+                </div>
+
+                <!-- Capacity Field (Hidden, emote set always has capacity of 1000) -->
+                <input type="hidden"
+                       id="Capacity"
+                       name="Capacity"
+                       value="1000"
+                       class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 focus:ring focus:ring-blue-900/40" />
+
+                <!-- Action Buttons -->
+                <div class="flex items-center justify-end gap-3">
+                    <button type="button"
+                            id="cancel-create"
+                            class="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-700">
+                        Hủy
+                    </button>
+                    <button type="submit"
+                            class="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:outline-none">
+                        Tạo bộ
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+          const openBtn = document.getElementById('open-activate-modal');
+          const modal = document.getElementById('activate-modal');
+          const closeBtn = document.getElementById('close-activate-modal');
+          const cancelBtn = document.getElementById('cancel-activate');
+          const search = document.getElementById('set-search');
+          const list = document.getElementById('set-list');
+          const confirmBtn = document.getElementById('confirm-activate');
+          const currentNameEl = document.getElementById('current-active-name');
+
+          function openModal() {
+            modal.classList.remove('hidden');
+            // small entrance animation
+            modal.querySelector('.w-full').classList.add('animate-in');
+            setTimeout(() => search?.focus(), 50);
+          }
+          function closeModal() {
+            modal.classList.add('hidden');
+            // reset search
+            if (search) {
+              search.value = '';
+              filter('');
+            }
+          }
+
+          function filter(q) {
+            const query = (q || '').toLowerCase().trim();
+            const rows = list.querySelectorAll('label[data-name]');
+            rows.forEach(row => {
+              const name = row.getAttribute('data-name') || '';
+              row.classList.toggle('hidden', !name.includes(query));
+            });
+          }
+
+          let selectedSetId = '';
+
+          function updateSelection() {
+            const selected = list.querySelector('input[name="activate-set"]:checked');
+            if (selected) {
+              selectedSetId = selected.value;
+              confirmBtn.disabled = false;
+              confirmBtn.classList.remove('opacity-50');
+            } else {
+              selectedSetId = '';
+              confirmBtn.disabled = true;
+              confirmBtn.classList.add('opacity-50');
+            }
+          }
+
+          // Open/close hooks
+          openBtn?.addEventListener('click', openModal);
+          closeBtn?.addEventListener('click', closeModal);
+          cancelBtn?.addEventListener('click', closeModal);
+          modal?.addEventListener('click', (e) => {
+            // click outside panel closes
+            if (e.target === modal) closeModal();
+          });
+          document.addEventListener('keydown', (e) => {
+            if (!modal.classList.contains('hidden') && e.key === 'Escape') closeModal();
+          });
+
+          // Search
+          search?.addEventListener('input', (e) => filter(e.target.value));
+
+          // Selection change
+          list.addEventListener('change', (e) => {
+            if (e.target && e.target.name === 'activate-set') updateSelection();
+          });
+
+          // Handle activate button click using the predefined toggle function
+          confirmBtn?.addEventListener('click', async (e) => {
+            if (!selectedSetId) return;
+            
+            // Use the predefined toggle function
+            await toggleEmoteSetActive(e, selectedSetId);
+          });
+
+          // Initialize button disabled state based on default checked (current active)
+          updateSelection();
+
+        })();
+
+        // Toggle Emote Set Active Status functionality
+        async function toggleEmoteSetActive(event, emoteSetId) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            try {
+                // Make API call
+                const formData = new FormData();
+                formData.append('emoteSetId', emoteSetId);
+                formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+                
+                const response = await fetch('/EmoteSets/ToggleEmoteSetActiveStatus', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Reload the page to show updated status
+                    window.location.reload();
+                } else {
+                    // Show error message
+                    alert(result.message || 'Có lỗi xảy ra khi thay đổi trạng thái');
+                }
+            } catch (error) {
+                console.error('Error toggling active status:', error);
+                alert('Có lỗi xảy ra khi thay đổi trạng thái');
+            }
+        }
+
+        // Create Modal functionality
+        (function() {
+          const openCreateBtn = document.getElementById('open-create-modal');
+          const createModal = document.getElementById('create-modal');
+          const closeCreateBtn = document.getElementById('close-create-modal');
+          const cancelCreateBtn = document.getElementById('cancel-create');
+
+          // HTML decoder function for handling encoded characters
+          function decodeHtml(html) {
+            var txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+          }
+
+          function openCreateModal() {
+            createModal.classList.remove('hidden');
+            // Trigger reflow to ensure the hidden class is removed before adding opacity
+            createModal.offsetHeight;
+            createModal.classList.remove('opacity-0');
+            createModal.classList.add('opacity-100');
+
+            // Animate the panel
+            const panel = createModal.querySelector('.transform');
+            if (panel) {
+              panel.classList.remove('scale-95', 'translate-y-4');
+              panel.classList.add('scale-100', 'translate-y-0');
+            }
+
+            // Focus on the first input after animation starts
+            setTimeout(() => document.getElementById('Name')?.focus(), 100);
+          }
+
+          function closeCreateModal() {
+            // Start fade out animation
+            createModal.classList.remove('opacity-100');
+            createModal.classList.add('opacity-0');
+
+            // Animate the panel out
+            const panel = createModal.querySelector('.transform');
+            if (panel) {
+              panel.classList.remove('scale-100', 'translate-y-0');
+              panel.classList.add('scale-95', 'translate-y-4');
+            }
+
+            // Hide modal after animation completes
+            setTimeout(() => {
+              createModal.classList.add('hidden');
+              // Reset form
+              const form = createModal.querySelector('form');
+              if (form) {
+                form.reset();
+              }
+              // Reset tags
+              tags = [];
+              updateTagsDisplay();
+              updateHiddenInput();
+            }, 300); // Match the CSS transition duration
+          }
+
+          // Tag management
+          let tags = [];
+          const tagsInput = document.getElementById('TagsString');
+          const tagsDisplay = document.getElementById('tags-display');
+
+          function addTag(tagText) {
+            const trimmedTag = tagText.trim();
+            if (trimmedTag && !tags.includes(trimmedTag)) {
+              if (tags.length >= 6) {
+                // Show a message or prevent adding more tags
+                alert('Bạn chỉ có thể thêm tối đa 6 thẻ cho mỗi bộ emote.');
+                return;
+              }
+              tags.push(trimmedTag);
+              updateTagsDisplay();
+              updateHiddenInput();
+            }
+          }
+
+          function removeTag(tagToRemove) {
+            tags = tags.filter(tag => tag !== tagToRemove);
+            updateTagsDisplay();
+            updateHiddenInput();
+          }
+
+          function updateTagsDisplay() {
+            tagsDisplay.innerHTML = '';
+            
+            // Add tag count indicator
+            const countElement = document.createElement('div');
+            countElement.className = 'w-full text-xs text-zinc-400 mb-2';
+            countElement.textContent = `Thẻ: ${tags.length}/6`;
+            tagsDisplay.appendChild(countElement);
+            
+            tags.forEach(tag => {
+              const tagElement = document.createElement('div');
+              tagElement.className = 'inline-flex items-center gap-1 rounded-md bg-zinc-800/60 px-2 py-1 text-xs text-white';
+              tagElement.innerHTML = `
+                <span>${tag}</span>
+                <button type="button" onclick="removeTagFromModal('${tag}')" class="ml-1 hover:text-red-300">
+                  <i class="fas fa-times"></i>
+                </button>
+              `;
+              tagsDisplay.appendChild(tagElement);
+            });
+          }
+
+          function updateHiddenInput() {
+            // Update the original input field with comma-separated tags
+            if (tagsInput) {
+              tagsInput.value = tags.join(',');
+            }
+          }
+
+          // Make removeTagFromModal globally accessible
+          window.removeTagFromModal = function(tag) {
+            removeTag(tag);
+          };
+
+          // Handle space key press for tag creation
+          tagsInput?.addEventListener('keydown', function(e) {
+            if (e.key === ' ' || e.key === 'Space') {
+              e.preventDefault();
+              const currentValue = this.value.trim();
+              if (currentValue) {
+                addTag(currentValue);
+                this.value = '';
+              }
+            }
+          });
+
+          // Handle comma key press as alternative
+          tagsInput?.addEventListener('keydown', function(e) {
+            if (e.key === ',') {
+              e.preventDefault();
+              const currentValue = this.value.trim();
+              if (currentValue) {
+                addTag(currentValue);
+                this.value = '';
+              }
+            }
+          });
+
+          // Form submission handler
+          const createForm = createModal?.querySelector('form');
+          createForm?.addEventListener('submit', function(e) {
+            // Ensure tags are included in the form submission
+            updateHiddenInput();
+            
+            // Decode any HTML entities in form fields before submission
+            const nameInput = document.getElementById('Name');
+            if (nameInput) {
+              nameInput.value = decodeHtml(nameInput.value);
+            }
+            
+            const tagsInput = document.getElementById('TagsString');
+            if (tagsInput) {
+              tagsInput.value = decodeHtml(tagsInput.value);
+            }
+          });
+
+          // Event listeners for create modal
+          openCreateBtn?.addEventListener('click', openCreateModal);
+          closeCreateBtn?.addEventListener('click', closeCreateModal);
+          cancelCreateBtn?.addEventListener('click', closeCreateModal);
+
+          // Close modal when clicking outside
+          createModal?.addEventListener('click', (e) => {
+            if (e.target === createModal) closeCreateModal();
+          });
+
+          // Close modal with Escape key
+          document.addEventListener('keydown', (e) => {
+            if (!createModal.classList.contains('hidden') && !createModal.classList.contains('opacity-0') && e.key === 'Escape') {
+              closeCreateModal();
+            }
+          });
+        })();
+    </script>
+}

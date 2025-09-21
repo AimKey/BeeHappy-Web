@@ -6,77 +6,23 @@
     <projectFile profileName="http">BeeHappy/BeeHappy.csproj</projectFile>
     <projectFile profileName="https">BeeHappy/BeeHappy.csproj</projectFile>
     <projectFile pubXmlPath="BeeHappy/Properties/PublishProfiles/site36362-WebDeploy.pubxml">BeeHappy/BeeHappy.csproj</projectFile>
+    <projectFile pubXmlPath="BeeHappy/Properties/PublishProfiles/site36362-WebDeploy1.pubxml">BeeHappy/BeeHappy.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd34f25f-aa9c-4676-9f8b-dd937d331994" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/BusinessObjects/MongoEntity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DataAccessObjects/MongoDBContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BeeHappy/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BeeHappy/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy.sln" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy/BeeHappy.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/BeeHappy.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Controllers/HomeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy/Views/Home/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Views/Home/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/BusinessObjects.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/BusinessObjects.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/TestObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/TestObject.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/BusinessObjects.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/BusinessObjects.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/BusinessObjects.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/BusinessObjects.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/Debug/net8.0/BusinessObjects.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/Debug/net8.0/BusinessObjects.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/Debug/net8.0/BusinessObjects.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/Debug/net8.0/BusinessObjects.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/project.packagespec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/CommonObjects.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/CommonObjects.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/CommonObjects.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/CommonObjects.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/CommonObjects.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/CommonObjects.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/Debug/net8.0/CommonObjects.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/Debug/net8.0/CommonObjects.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/Debug/net8.0/CommonObjects.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/Debug/net8.0/CommonObjects.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/BeeHappyContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/BeeHappyContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/DataAccessObjects.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/DataAccessObjects.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/DataAccessObjects.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/DataAccessObjects.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/DataAccessObjects.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/DataAccessObjects.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/DataAccessObjects.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/DataAccessObjects.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/Debug/net8.0/DataAccessObjects.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/Debug/net8.0/DataAccessObjects.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/Debug/net8.0/DataAccessObjects.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/Debug/net8.0/DataAccessObjects.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/project.packagespec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccessObjects/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccessObjects/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/Generics/GenericRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/Generics/GenericRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/Generics/IGenericRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/Generics/IGenericRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/Generics/IUnitOfWork.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/Generics/UnitOfWork.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/Implementations/TestObjectRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/Implementations/TestObjectRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/Debug/net8.0/Repositories.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/Debug/net8.0/Repositories.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/Debug/net8.0/Repositories.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/Debug/net8.0/Repositories.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/Repositories.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/Repositories.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/Repositories.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/Repositories.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/Repositories.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/Repositories.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Repositories/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Interfaces/TestObjectService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/TestObjectService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/Debug/net8.0/Services.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/Debug/net8.0/Services.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/Debug/net8.0/Services.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/Debug/net8.0/Services.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/Services.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/Services.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/Services.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/Services.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/Services.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/Services.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Services/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/BeeHappy.csproj.user" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/BeeHappy.csproj.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Controllers/EmoteSetsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Controllers/EmoteSetsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/wwwroot/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/wwwroot/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BusinessObjects/EmoteSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/EmoteSet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommonObjects/CommonObjects.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/CommonObjects.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommonObjects/DTOs/EmoteSet/EmoteSetPreviewVM.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommonObjects/DTOs/EmoteSet/EmoteSetVM.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Implementations/EmoteSetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Implementations/EmoteSetService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Interfaces/IEmoteSetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IEmoteSetService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,27 +50,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Launch Settings Profile.BeeHappy: https.executor&quot;: &quot;Debug&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;KIET-testMongoDB&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Launch Settings Profile.BeeHappy: https.executor": "Debug",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "kiet/feature/emote-set",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.BeeHappy: https">
     <configuration name="BeeHappy: site36362-WebDeploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish configuration="Release" platform="Any CPU" publish_profile="site36362-WebDeploy.pubxml" pubxml_path="$PROJECT_DIR$/BeeHappy/Properties/PublishProfiles/site36362-WebDeploy.pubxml" user_name="site36362" uuid_high="5031011066789054266" uuid_low="-8974481550009193697" />
+      <method v="2" />
+    </configuration>
+    <configuration name="BeeHappy: site36362-WebDeploy1" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="site36362-WebDeploy1.pubxml" pubxml_path="$PROJECT_DIR$/BeeHappy/Properties/PublishProfiles/site36362-WebDeploy1.pubxml" user_name="site36362" uuid_high="5031011066789054266" uuid_low="-8974481550009193697" />
       <method v="2" />
     </configuration>
     <configuration name="BeeHappy: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
@@ -207,6 +157,7 @@
       <workItem from="1757736195394" duration="2046000" />
       <workItem from="1757858430631" duration="1618000" />
       <workItem from="1757930516051" duration="597000" />
+      <workItem from="1758375601785" duration="75000" />
     </task>
     <servers />
   </component>

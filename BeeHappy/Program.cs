@@ -1,9 +1,11 @@
+using AutoMapper;
 using DataAccessObjects;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MongoDB.Driver;
 using Repositories.Generics;
 using Repositories.Implementations;
 using Repositories.Interfaces;
+using Services.HelperServices;
 using Services.Implementations;
 using Services.Interfaces;
 
@@ -92,6 +94,12 @@ public class Program
         builder.Services.AddScoped<IEmoteSetService, EmoteSetService>();
         builder.Services.AddScoped<IPaintService, PaintService>();
         builder.Services.AddScoped<IUserService, UserService>();
+
+        // Auto Mapper Configurations
+        builder.Services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>();
+        });
     }
 
     private static void SetupRepos(WebApplicationBuilder builder)

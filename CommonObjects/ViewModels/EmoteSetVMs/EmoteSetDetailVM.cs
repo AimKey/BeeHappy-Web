@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommonObjects.DTOs.EmoteSet
+namespace CommonObjects.ViewModels.EmoteSetVMs
 {
-    public class EmoteSetPreviewVM
+    public class EmoteSetDetailVM
     {
-        // First 10 emote preview
         public List<Emote> Emotes { get; set; }
-        public int EmoteCapacityPercent { get; set; }
-
+        public EmoteSet EmoteSet { get; set; }
+        public User Owner { get; set; }
     }
 }

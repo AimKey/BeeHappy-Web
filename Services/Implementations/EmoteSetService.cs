@@ -1,16 +1,42 @@
+using AutoMapper;
 using BusinessObjects;
+using CommonObjects.DTOs.EmoteSetDTOs;
+using CommonObjects.Mappers;
+using CommonObjects.ViewModels.EmoteSetVMs;
+using DataAccessObjects;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
 namespace Services.Implementations
 {
-    public class EmoteSetService(IEmoteSetRepository emoteSetRepository) : IEmoteSetService
+    public class EmoteSetService(IEmoteSetRepository emoteSetRepository,
+                                 IEmoteService emoteService,
+                                 IUserService userService,
+                                 IEmoteRepository emoteRepository,
+                                 IMapper mapper,
+                                 MongoDBContext mongoDBContext) : IEmoteSetService
     {
-        public async Task<List<EmoteSet>> GetEmoteSetsOfUserAsync(ObjectId userId)
+        public async Task<List<EmoteSetPreviewVM>> GetEmoteSetPreviewsOfUserAsync(ObjectId userId)
         {
             var sets = await GetEmoteSetsAsync(es => es.OwnerId == userId);
-            return sets;
+            var previews = new List<EmoteSetPreviewVM>();
+
+            foreach (var set in sets)
+            {
+                var collection = mongoDBContext.Database.GetCollection<Emote>(typeof(Emote).Name);
+                var emotes = await collection.Find(e => set.Emotes != null && set.Emotes.Contains(e.Id))
+                                             .Limit(10)
+                                             .ToListAsync();
+
+                var preview = EmoteSetMapper.ToPreviewVM(set, emotes);
+                previews.Add(preview);
+            }
+
+            // Sort ascending by CreatedAt
+            previews.Sort((a, b) => a.CreatedAt.CompareTo(b.CreatedAt));
+            return previews;
         }
 
         public async Task<List<EmoteSet>> GetAllEmoteSetsAsync(CancellationToken ct = default)
@@ -51,6 +77,122 @@ namespace Services.Implementations
         public async Task<long> CountEmoteSetsAsync(System.Linq.Expressions.Expression<Func<EmoteSet, bool>>? filter = null, CancellationToken ct = default)
         {
             return await emoteSetRepository.CountAsync(filter, ct);
+        }
+
+        public async Task<EmoteSetDetailVM> GetEmoteSetDetailByIdAsync(ObjectId id)
+        {
+            var emoteSet = await GetEmoteSetByIdAsync(id) ?? throw new Exception("Emote set not found");
+            if (emoteSet.OwnerId == null)
+            {
+                throw new Exception("Emote set has no owner");
+            }
+            var owner = await userService.GetUserByIdAsync(emoteSet.OwnerId);
+            if (owner == null)
+                throw new Exception("Owner of the emote set not found");
+            var emotes = await emoteService.GetEmotesAsync(e => emoteSet.Emotes.Contains(e.Id));
+            // Map to the detail VM
+            var vm = EmoteSetMapper.ToDetailVM(emoteSet, emotes, owner);
+            return vm;
+        }
+
+        public async Task InsertEmoteSetAsync(CreateEmoteSetDto createDto)
+        {
+            var emoteSet = mapper.Map<EmoteSet>(createDto);
+            List<string> tagStrings = GetListTagsFromString(createDto.TagsString);
+
+            await InsertEmoteSetAsync(new EmoteSet
+            {
+                Name = createDto.Name,
+                OwnerId = createDto.OwnerId,
+                Tags = tagStrings,
+                Capacity = createDto.Capacity,
+                IsActive = createDto.IsActive,
+                Emotes = new List<ObjectId>(),
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            });
+        }
+
+        public async Task UpdateEmoteSetAsync(EditEmoteSetDto dto)
+        {
+            var emoteSet = await GetEmoteSetByIdAsync(dto.Id) ?? throw new Exception("Emote set not found");
+            if (emoteSet.OwnerId != dto.OwnerId)
+            {
+                throw new Exception("You do not own this emote set");
+            }
+            List<string> tagStrings = GetListTagsFromString(dto.TagsString);
+            emoteSet.Name = dto.Name;
+            emoteSet.Tags = tagStrings;
+            emoteSet.Capacity = dto.Capacity;
+            emoteSet.IsActive = dto.IsActive;
+            emoteSet.UpdatedAt = DateTime.UtcNow;
+            var success = await ReplaceEmoteSetAsync(emoteSet);
+            if (!success)
+            {
+                throw new Exception("Failed to update emote set");
+            }
+        }
+
+        // Toggle the new emote set and turn off all of the other one
+
+        public async Task ToggleEmoteSetActiveStatus(ObjectId emoteSetId, ObjectId userId)
+        {
+            var emoteSet = await GetEmoteSetByIdAsync(emoteSetId) ?? throw new Exception("Emote set not found");
+            if (emoteSet.OwnerId != userId)
+            {
+                throw new Exception("You do not own this emote set");
+            }
+            if (emoteSet.IsActive)
+            {
+                await ToggleCurrentEmoteSetActiveStatus(emoteSet);
+            }
+            else
+            {
+                await ToggleMultipleEmoteSetActiveStatus(userId, emoteSet);
+            }
+        }
+
+        private async Task ToggleMultipleEmoteSetActiveStatus(ObjectId userId, EmoteSet emoteSet)
+        {
+            var userEmoteSets = await GetEmoteSetsAsync(es => es.OwnerId == userId && es.IsActive);
+            foreach (var set in userEmoteSets)
+            {
+                set.IsActive = false;
+                set.UpdatedAt = DateTime.UtcNow;
+                var success = await ReplaceEmoteSetAsync(set);
+                if (!success)
+                {
+                    throw new Exception("Failed to update emote set");
+                }
+            }
+
+            emoteSet.IsActive = true;
+            emoteSet.UpdatedAt = DateTime.UtcNow;
+            await ReplaceEmoteSetAsync(emoteSet);
+        }
+
+        private async Task ToggleCurrentEmoteSetActiveStatus(EmoteSet emoteSet)
+        {
+            emoteSet.IsActive = !emoteSet.IsActive;
+            emoteSet.UpdatedAt = DateTime.UtcNow;
+            var success = await ReplaceEmoteSetAsync(emoteSet);
+            if (!success)
+            {
+                throw new Exception("Failed to update emote set");
+            }
+        }
+
+        private static List<string> GetListTagsFromString(string tagString)
+        {
+            List<string> tagStrings = new List<string>();
+            if (!string.IsNullOrEmpty(tagString))
+            {
+                tagStrings = tagString.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                            .Select(tag => tag.Trim())
+                                            .ToList();
+            }
+
+            return tagStrings;
         }
     }
 }

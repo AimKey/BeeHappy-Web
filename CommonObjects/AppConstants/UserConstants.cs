@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CommonObjects.DTOs.EmoteSet
+namespace CommonObjects.AppConstants
 {
-    public class EmoteSetVM
+    public class UserConstants
     {
+        public const string UserId = "userId";
     }
 }
