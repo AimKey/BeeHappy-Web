@@ -199,8 +199,13 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="flex items-center justify-end gap-3">
-                            <button type="button"
+                        <div class="mt-6 flex items-center justify-between">
+                            <button id="delete-btn" type="button" class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 
+                                focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:outline-none">
+                                Xóa bộ emote này
+                            </button>
+                            <div class="flex items-center gap-3">
+                             <button type="button"
                                     id="cancel-edit"
                                     class="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-700">
                                 Hủy
@@ -209,7 +214,9 @@
                                     class="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:outline-none">
                                 Chỉnh sửa
                             </button>
-                        </div>
+
+                            </div>
+                            </div>
                     </form>
                 </div>
             </div>
@@ -276,6 +283,8 @@
 
 
 @section Scripts {
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Search script loaded');
@@ -718,6 +727,105 @@
                 if (tagsInput) {
                     tagsInput.value = decodeHtml(tagsInput.value);
                 }
+            });
+
+            const deleteBtn = document.getElementById('delete-btn');
+            deleteBtn?.addEventListener('click', function() {
+                Swal.fire({
+                    title: 'Bạn có chắc chắn?',
+                    text: "Hành động này không thể hoàn tác. Bộ emote sẽ bị xóa vĩnh viễn!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Có, xóa bộ emote!',
+                    cancelButtonText: 'Hủy bỏ',
+                    background: '#18181b',
+                    color: '#ffffff',
+                    customClass: {
+                        popup: 'border border-zinc-700',
+                        title: 'text-white',
+                        htmlContainer: 'text-zinc-300'
+                    }
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        try {
+                            // Show loading state
+                            Swal.fire({
+                                title: 'Đang xóa...',
+                                text: 'Vui lòng chờ trong giây lát',
+                                icon: 'info',
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                background: '#18181b',
+                                color: '#ffffff',
+                                customClass: {
+                                    popup: 'border border-zinc-700'
+                                },
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+
+                            // Get emote set ID
+                            const emoteSetId = '@emoteSet.Id';
+
+                            // Create form data
+                            const formData = new FormData();
+                            formData.append('id', emoteSetId);
+                            formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+
+                            // Make API call to delete
+                            const response = await fetch('/EmoteSets/Delete/' + emoteSetId, {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            const result = await response.json();
+
+                            if (response.ok && result.success) {
+                                // Success - show success message and redirect
+                                Swal.fire({
+                                    title: 'Đã xóa!',
+                                    text: result.message || 'Bộ emote đã được xóa thành công.',
+                                    icon: 'success',
+                                    background: '#18181b',
+                                    color: '#ffffff',
+                                    customClass: {
+                                        popup: 'border border-zinc-700'
+                                    }
+                                }).then(() => {
+                                    // Redirect to emote sets list
+                                    window.location.href = '/EmoteSets';
+                                });
+                            } else {
+                                // Error response
+                                Swal.fire({
+                                    title: 'Lỗi!',
+                                    text: result.message || 'Không thể xóa bộ emote. Vui lòng thử lại sau.',
+                                    icon: 'error',
+                                    background: '#18181b',
+                                    color: '#ffffff',
+                                    customClass: {
+                                        popup: 'border border-zinc-700'
+                                    }
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Error deleting emote set:', error);
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Có lỗi xảy ra khi xóa bộ emote. Vui lòng thử lại sau.',
+                                icon: 'error',
+                                background: '#18181b',
+                                color: '#ffffff',
+                                customClass: {
+                                    popup: 'border border-zinc-700'
+                                }
+                            });
+                        }
+                    }
+                });
             });
 
             // Event listeners for edit modal

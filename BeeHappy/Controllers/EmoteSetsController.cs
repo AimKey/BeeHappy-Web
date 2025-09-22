@@ -109,7 +109,7 @@ namespace BeeHappy.Controllers
 
                 // Set the owner ID from the current user
                 createDto.OwnerId = currentUser.Id;
-                
+
                 await emoteSetService.InsertEmoteSetAsync(createDto);
                 TempData[MessageConstants.MESSAGE] = "Tạo bộ emote thành công";
                 TempData[MessageConstants.MESSAGE_TYPE] = MessageConstants.SUCCESS;
@@ -131,7 +131,7 @@ namespace BeeHappy.Controllers
                 await emoteSetService.UpdateEmoteSetAsync(dto);
                 TempData[MessageConstants.MESSAGE] = "Thông tin bộ emote đã được thay đổi!";
                 TempData[MessageConstants.MESSAGE_TYPE] = MessageConstants.SUCCESS;
-                return RedirectToAction("Details", new {id = dto.Id});
+                return RedirectToAction("Details", new { id = dto.Id });
             }
             catch (Exception e)
             {
@@ -170,16 +170,31 @@ namespace BeeHappy.Controllers
         }
 
         // POST: EmoteSetsController/Delete/5
+        // API method
         [HttpPost]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> DeleteAsync(ObjectId id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var currentUser = await GetCurrentUserAsync();
+                if (currentUser == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+                await emoteSetService.DeleteEmoteSetByIdAsync(id);
+                return Ok(new EmoteSetResponseDto
+                {
+                    message = "Xoá bộ emote thành công",
+                    success = true,
+                });
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                return BadRequest(new EmoteSetResponseDto
+                {
+                    message = "Xoá bộ emote thất bại: " + e.Message,
+                    success = false,
+                });
             }
         }
 

@@ -12,18 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd34f25f-aa9c-4676-9f8b-dd937d331994" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/BeeHappy/BeeHappy.csproj.user" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/BeeHappy.csproj.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy/Controllers/EmoteSetsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Controllers/EmoteSetsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Views/Shared/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BeeHappy/wwwroot/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/wwwroot/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BusinessObjects/EmoteSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BusinessObjects/EmoteSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/CommonObjects.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/CommonObjects.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/DTOs/EmoteSet/EmoteSetPreviewVM.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CommonObjects/DTOs/EmoteSet/EmoteSetVM.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Implementations/EmoteSetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Implementations/EmoteSetService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Services/Interfaces/IEmoteSetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IEmoteSetService.cs" afterDir="false" />
-    </list>
+    <list default="true" id="bd34f25f-aa9c-4676-9f8b-dd937d331994" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +53,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -158,6 +147,7 @@
       <workItem from="1757858430631" duration="1618000" />
       <workItem from="1757930516051" duration="597000" />
       <workItem from="1758375601785" duration="75000" />
+      <workItem from="1758532990846" duration="184000" />
     </task>
     <servers />
   </component>
@@ -165,6 +155,17 @@
     <option name="version" value="3" />
   </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="dependencySupport" implementationName="javascript:npm:tailwindcss" />
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.Identity.Client" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.EntityFrameworkCore.Abstractions" />
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.EntityFrameworkCore.Relational" />
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.ApplicationInsights" />
+    <option featureType="dependencySupport" implementationName="dotnet:Microsoft.EntityFrameworkCore" />
+    <option featureType="dependencySupport" implementationName="javascript:npm:postcss" />
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>

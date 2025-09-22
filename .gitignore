@@ -63,5 +63,8 @@ node_modules
 .vs
 .vscode
 
+# AI Configuration Files
+.github/copilot-instructions.md
+
 # Local publish
 publish
