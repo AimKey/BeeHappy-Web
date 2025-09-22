@@ -1,0 +1,180 @@
+﻿@model CommonObjects.Pagination.PagedResult<object>
+@{
+    ViewData["Title"] = "Emotes Directory";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="emotes-directory">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <h2 class="sidebar-title">Directory</h2>
+
+            <!-- Navigation -->
+            <div class="nav-section">
+                <div class="nav-item active">
+                    <span class="nav-icon">😀</span>
+                    <span>Emotes</span>
+                </div>
+            </div>
+
+            <!-- Wrapped search and filters in a form with search button -->
+            <form id="searchForm" method="get" action="@Url.Action("Directory")">
+                <!-- Search -->
+                <div class="search-section">
+                    <h3 class="section-title">Search</h3>
+                    <div class="search-input-wrapper">
+                        <input type="text" name="search" id="searchInput" placeholder="Emote" class="search-input" value="@ViewBag.Search">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="tags-section">
+                    <h3 class="section-title">Tags</h3>
+                    <div class="tags-input-wrapper">
+                        <input type="text" name="tags" id="tagsInput" placeholder="Enter tags (comma separated)" class="tags-input" value="@ViewBag.Tags">
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-section">
+                    <h3 class="section-title">Filters</h3>
+                    <div class="filter-options">
+                        <!-- Updated checkboxes to support multiple selections -->
+                        <label class="filter-option">
+                            <input type="checkbox" name="filters" value="animated" @(ViewBag.Filters != null && ((string[])ViewBag.Filters).Contains("animated") ? "checked" : "")>
+                            <span>Animated</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="filters" value="static" @(ViewBag.Filters != null && ((string[])ViewBag.Filters).Contains("static") ? "checked" : "")>
+                            <span>Static</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="filters" value="overlaying" @(ViewBag.Filters != null && ((string[])ViewBag.Filters).Contains("overlaying") ? "checked" : "")>
+                            <span>Overlaying</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="filters" value="personal" @(ViewBag.Filters != null && ((string[])ViewBag.Filters).Contains("personal") ? "checked" : "")>
+                            <span>Personal Use</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" name="filters" value="exact" @(ViewBag.Filters != null && ((string[])ViewBag.Filters).Contains("exact") ? "checked" : "")>
+                            <span>Exact Match</span>
+                        </label>
+                    </div>
+                </div>
+
+                @* <!-- Added search button --> *@
+                @* <div class="search-button-section"> *@
+                @*     <button type="submit" class="search-button"> *@
+                @*         <span class="search-button-icon">🔍</span> *@
+                @*         <span>Search Emotes</span> *@
+                @*     </button> *@
+                @* </div> *@
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-sort="top">
+                    <span class="tab-icon">🏆</span>
+                    <span>Top</span>
+                </button>
+                <button class="nav-tab" data-sort="trending">
+                    <span class="tab-icon">🔥</span>
+                    <span>Trending</span>
+                </button>
+                <button class="nav-tab" data-sort="new">
+                    <span class="tab-icon">✨</span>
+                    <span>New</span>
+                </button>
+            </div>
+
+            <div class="view-controls">
+                <button class="view-btn active" data-view="grid">
+                    <span class="view-icon">⊞</span>
+                </button>
+                <button class="view-btn" data-view="list">
+                    <span class="view-icon">☰</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Emotes Grid -->
+        <div class="emotes-container">
+            <div id="emotesGrid" class="emotes-grid">
+                @* Updated to use PagedResult model *@
+                @if (Model?.Items != null)
+                {
+                    @foreach (dynamic emote in Model.Items)
+                    {
+                        <a href="/Emotes/Detail/@emote.id" class="emote-card" data-emote-id="@emote.id">
+                            <div class="emote-thumbnail">
+                                <img src="@emote.thumbnail" alt="@emote.name" loading="lazy" onerror="this.src='/images/placeholder-emote.png'">
+                                @if (emote.isAnimated)
+                                {
+                                    <div class="animated-badge">GIF</div>
+                                }
+                            </div>
+                            <div class="emote-info">
+                                <div class="emote-name">@emote.name</div>
+                                <div class="emote-owner">@emote.owner</div>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+
+            <!-- Updated pagination to include filters array -->
+            @if (Model != null && Model.TotalPages > 1)
+            {
+                <div class="pagination-container">
+                    <div class="pagination">
+                        @{
+                            var filterParams = ViewBag.Filters != null ? string.Join("&", ((string[])ViewBag.Filters).Select(f => $"filters={f}")) : "";
+                        }
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <a href="@Url.Action("Directory", new { page = Model.CurrentPage - 1, search = ViewBag.Search, tags = ViewBag.Tags })@(!string.IsNullOrEmpty(filterParams) ? "&" + filterParams : "")" class="pagination-btn">
+                                ← Previous
+                            </a>
+                        }
+
+                        @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
+                        {
+                            if (i == Model.CurrentPage)
+                            {
+                                <span class="pagination-btn active">@i</span>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Directory", new { page = i, search = ViewBag.Search, tags = ViewBag.Tags })@(!string.IsNullOrEmpty(filterParams) ? "&" + filterParams : "")" class="pagination-btn">@i</a>
+                            }
+                        }
+
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <a href="@Url.Action("Directory", new { page = Model.CurrentPage + 1, search = ViewBag.Search, tags = ViewBag.Tags })@(!string.IsNullOrEmpty(filterParams) ? "&" + filterParams : "")" class="pagination-btn">
+                                Next →
+                            </a>
+                        }
+                    </div>
+
+                    <div class="pagination-info">
+                        Showing @((Model.CurrentPage - 1) * Model.PageSize + 1) - @(Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount)) of @Model.TotalCount emotes
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="~/css/emotes-directory.css">
+    <script src="~/js/emotes-directory.js"></script>
+}

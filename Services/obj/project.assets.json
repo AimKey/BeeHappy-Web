@@ -3540,23 +3540,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\phamm\\.nuget\\packages\\": {},
-    "E:\\VisualStudio\\VSShared\\NuGetPackages": {}
+    "C:\\Users\\PC\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\Services\\Services.csproj",
+      "projectUniqueName": "D:\\fpt\\exe\\BeeHappy-Web\\Services\\Services.csproj",
       "projectName": "Services",
-      "projectPath": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\Services\\Services.csproj",
-      "packagesPath": "C:\\Users\\phamm\\.nuget\\packages\\",
-      "outputPath": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\Services\\obj\\",
+      "projectPath": "D:\\fpt\\exe\\BeeHappy-Web\\Services\\Services.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "D:\\fpt\\exe\\BeeHappy-Web\\Services\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "E:\\VisualStudio\\VSShared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\phamm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3571,11 +3571,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\CommonObjects\\CommonObjects.csproj": {
-              "projectPath": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\CommonObjects\\CommonObjects.csproj"
+            "D:\\fpt\\exe\\BeeHappy-Web\\CommonObjects\\CommonObjects.csproj": {
+              "projectPath": "D:\\fpt\\exe\\BeeHappy-Web\\CommonObjects\\CommonObjects.csproj"
             },
-            "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\Repositories\\Repositories.csproj": {
-              "projectPath": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\Repositories\\Repositories.csproj"
+            "D:\\fpt\\exe\\BeeHappy-Web\\Repositories\\Repositories.csproj": {
+              "projectPath": "D:\\fpt\\exe\\BeeHappy-Web\\Repositories\\Repositories.csproj"
             }
           }
         }

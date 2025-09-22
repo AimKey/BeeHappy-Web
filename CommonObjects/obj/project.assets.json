@@ -3502,23 +3502,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\phamm\\.nuget\\packages\\": {},
-    "E:\\VisualStudio\\VSShared\\NuGetPackages": {}
+    "C:\\Users\\PC\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\CommonObjects\\CommonObjects.csproj",
+      "projectUniqueName": "D:\\fpt\\exe\\BeeHappy-Web\\CommonObjects\\CommonObjects.csproj",
       "projectName": "CommonObjects",
-      "projectPath": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\CommonObjects\\CommonObjects.csproj",
-      "packagesPath": "C:\\Users\\phamm\\.nuget\\packages\\",
-      "outputPath": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\CommonObjects\\obj\\",
+      "projectPath": "D:\\fpt\\exe\\BeeHappy-Web\\CommonObjects\\CommonObjects.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "D:\\fpt\\exe\\BeeHappy-Web\\CommonObjects\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "E:\\VisualStudio\\VSShared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\phamm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -3533,8 +3533,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\DataAccessObjects\\DataAccessObjects.csproj": {
-              "projectPath": "E:\\FPT\\2025_Fall\\EXE202\\projects\\BeeHappy\\DataAccessObjects\\DataAccessObjects.csproj"
+            "D:\\fpt\\exe\\BeeHappy-Web\\DataAccessObjects\\DataAccessObjects.csproj": {
+              "projectPath": "D:\\fpt\\exe\\BeeHappy-Web\\DataAccessObjects\\DataAccessObjects.csproj"
             }
           }
         }
