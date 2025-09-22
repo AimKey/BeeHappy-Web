@@ -1,6 +1,7 @@
-using AutoMapper;
+﻿using AutoMapper;
 using DataAccessObjects;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using MongoDB.Driver;
 using Repositories.Generics;
 using Repositories.Implementations;
@@ -37,18 +38,20 @@ public class Program
 
         // Configure authentication with cookies
         // Cookie Authentication setup
-        _ = builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        builder.Services.AddAuthentication(options => {
+            options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
             .AddCookie(options =>
             {
-                options.LoginPath = "/Account/Login"; // redirect if not logged in
-                options.AccessDeniedPath = "/Account/AccessDenied"; // redirect if not authorized
+                options.LoginPath = "/Home/LandingPage"; // redirect if not logged in
+                options.AccessDeniedPath = "/Auth/AccessDenied"; // redirect if not authorized
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
             })
-            .AddGoogle(options =>
+            .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
             {
                 options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                options.CallbackPath = "/Account/signin-google";
             });
 
         // Debug
