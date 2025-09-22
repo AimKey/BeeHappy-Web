@@ -27,6 +27,7 @@ public class Program
         builder.Services.AddHttpContextAccessor();
 
         // Add session
+        builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {
             options.IdleTimeout = System.TimeSpan.FromMinutes(60);
@@ -52,7 +53,7 @@ public class Program
 
         // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");
-        Console.WriteLine($"SQL string: {builder.Configuration.GetConnectionString("DefaultConnection")}");
+        Console.WriteLine($"SQL string: {builder.Configuration.GetConnectionString("MongoDB")}");
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
