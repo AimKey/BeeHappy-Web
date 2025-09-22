@@ -47,11 +47,22 @@ namespace BeeHappy.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EmoteViewModel vm)
         {
+            // Validate bắt buộc Name
+            if (string.IsNullOrWhiteSpace(vm.Name))
+            {
+                ModelState.AddModelError("Name", "Name is required.");
+            }
+
+            // Validate bắt buộc có ít nhất 1 file upload
+            if (vm.Files == null || !vm.Files.Any(f => f.File != null && f.File.Length > 0))
+            {
+                ModelState.AddModelError("Files", "Please upload at least one image (jpg, png, gif).");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
-
             try
             {                
 
@@ -59,6 +70,8 @@ namespace BeeHappy.Controllers
                 var ownerId = ObjectId.GenerateNewId();
 
                 var emoteId = ObjectId.GenerateNewId();
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                var maxFileSize = 2 * 1024 * 1024; // 2MB
                 string uploadPath = Path.Combine(
                     Directory.GetCurrentDirectory(),
                     "wwwroot", "uploads", "emotes", emoteId.ToString()
@@ -85,6 +98,20 @@ namespace BeeHappy.Controllers
                     {
                         if (fileVm.File != null && fileVm.File.Length > 0)
                         {
+                            var ext = Path.GetExtension(fileVm.File.FileName).ToLower();
+
+                            if (!allowedExtensions.Contains(ext))
+                            {
+                                ModelState.AddModelError("Files", "Only JPG, PNG, GIF files are allowed.");
+                                return View(vm);
+                            }
+
+                            if (fileVm.File.Length > maxFileSize)
+                            {
+                                ModelState.AddModelError("Files", "File size cannot exceed 2 MB.");
+                                return View(vm);
+                            }
+
                             string fileName = Path.GetFileName(fileVm.File.FileName);
                             string filePath = Path.Combine(uploadPath, fileName);
 
@@ -172,6 +199,36 @@ namespace BeeHappy.Controllers
             await _emoteService.DeleteEmoteByIdAsync(ObjectId.Parse(id));
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public async Task<IActionResult> Details(string id)
+        {
+            if (string.IsNullOrEmpty(id)) return BadRequest();
+
+            var emote = await _emoteService.GetEmoteByIdAsync(ObjectId.Parse(id));
+            if (emote == null) return NotFound();
+
+            var vm = new EmoteViewModel
+            {
+                Id = emote.Id.ToString(),
+                Name = emote.Name,
+                OwnerId = emote.OwnerId.ToString(),
+                Tags = emote.Tags,
+                Visibility = emote.Visibility,
+                Status = emote.Status,
+                IsOverlaying = emote.IsOverlaying,
+                CreatedAt = emote.CreatedAt,
+                UpdatedAt = emote.UpdatedAt,
+                Files = emote.Files?.Select(f => new EmoteFileViewModel
+                {
+                    Format = f.Format,
+                    Url = f.Url,
+                    Size = f.Size
+                }).ToList()
+            };
+
+            return View(vm);
+        }
+
 
     }
 }
