@@ -1,4 +1,4 @@
-﻿namespace Kiet_WebAPI.Dto
+﻿namespace CommonObjects.Pagination
 {
     public class PagedResponse<T> where T : class
     {
@@ -8,7 +8,7 @@
         public int PageSize
         {
             get => 20;
-            set => _ = (value > _maxPageSize) ? _maxPageSize : value;
+            set => _ = value > _maxPageSize ? _maxPageSize : value;
         }
         public int TotalRecordCount { get; set; }
         public IList<T> Result { get; set; }

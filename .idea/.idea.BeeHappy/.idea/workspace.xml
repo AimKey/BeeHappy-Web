@@ -12,7 +12,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd34f25f-aa9c-4676-9f8b-dd937d331994" name="Changes" comment="" />
+    <list default="true" id="bd34f25f-aa9c-4676-9f8b-dd937d331994" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BeeHappy/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BeeHappy/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Controllers/EmoteSetsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Controllers/EmoteSets/EmoteSetsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Controllers/Emotes/EmotesController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Controllers/Emotes/EmotesController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Controllers/HomeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Views/EmoteSets/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Views/EmoteSets/Index.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Views/Emotes/Detail.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Views/Emotes/Detail.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Views/Home/LandingPage.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Views/Home/LandingPage.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/wwwroot/css/site.output.css" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/wwwroot/css/site.output.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BeeHappy/wwwroot/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/BeeHappy/wwwroot/css/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommonObjects/CommonObjects.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/CommonObjects.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommonObjects/Pagination/PagedResponse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/CommonObjects/Pagination/PagedResponse.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CommonObjects/ViewModels/Emote/EmoteDetailsViewModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/HelperServices/PaginationHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/HelperServices/PaginationHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Implementations/EmoteSetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Implementations/EmoteSetService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/Interfaces/IEmoteSetService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/Interfaces/IEmoteSetService.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,14 +63,14 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "kiet/feature/emote-set",
+    "git-widget-placeholder": "kiet/merge/dat-dev",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "preferences.editor",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -148,6 +165,7 @@
       <workItem from="1757930516051" duration="597000" />
       <workItem from="1758375601785" duration="75000" />
       <workItem from="1758532990846" duration="184000" />
+      <workItem from="1758637137748" duration="4829000" />
     </task>
     <servers />
   </component>
@@ -186,5 +204,9 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -3,13 +3,12 @@ using BusinessObjects;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using CommonObjects.Pagination;
-using CommonObjects.ViewModels.Emote;
+using CommonObjects.ViewModels.EmoteVMs;
 
 namespace BeeHappy.Controllers.Emotes;
 
 public class EmotesController : Controller
 {
-
     public IActionResult Directory(int page = 1, int pageSize = 20, string search = "", string tags = "", string[] filters = null)
     {
         ViewBag.Search = search;
@@ -113,7 +112,7 @@ public class EmotesController : Controller
         {
             mockEmotes.Add(new Emote
             {
-                Id = ObjectId.GenerateNewId().ToString(),
+                Id = ObjectId.GenerateNewId(),
                 Name = emoteNames[i],
                 OwnerId = ObjectId.GenerateNewId(),
                 Files = new List<EmoteFile>

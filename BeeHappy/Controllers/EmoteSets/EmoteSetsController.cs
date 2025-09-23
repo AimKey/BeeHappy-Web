@@ -1,15 +1,14 @@
-﻿using BusinessObjects;
+﻿using System.Security.Claims;
+using BusinessObjects;
 using BusinessObjects.NestedObjects;
 using CommonObjects.AppConstants;
 using CommonObjects.DTOs.EmoteSetDTOs;
 using CommonObjects.DTOs.EmoteSetDTOs.API;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Services.Interfaces;
-using System.Linq;
 
-namespace BeeHappy.Controllers
+namespace BeeHappy.Controllers.EmoteSets
 {
     public class EmoteSetsController(IUserService userService,
                                      IEmoteSetService emoteSetService,
@@ -170,7 +169,7 @@ namespace BeeHappy.Controllers
         }
 
         // POST: EmoteSetsController/Delete/5
-        // API method
+        // API
         [HttpPost]
         public async Task<ActionResult> DeleteAsync(ObjectId id)
         {
@@ -197,10 +196,38 @@ namespace BeeHappy.Controllers
                 });
             }
         }
+        
+        public async Task<IActionResult> AddEmoteToSet(ObjectId emoteSetId, ObjectId emoteId)
+        {
+            try
+            {
+                var currentUser = await GetCurrentUserAsync();
+                if (currentUser == null)
+                {
+                    return RedirectToAction("LandingPage", "Home");
+                }
+                await emoteSetService.AddEmoteToSetAsync(emoteSetId, emoteId, currentUser.Id);
+                return Ok(new EmoteSetResponseDto
+                {
+                    message = "Thêm emote vào bộ thành công",
+                    success = true,
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new EmoteSetResponseDto
+                {
+                    message = "Thêm emote vào bộ thất bại: " + e.Message,
+                    success = false,
+                });
+            }
+        }
 
         private async Task<User?> GetCurrentUserAsync()
         {
-            var userId = HttpContext.Session.GetString(UserConstants.UserId);
+            // var userId = HttpContext.Session.GetString(UserConstants.UserId);
+            var userId = User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+            
             if (string.IsNullOrEmpty(userId))
             {
                 return null;

@@ -1,37 +1,8 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BeeTV - The Emote Platform For All</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="~/css/emotes-platform.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': '#8B5CF6',
-                        'primary-dark': '#7C3AED',
-                        'primary-light': '#A855F7',
-                        'secondary': '#06B6D4',
-                        'accent': '#F59E0B',
-                        'dark-bg': '#0F0F23',
-                        'dark-surface': '#1A1A2E',
-                        'dark-border': '#2D2D44',
-                        'dark-hover': '#373044'
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body class="bg-dark-bg text-white font-sans">
+﻿@{
+    ViewData["Title"] = "BeeTV - The Emote Platform For All";
+}
 
-    <!-- Hero Section -->
+<!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-primary/40 via-dark-bg to-secondary/35"></div>
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_80%,rgba(124,58,237,0.5),transparent_50%)]"></div>
@@ -73,10 +44,14 @@
             </div>
         </div>
 
-        <!-- Bottom CTA -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center">
-            <p class="text-gray-400 mb-4 max-w-2xl text-pretty">
-                Start your journey with hundreds of emotes and features that enhance your chatting experience. Download the Official 7TV Extension or other 3rd party tools.
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-6 bg-dark-surface/50 relative overflow-hidden">
+        <div class="relative max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-4 text-balance">Get Started</h2>
+            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto text-pretty">
+                Start your journey with hundreds of emotes and powerful tools for your channel. Choose your platform below to begin.
             </p>
             <div class="flex flex-wrap justify-center gap-4">
                 <button class="bg-dark-surface border border-dark-border px-6 py-2 rounded-lg hover:border-primary/60 hover:bg-dark-hover transition-all flex items-center space-x-2 shadow-md">
@@ -86,7 +61,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
-                <button class="bg-dark-surface border border-dark-border px-6 py-2 rounded-lg hover:border-primary/60 hover:bg-dark-hover transition-all flex items-center space-x-2 shadow-md">
+                @* <button class="bg-dark-surface border border-dark-border px-6 py-2 rounded-lg hover:border-primary/60 hover:bg-dark-hover transition-all flex items-center space-x-2 shadow-md">
                     <span>💬</span>
                     <span>Chatterino</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,13 +74,13 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
-                </button>
+                </button> *@
             </div>
         </div>
     </section>
 
     <!-- Why BeeHappy Section -->
-    <section class="py-20 px-6">
+    <section class="py-20 px-6 bg-dark-surface/20">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold mb-4 text-balance">Why BeeHappy?</h2>
@@ -224,6 +199,3 @@
         </div>
     </section>
 
-    <script src="~/js/emotes-platform.js"></script>
-</body>
-</html>

@@ -1,4 +1,5 @@
-﻿@model CommonObjects.ViewModels.Emote.EmoteDetailsViewModel
+﻿@using CommonObjects.ViewModels.EmoteVMs
+@model EmoteDetailsViewModel
 
 <!DOCTYPE html>
 <html lang="en">
@@ -80,62 +81,62 @@
             }
     </style>
 </head>
-<body class="bg-discord-darkest text-white font-sans">
+<body class="bg-discord-darkest font-sans text-white">
     <div class="flex h-screen">
         <!-- Main Content -->
-        <main class="flex-1 flex flex-col">
+        <main class="flex flex-1 flex-col">
             <!-- Header Section -->
-            <header class="bg-discord-darker p-6 border-b border-discord-dark">
+            <header class="bg-discord-darker border-discord-dark border-b p-6">
                 <!-- Owner Info -->
-                <div class="flex items-center space-x-4 mb-8">
-                    <img src="@Model.OwnerAvatar" alt="@Model.OwnerName" class="w-12 h-12 rounded-full">
+                <div class="mb-8 flex items-center space-x-4">
+                    <img src="@Model.OwnerAvatar" alt="@Model.OwnerName" class="h-12 w-12 rounded-full">
                     <span class="text-xl font-semibold text-white">@Model.OwnerName</span>
                 </div>
 
                 <!-- Emote Display -->
                 <section class="text-center">
-                    <h1 class="text-4xl font-bold mb-10 text-white">@Model.EmoteName</h1>
+                    <h1 class="mb-10 text-4xl font-bold text-white">@Model.EmoteName</h1>
 
                     <!-- Emote Variants -->
-                    <div class="flex justify-center items-end space-x-6 mb-10">
+                    <div class="mb-10 flex items-end justify-center space-x-6">
                         @foreach (var file in Model.EmoteFiles)
                         {
                             <div class="flex flex-col items-center">
-                                <div class="bg-discord-dark rounded-lg p-3 mb-3 hover:bg-discord-gray hover:scale-105 transition-all duration-200 cursor-pointer"
+                                <div class="bg-discord-dark mb-3 cursor-pointer rounded-lg p-3 transition-all duration-200 hover:bg-discord-gray hover:scale-105"
                                      style="width: @(file.Size + 24)px; height: @(file.Size + 24)px;">
                                     <img src="@file.Url"
                                          alt="@Model.EmoteName @(file.Size)x@(file.Size)"
-                                         class="w-full h-full object-contain"
+                                         class="h-full w-full object-contain"
                                          style="width: @(file.Size)px; height: @(file.Size)px;">
                                 </div>
-                                <span class="text-sm text-gray-400 font-medium">@(file.Size)×@(file.Size)</span>
+                                <span class="text-sm font-medium text-gray-400">@(file.Size)×@(file.Size)</span>
                             </div>
                         }
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="flex justify-center space-x-4">
-                        <button class="bg-white text-black px-6 py-2.5 rounded-md font-medium hover:bg-gray-200 transition-colors flex items-center space-x-2"
+                        <button class="flex items-center space-x-2 rounded-md bg-white px-6 py-2.5 font-medium text-black transition-colors hover:bg-gray-200"
                                 data-action="add-to-anime">
                             <span class="text-lg">+</span>
                             <span>Add Emote to Anime</span>
                         </button>
-                        <button class="bg-discord-gray text-white px-6 py-2.5 rounded-md font-medium hover:bg-discord-lightgray transition-colors flex items-center space-x-2"
+                        <button class="bg-discord-gray flex items-center space-x-2 rounded-md px-6 py-2.5 font-medium text-white transition-colors hover:bg-discord-lightgray"
                                 data-action="add-to-collection">
                             <span>📁</span>
                             <span>Add to...</span>
                         </button>
-                        <div class="relative dropdown">
-                            <button class="bg-discord-gray text-white px-4 py-2.5 rounded-md font-medium hover:bg-discord-lightgray transition-colors flex items-center space-x-2"
+                        <div class="dropdown relative">
+                            <button class="bg-discord-gray flex items-center space-x-2 rounded-md px-4 py-2.5 font-medium text-white transition-colors hover:bg-discord-lightgray"
                                     data-dropdown="more-menu">
                                 <span>More</span>
                                 <span class="dropdown-arrow text-xs">▼</span>
                             </button>
-                            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-discord-darker rounded-md shadow-lg border border-discord-dark z-10"
+                            <div class="dropdown-menu bg-discord-darker border-discord-dark absolute right-0 z-10 mt-2 w-48 rounded-md border shadow-lg"
                                  id="more-menu">
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-discord-dark text-white no-underline" data-action="download">Download</a>
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-discord-dark text-white no-underline" data-action="copy-link">Copy Link</a>
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-discord-dark text-white no-underline" data-action="report">Report</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white no-underline hover:bg-discord-dark" data-action="download">Download</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white no-underline hover:bg-discord-dark" data-action="copy-link">Copy Link</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-white no-underline hover:bg-discord-dark" data-action="report">Report</a>
                             </div>
                         </div>
                     </div>
@@ -143,26 +144,26 @@
             </header>
 
             <!-- Channels Section -->
-            <section class="flex-1 bg-discord-darkest p-6">
-                <div class="flex items-center justify-between mb-6">
+            <section class="bg-discord-darkest flex-1 p-6">
+                <div class="mb-6 flex items-center justify-between">
                     <div class="flex items-center space-x-6">
-                        <button class="flex items-center space-x-2 px-4 py-2 rounded-md font-medium bg-discord-dark text-white tab active"
+                        <button class="bg-discord-dark tab active flex items-center space-x-2 rounded-md px-4 py-2 font-medium text-white"
                                 data-tab="channels">
                             <span class="text-lg">👥</span>
                             <span>Channels (@Model.TotalChannels)</span>
                         </button>
-                        <button class="flex items-center space-x-2 px-4 py-2 rounded-md font-medium text-gray-400 hover:text-white hover:bg-discord-dark transition-colors tab"
+                        <button class="tab flex items-center space-x-2 rounded-md px-4 py-2 font-medium text-gray-400 transition-colors hover:bg-discord-dark hover:text-white"
                                 data-tab="activity">
                             <span class="text-lg">⚡</span>
                             <span>Activity</span>
                         </button>
                     </div>
                     <div class="flex space-x-2">
-                        <button class="p-2 hover:bg-discord-dark rounded text-gray-400 hover:text-white transition-colors"
+                        <button class="rounded p-2 text-gray-400 transition-colors hover:bg-discord-dark hover:text-white"
                                 data-direction="prev">
                             ◀
                         </button>
-                        <button class="p-2 hover:bg-discord-dark rounded text-gray-400 hover:text-white transition-colors"
+                        <button class="rounded p-2 text-gray-400 transition-colors hover:bg-discord-dark hover:text-white"
                                 data-direction="next">
                             ▶
                         </button>
@@ -170,19 +171,19 @@
                 </div>
 
                 <!-- Channels Grid - Tighter spacing -->
-                <div class="grid grid-cols-8 xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-4 gap-x-4 gap-y-3 channels-grid">
+                <div class="channels-grid grid grid-cols-8 gap-x-4 gap-y-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8">
                     @foreach (var channel in Model.Channels)
                     {
-                        <div class="flex items-center space-x-2 px-2 py-1.5 rounded-md hover:bg-discord-dark transition-colors cursor-pointer channel-item group"
+                        <div class="channel-item group flex cursor-pointer items-center space-x-2 rounded-md px-2 py-1.5 transition-colors hover:bg-discord-dark"
                              data-channel="@channel.Name">
                             <div class="relative flex-shrink-0">
-                                <img src="@channel.Avatar" alt="@channel.Name" class="w-8 h-8 rounded-full">
+                                <img src="@channel.Avatar" alt="@channel.Name" class="h-8 w-8 rounded-full">
                                 @if (channel.IsOnline)
                                 {
-                                    <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-discord-green rounded-full border-2 border-discord-darkest"></div>
+                                    <div class="bg-discord-green border-discord-darkest absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full border-2"></div>
                                 }
                             </div>
-                            <span class="text-sm font-medium truncate group-hover:text-white transition-colors"
+                            <span class="truncate text-sm font-medium transition-colors group-hover:text-white"
                                   style="color: @channel.Color">@channel.Name</span>
                         </div>
                     }

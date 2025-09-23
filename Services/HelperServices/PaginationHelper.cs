@@ -1,4 +1,4 @@
-﻿using Kiet_WebAPI.Dto;
+﻿using CommonObjects.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;

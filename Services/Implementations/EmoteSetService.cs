@@ -11,12 +11,13 @@ using Services.Interfaces;
 
 namespace Services.Implementations
 {
-    public class EmoteSetService(IEmoteSetRepository emoteSetRepository,
-                                 IEmoteService emoteService,
-                                 IUserService userService,
-                                 IEmoteRepository emoteRepository,
-                                 IMapper mapper,
-                                 MongoDBContext mongoDBContext) : IEmoteSetService
+    public class EmoteSetService(
+        IEmoteSetRepository emoteSetRepository,
+        IEmoteService emoteService,
+        IUserService userService,
+        IEmoteRepository emoteRepository,
+        IMapper mapper,
+        MongoDBContext mongoDBContext) : IEmoteSetService
     {
         public async Task<List<EmoteSetPreviewVM>> GetEmoteSetPreviewsOfUserAsync(ObjectId userId)
         {
@@ -27,8 +28,8 @@ namespace Services.Implementations
             {
                 var collection = mongoDBContext.Database.GetCollection<Emote>(typeof(Emote).Name);
                 var emotes = await collection.Find(e => set.Emotes != null && set.Emotes.Contains(e.Id))
-                                             .Limit(10)
-                                             .ToListAsync();
+                    .Limit(10)
+                    .ToListAsync();
 
                 var preview = EmoteSetMapper.ToPreviewVM(set, emotes);
                 previews.Add(preview);
@@ -44,7 +45,8 @@ namespace Services.Implementations
             return await emoteSetRepository.GetAllAsync(ct);
         }
 
-        public async Task<List<EmoteSet>> GetEmoteSetsAsync(System.Linq.Expressions.Expression<Func<EmoteSet, bool>>? filter, CancellationToken ct = default)
+        public async Task<List<EmoteSet>> GetEmoteSetsAsync(
+            System.Linq.Expressions.Expression<Func<EmoteSet, bool>>? filter, CancellationToken ct = default)
         {
             return await emoteSetRepository.GetAsync(filter, ct);
         }
@@ -59,7 +61,8 @@ namespace Services.Implementations
             await emoteSetRepository.InsertAsync(emoteSet, ct);
         }
 
-        public async Task<bool> ReplaceEmoteSetAsync(EmoteSet emoteSet, bool upsert = false, CancellationToken ct = default)
+        public async Task<bool> ReplaceEmoteSetAsync(EmoteSet emoteSet, bool upsert = false,
+            CancellationToken ct = default)
         {
             return await emoteSetRepository.ReplaceAsync(emoteSet, upsert, ct);
         }
@@ -74,21 +77,23 @@ namespace Services.Implementations
             return await emoteSetRepository.DeleteAsync(emoteSet, ct);
         }
 
-        public async Task<long> CountEmoteSetsAsync(System.Linq.Expressions.Expression<Func<EmoteSet, bool>>? filter = null, CancellationToken ct = default)
+        public async Task<long> CountEmoteSetsAsync(
+            System.Linq.Expressions.Expression<Func<EmoteSet, bool>>? filter = null, CancellationToken ct = default)
         {
             return await emoteSetRepository.CountAsync(filter, ct);
         }
 
         public async Task<EmoteSetDetailVM> GetEmoteSetDetailByIdAsync(ObjectId id)
         {
-            var emoteSet = await GetEmoteSetByIdAsync(id) ?? throw new Exception("Emote set not found");
+            var emoteSet = await GetEmoteSetByIdAsync(id) ?? throw new Exception("Không tìm thấy bộ emote");
             if (emoteSet.OwnerId == null)
             {
-                throw new Exception("Emote set has no owner");
+                throw new Exception("Bộ emote không có chủ sở hữu");
             }
+
             var owner = await userService.GetUserByIdAsync(emoteSet.OwnerId);
             if (owner == null)
-                throw new Exception("Owner of the emote set not found");
+                throw new Exception("Không tìm thấy chủ sở hữu của bộ emote");
             var emotes = await emoteService.GetEmotesAsync(e => emoteSet.Emotes.Contains(e.Id));
             // Map to the detail VM
             var vm = EmoteSetMapper.ToDetailVM(emoteSet, emotes, owner);
@@ -115,11 +120,12 @@ namespace Services.Implementations
 
         public async Task UpdateEmoteSetAsync(EditEmoteSetDto dto)
         {
-            var emoteSet = await GetEmoteSetByIdAsync(dto.Id) ?? throw new Exception("Emote set not found");
+            var emoteSet = await GetEmoteSetByIdAsync(dto.Id) ?? throw new Exception("Không tìm thấy bộ emote");
             if (emoteSet.OwnerId != dto.OwnerId)
             {
-                throw new Exception("You do not own this emote set");
+                throw new Exception("Bạn không sở hữu bộ emote này");
             }
+
             List<string> tagStrings = GetListTagsFromString(dto.TagsString);
             emoteSet.Name = dto.Name;
             emoteSet.Tags = tagStrings;
@@ -129,7 +135,7 @@ namespace Services.Implementations
             var success = await ReplaceEmoteSetAsync(emoteSet);
             if (!success)
             {
-                throw new Exception("Failed to update emote set");
+                throw new Exception("Cập nhật bộ emote thất bại");
             }
         }
 
@@ -142,6 +148,7 @@ namespace Services.Implementations
             {
                 throw new Exception("You do not own this emote set");
             }
+
             if (emoteSet.IsActive)
             {
                 await ToggleCurrentEmoteSetActiveStatus(emoteSet);
@@ -150,6 +157,23 @@ namespace Services.Implementations
             {
                 await ToggleMultipleEmoteSetActiveStatus(userId, emoteSet);
             }
+        }
+
+        public async Task AddEmoteToSetAsync(ObjectId emoteSetId, ObjectId emoteId, ObjectId currentUserId)
+        {
+            var emoteSet = await GetEmoteSetByIdAsync(emoteSetId) ?? throw new Exception("Không tìm thấy bộ emote");
+            if (emoteSet.OwnerId != currentUserId)
+            {
+                throw new Exception("Bạn không sở hữu bộ emote này");
+            }
+
+            if (emoteSet.Emotes.Contains(emoteId))
+            {
+                throw new Exception("Emote đã có trong bộ emote");
+            }
+
+            emoteSet.Emotes.Add(emoteId);
+            await ReplaceEmoteSetAsync(emoteSet);
         }
 
         private async Task ToggleMultipleEmoteSetActiveStatus(ObjectId userId, EmoteSet emoteSet)
@@ -162,7 +186,7 @@ namespace Services.Implementations
                 var success = await ReplaceEmoteSetAsync(set);
                 if (!success)
                 {
-                    throw new Exception("Failed to update emote set");
+                    throw new Exception("Cập nhật bộ emote thất bại");
                 }
             }
 
@@ -178,7 +202,7 @@ namespace Services.Implementations
             var success = await ReplaceEmoteSetAsync(emoteSet);
             if (!success)
             {
-                throw new Exception("Failed to update emote set");
+                throw new Exception("Cập nhật bộ emote thất bại");
             }
         }
 
@@ -188,8 +212,8 @@ namespace Services.Implementations
             if (!string.IsNullOrEmpty(tagString))
             {
                 tagStrings = tagString.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                            .Select(tag => tag.Trim())
-                                            .ToList();
+                    .Select(tag => tag.Trim())
+                    .ToList();
             }
 
             return tagStrings;

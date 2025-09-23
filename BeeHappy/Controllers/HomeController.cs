@@ -24,20 +24,21 @@ namespace BeeHappy.Controllers
             _userService = userService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
+            return RedirectToAction("LandingPage");
             // Test MongoDB connection
-            try
-            {
-                var users = await _userService.GetAllUsersAsync();
-                ViewBag.Message += "Current user in DB: " + users.Count;
-                ViewBag.Items = users;
-            }
-            catch (Exception e)
-            {
-                ViewBag.Message += "MongoDB Error: " + e.Message;
-            }
-            return View();
+            // try
+            // {
+            //     var users = await _userService.GetAllUsersAsync();
+            //     ViewBag.Message += "Current user in DB: " + users.Count;
+            //     ViewBag.Items = users;
+            // }
+            // catch (Exception e)
+            // {
+            //     ViewBag.Message += "MongoDB Error: " + e.Message;
+            // }
+            // return View();
         }
 
         [HttpPost]
