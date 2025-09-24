@@ -70,4 +70,4 @@ node_modules
 publish
 
 # Auto generated tailwind file
-BeeHappy/wwwroot/css/tailwind.css
+/BeeHappy/wwwroot/css/styles.css
