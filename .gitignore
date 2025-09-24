@@ -68,3 +68,6 @@ node_modules
 
 # Local publish
 publish
+
+# Auto generated tailwind file
+BeeHappy/wwwroot/css/tailwind.css

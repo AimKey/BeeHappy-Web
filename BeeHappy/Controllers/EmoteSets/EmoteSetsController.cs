@@ -17,15 +17,11 @@ namespace BeeHappy.Controllers.EmoteSets
         // Get all emote sets of the current user
         public async Task<IActionResult> Index()
         {
-            // TODO: DELETE THIS WHEN AUTHENTICATION IS IMPLEMENTED
-            HttpContext.Session.SetString(UserConstants.UserId, "68caea0b352f76be3fd4972d");
             var currentUser = await GetCurrentUserAsync();
             if (currentUser == null)
             {
                 return RedirectToAction("Login", "Account");
             }
-            // TODO: DELETE THIS WHEN THE CREATE EMOTE SET IS IMPLEMENTED
-            CreateDummyEmoteAndEmoteSetForUser();
             var userEmoteSets = await emoteSetService.GetEmoteSetPreviewsOfUserAsync(currentUser.Id);
             return View(userEmoteSets);
         }
@@ -103,7 +99,7 @@ namespace BeeHappy.Controllers.EmoteSets
                 var currentUser = await GetCurrentUserAsync();
                 if (currentUser == null)
                 {
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("LandingPage", "Home");
                 }
 
                 // Set the owner ID from the current user

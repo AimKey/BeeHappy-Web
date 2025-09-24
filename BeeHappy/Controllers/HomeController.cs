@@ -26,7 +26,8 @@ namespace BeeHappy.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("LandingPage");
+            return View("LandingPage");
+            // return RedirectToAction("LandingPage");
             // Test MongoDB connection
             // try
             // {
@@ -39,6 +40,11 @@ namespace BeeHappy.Controllers
             //     ViewBag.Message += "MongoDB Error: " + e.Message;
             // }
             // return View();
+        }
+
+        public IActionResult Test()
+        {
+            return View("Index");
         }
 
         [HttpPost]

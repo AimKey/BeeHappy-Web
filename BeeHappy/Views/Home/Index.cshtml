@@ -1,142 +1,132 @@
-﻿@using BusinessObjects
-@model User
-@{
-    ViewData["Title"] = "Home Page";
-    List<User>? testObjects = ViewBag.Items as List<User>;
-}
+﻿<style>
+  /* shared text styles */
+  p {
+    font-weight: 800;
+    font-size: 2.4rem;
+    line-height: 1.15;
+    margin: 1rem 0;
+    display: inline-block;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 300% 100%; /* stretch so the blend is obvious */
+    letter-spacing: 0.02em;
+  }
+</style>
+<div class="flex flex-column gap-4 flex-wrap px-8">
+  <div style="
+  display: inline-block; 
+  padding: 0.5rem 1rem; 
+  margin: 0.5rem;
+  border-radius: 0.5rem;
+">
+    <span style="
+    display: inline-block;
+    background: linear-gradient(90deg, #ff7e5f, #feb47b, #43cea2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    font-size: 1.5rem;
+  ">
+      Sunset Theme
+    </span>
+  </div>
+  <!-- Blue ↔ Orange (complementary) -->
+  <p style="background-image: linear-gradient(90deg,
+      #0072ff 0%,
+      #00c6ff 25%,
+      #ff8c00 60%,
+      #ff512f 100%
+    );">
+    IceFire
+  </p>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <h1 class="animate-pulse text-xl text-red-500">
-        This is a line rendered by tailwind css
-    </h1>
-    <h2 class="text-xl text-blue-500 animate-bounce font-bold">@ViewBag.Message</h2>
-    
-    <!-- Success/Error Messages -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="max-w-lg mx-auto mb-8">
-            <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded-r-lg shadow-sm">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-green-800">@TempData["SuccessMessage"]</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="max-w-lg mx-auto mb-8">
-            <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg shadow-sm">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-red-800">@TempData["ErrorMessage"]</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-    
-    <!-- User Creation Form -->
-    <div class="mt-12 max-w-lg mx-auto">
-        <div class="bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
-            <div class="text-center mb-8">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 mb-4">
-                    <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-2">Create New User</h3>
-                <p class="text-gray-600">Add a new user to the system</p>
-            </div>
-            
-            <form asp-action="CreateDummyUser" method="post" class="space-y-6">
-                <div class="space-y-2">
-                    <label asp-for="Username" class="block text-sm font-semibold text-gray-700">
-                        Username
-                        <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
-                        </div>
-                        <input asp-for="Username" type="text" 
-                               class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-lg" 
-                               placeholder="Enter a unique username" required />
-                    </div>
-                    <span asp-validation-for="Username" class="text-red-500 text-sm font-medium"></span>
-                </div>
-                
-                <button type="submit" 
-                        class="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-semibold rounded-xl text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
-                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                        <svg class="h-5 w-5 text-white group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                    </span>
-                    Create User
-                </button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Users List -->
-    <div class="mt-16 max-w-4xl mx-auto">
-        <div class="text-center mb-8">
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Current Users</h3>
-            <p class="text-gray-600">Users in the database</p>
-        </div>
-        
-        @if (testObjects != null && testObjects.Any())
-        {
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach (var item in testObjects)
-                {
-                    <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 p-6">
-                        <div class="flex items-center space-x-4">
-                            <div class="flex-shrink-0">
-                                <div class="h-12 w-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-                                    <span class="text-white font-bold text-lg">@item.Username.Substring(0, 1).ToUpper()</span>
-                                </div>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-lg font-semibold text-gray-900 truncate">@item.Username</p>
-                                <p class="text-sm text-gray-500 truncate">ID: @item.Id</p>
-                                @if (item.CreatedAt != default)
-                                {
-                                    <p class="text-xs text-gray-400">Created: @item.CreatedAt.ToString("MMM dd, yyyy")</p>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-        else
-        {
-            <div class="text-center py-12">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-gray-100 mb-4">
-                    <svg class="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                    </svg>
-                </div>
-                <h4 class="text-lg font-medium text-gray-900 mb-2">No users yet</h4>
-                <p class="text-gray-500">Create your first user using the form above</p>
-            </div>
-        }
-    </div>
+  <!-- Purple ↔ Yellow (complementary) -->
+  <p style="background-image: linear-gradient(90deg,
+      #6a00f4 0%,
+      #a200ff 20%,
+      #ffd200 65%,
+      #ffb100 100%
+    );">
+    SolarBurst
+  </p>
+
+  <!-- Teal/Green ↔ Magenta (opposites on modern palettes) -->
+  <p style="background-image: linear-gradient(90deg,
+      #00e5a8 0%,
+      #00c3ff 30%,
+      #7f00ff 65%,
+      #ff2da1 100%
+    );">
+    Aurora
+  </p>
+
+  <!-- Deep Ocean → Indigo → Opposite Pink -->
+  <p style="background-image: linear-gradient(90deg,
+      #00b4db 0%,
+      #0083b0 35%,
+      #1f005c 70%,
+      #ff7eb3 100%
+    );">
+    OceanDeep
+  </p>
+
+  <!-- Sunset with opposing teal punch -->
+  <p style="background-image: linear-gradient(90deg,
+      #ff7e5f 0%,
+      #feb47b 35%,
+      #43cea2 70%,
+      #185a9d 100%
+    );">
+    SunsetTeal
+  </p>
+
+  <!-- Forest greens ↔ Magenta/Purple -->
+  <p style="background-image: linear-gradient(90deg,
+      #11998e 0%,
+      #38ef7d 32%,
+      #ff3cac 72%,
+      #784ba0 100%
+    );">
+    ForestMagenta
+  </p>
+
+  <!-- Hot Red/Pink ↔ Cyan/Teal (opposites) -->
+  <p style="background-image: linear-gradient(90deg,
+      #ff0062 0%,
+      #ff5ea8 28%,
+      #00d2ff 68%,
+      #3a7bd5 100%
+    );">
+    NeonPop
+  </p>
+
+  <!-- Gold/Orange ↔ Royal Blue/Cyan -->
+  <p style="background-image: linear-gradient(90deg,
+      #fbd72b 0%,
+      #f9484a 30%,
+      #2e3192 68%,
+      #1bffff 100%
+    );">
+    Eclipse
+  </p>
+
+  <!-- Candy pinks ↔ Electric blues -->
+  <p style="background-image: linear-gradient(90deg,
+      #ff5858 0%,
+      #f857a6 30%,
+      #4facfe 70%,
+      #00f2fe 100%
+    );">
+    CandyWave
+  </p>
+
+  <!-- Orange ↔ Magenta ↔ Violet ↔ Cyan (vaporwave-ish complements) -->
+  <p style="background-image: linear-gradient(90deg,
+      #ff8a00 0%,
+      #e52e71 28%,
+      #7f00ff 65%,
+      #00dbde 100%
+    );">
+    VaporGlow
+  </p>
 </div>

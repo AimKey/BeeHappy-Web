@@ -12,13 +12,15 @@
     var percent = (int)Math.Round((double)Math.Min(used, capacity) * 100 / capacity);
 }
 
-<div class="flex h-full w-full">
+<partial name="_Notification"/>
+<div class="flex h-full w-full px-6 py-4">
     @* Main content *@
     <div class="w-full flex-1 py-4">
         @* Go Back Button *@
         <div class="mb-4">
             <a asp-action="Index" asp-controller="EmoteSets">
-                <button class="inline-flex cursor-pointer items-center gap-2 rounded-md border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-700 hover:text-white">
+                <button
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dark-border bg-dark-surface px-4 py-2 text-sm font-semibold text-gray-200 transition-colors hover:bg-dark-hover hover:text-white shadow-sm">
                     <i class="fas fa-arrow-left"></i>
                     Quay lại danh sách
                 </button>
@@ -26,7 +28,8 @@
             </a>
         </div>
 
-        <div class="mb-4 grid w-full grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg bg-zinc-900/60 px-4 py-4">
+        <div
+            class="mb-4 grid w-full grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg border border-dark-border bg-dark-surface px-4 py-4 shadow-sm">
             @* Upper half section *@
             <a asp-action="Details" asp-controller="User" asp-route-id="@owner.Id" class="flex items-center gap-3">
                 <img src="https://cdn.dlcompare.com/game_tetiere/upload/gameimage/file/54998.jpg.webp"
@@ -38,7 +41,8 @@
             <div class="flex items-center gap-2 justify-self-end">
                 @if (emoteSet.IsActive)
                 {
-                    <div class="flex items-center gap-2 rounded-md bg-blue-600/80 px-2 py-1 text-sm font-medium text-white">
+                    <div
+                        class="flex items-center gap-2 rounded-md bg-primary px-2 py-1 text-sm font-semibold text-white">
                         <i class="fas fa-bolt"></i>
                         Đang hoạt động
                     </div>
@@ -51,7 +55,7 @@
                     {
                         foreach (string tag in emoteSet.Tags)
                         {
-                            <a class="rounded-md bg-zinc-800 px-4 py-2">@Html.Raw(tag)</a>
+                            <a class="rounded-md border border-dark-border bg-dark-surface px-4 py-2">@Html.Raw(tag)</a>
                         }
                     }
                 }
@@ -60,8 +64,8 @@
             @* Lower half section *@
             <div class="col-start-1 -col-end-1 w-full">
                 <div class="flex items-center gap-4">
-                    <div class="h-1 w-full overflow-hidden rounded-full bg-zinc-800">
-                        <div class="h-full bg-white transition-all duration-300" style="width:@percent%"></div>
+                    <div class="h-1 w-full overflow-hidden rounded-full bg-black">
+                        <div class="h-full bg-primary transition-all duration-300" style="width:@percent%"></div>
                     </div>
                     <div class="text-sm text-zinc-400">
                         @used/@capacity
@@ -76,14 +80,15 @@
                 @* Toggle Active Status Button *@
                 <div class="relative">
                     <button id="toggle-active-btn"
-                            class="flex cursor-pointer items-center gap-2 rounded-md border border-zinc-700 px-4 py-2 text-sm font-medium transition-colors @(emoteSet.IsActive ? "bg-red-600 text-white hover:bg-red-700" : "bg-blue-600 text-white hover:bg-blue-700")">
+                            class="flex cursor-pointer items-center gap-2 rounded-lg border border-dark-border px-4 py-2 text-sm font-semibold transition-colors @(emoteSet.IsActive ? "bg-red-600 text-white hover:bg-red-700" : "bg-primary text-white hover:bg-primary-dark")">
                         <i class="fas fa-bolt"></i>
                         <span id="toggle-btn-text">@(emoteSet.IsActive ? "Hủy kích hoạt" : "Kích hoạt")</span>
                     </button>
                 </div>
 
                 @* Edit Button *@
-                <button class="flex cursor-pointer items-center gap-2 rounded-md border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-700">
+                <button
+                    class="flex cursor-pointer items-center gap-2 rounded-lg border border-dark-border bg-dark-surface px-4 py-2 text-sm font-semibold text-gray-200 hover:bg-dark-hover">
                     <i class="fas fa-edit"></i>
                     Chỉnh sửa
                 </button>
@@ -91,21 +96,26 @@
             </div>
 
             <div class="flex items-center gap-3">
-                @* Search Bar *@
-                <div class="relative">
-                    <i class="fas fa-search absolute top-1/2 left-3 -translate-y-1/2 text-zinc-400"></i>
+                @* Search bar *@
+                <div class="relative md:block ">
                     <input type="text"
                            placeholder="Tìm kiếm"
                            id="searchBar"
-                           class="placeholder-zinc-400 w-64 rounded-md border border-zinc-700 bg-zinc-800 py-2 pr-4 pl-10 text-sm text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none">
+                           class="border-dark-border rounded-lg border px-4 py-2 text-sm 
+              transition-all focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none"/>
+                    <svg class="absolute top-2.5 right-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
                 </div>
 
                 @* View Toggle *@
-                <div class="flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-800 p-1">
-                    <button class="rounded bg-blue-600 p-2 text-white">
+                <div class="flex items-center gap-1 rounded-lg border border-dark-border bg-dark-surface p-1">
+                    <button class="rounded bg-primary p-2 text-white">
                         <i class="fas fa-th"></i>
                     </button>
-                    <button class="rounded p-2 text-zinc-400 hover:text-white">
+                    <button class="rounded p-2 text-gray-400 hover:text-white">
                         <i class="fas fa-list"></i>
                     </button>
                 </div>
@@ -119,7 +129,8 @@
 
             <!-- panel -->
             <div class="absolute inset-0 flex items-center justify-center p-4">
-                <div class="w-full max-w-xl translate-y-4 scale-95 transform rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-100 shadow-2xl transition-all duration-300 ease-in-out">
+                <div
+                    class="w-full max-w-xl translate-y-4 scale-95 transform rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-100 shadow-2xl transition-all duration-300 ease-in-out">
                     <div class="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
                         <h3 class="text-lg font-semibold">Chỉnh sửa bộ emote</h3>
                         <button type="button" id="close-edit-modal"
@@ -131,9 +142,9 @@
                     <form asp-action="EditEmoteSet" asp-controller="EmoteSets" method="post" class="p-4">
                         @Html.AntiForgeryToken()
                         @* Id field *@
-                        <input type="hidden" name="Id" value="@emoteSet.Id" />
+                        <input type="hidden" name="Id" value="@emoteSet.Id"/>
                         @* Owner Id field *@
-                        <input type="hidden" name="OwnerId" value="@emoteSet.OwnerId" />
+                        <input type="hidden" name="OwnerId" value="@emoteSet.OwnerId"/>
 
                         <!-- Name Field -->
                         <div class="mb-4">
@@ -143,8 +154,9 @@
                                    name="Name"
                                    value="@Html.Raw(emoteSet.Name)"
                                    required
-                                   class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 focus:ring focus:ring-blue-900/40"
-                                   placeholder="Nhập tên bộ emote" />
+                                   class="placeholder-gray-500 w-full rounded-lg bg-zinc-950 px-3 py-2 text-sm 
+                text-white outline-none focus:ring-2 focus:ring-primary"
+                                   placeholder="Nhập tên bộ emote"/>
                         </div>
 
                         <!-- Tags Field -->
@@ -153,10 +165,11 @@
                             <div class="relative">
                                 <input type="text"
                                        id="TagsString"
-                                       class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 focus:ring focus:ring-blue-900/40"
-                                       placeholder="Nhập thẻ và nhấn phím cách để thêm" />
+                                       class="placeholder-gray-500 w-full rounded-lg bg-zinc-950 px-3 py-2 text-sm
+ text-white outline-none focus:ring-2 focus:ring-primary"
+                                       placeholder="Nhập thẻ và nhấn phím cách để thêm"/>
                                 <!-- Hidden input for database -->
-                                <input type="hidden" id="TagsStringHidden" name="TagsString" value="" />
+                                <input type="hidden" id="TagsStringHidden" name="TagsString" value=""/>
                                 <!-- Tags display container -->
                                 <div id="tags-display" class="mt-2 flex flex-wrap gap-2">
                                     @* Existing tags will be populated here *@
@@ -169,93 +182,85 @@
                                     }
                                 </div>
                             </div>
-                            <p class="mt-1 text-xs text-zinc-500">Nhập thẻ và nhấn phím cách để thêm. Tối đa 6 thẻ được phép.</p>
+                            <p class="mt-1 text-xs text-zinc-500">Nhập thẻ và nhấn phím cách để thêm. Tối đa 6 thẻ được
+                                phép.</p>
                         </div>
 
                         <!-- Capacity Field -->
-                        <input type="number"
-                               id="Capacity"
-                               name="Capacity"
-                               min="1"
-                               max="1000"
-                               value="@Html.Raw(Model.EmoteSet.Capacity)"
-                               class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-white outline-none focus:border-blue-500 focus:ring focus:ring-blue-900/40" />
-
-                        <!-- Is Active Field -->
                         <div class="mb-4">
-                            <label for="IsActive" class="mb-2 block text-sm font-medium text-zinc-300">Trạng thái hoạt động</label>
+                            <label for="Capacity" class="block text-sm font-medium text-zinc-300 mb-2">Giới hạn emote</label>
+                            <input type="number"
+                                   id="Capacity"
+                                   name="Capacity"
+                                   min="1"
+                                   max="1000"
+                                   value="@Html.Raw(Model.EmoteSet.Capacity)"
+                                   class="placeholder-gray-500 w-full rounded-lg bg-zinc-950 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-primary"/>
+                        </div>
+                        
+                        <!-- Is Active Field -->
+                        <div class="mb-4 mt-2">
+                            @* <label for="IsActive" class="mb-2 block text-sm font-medium text-zinc-300">Trạng thái hoạt *@
+                                @* động</label> *@
                             <div class="flex items-center gap-3">
                                 <input type="checkbox"
                                        id="IsActive"
                                        name="IsActive"
                                        value="true"
-                                @(emoteSet.IsActive ? "checked" : "")
-                                       class="h-4 w-4 rounded border-zinc-700 bg-zinc-950 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900" />
+                                       @(emoteSet.IsActive ? "checked" : "")
+                                       class="h-4 w-4 rounded border-zinc-700 bg-zinc-950 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900"/>
                                 <label for="IsActive" class="cursor-pointer text-sm text-zinc-300">
                                     Đặt làm bộ emote hoạt động
                                 </label>
                             </div>
-                            <p class="mt-1 text-xs text-zinc-500">Chỉ có thể có một bộ emote hoạt động tại một thời điểm.</p>
+                            <p class="mt-1 text-xs text-zinc-500">Chỉ có thể có một bộ emote hoạt động tại một thời
+                                điểm.</p>
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="mt-6 flex items-center justify-between">
-                            <button id="delete-btn" type="button" class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 
-                                focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:outline-none">
+                            <button id="delete-btn" type="button"
+                                    class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none">
                                 Xóa bộ emote này
                             </button>
                             <div class="flex items-center gap-3">
-                             <button type="button"
-                                    id="cancel-edit"
-                                    class="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-700">
-                                Hủy
-                            </button>
-                            <button type="submit"
-                                    class="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:outline-none">
-                                Chỉnh sửa
-                            </button>
-
+                                <button type="button"
+                                        id="cancel-edit"
+                                        class="rounded-lg bg-dark-surface px-4 py-2 text-sm font-semibold text-gray-200 hover:bg-dark-hover">
+                                    Hủy
+                                </button>
+                                <button type="submit"
+                                        class="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark focus:outline-none">
+                                    Chỉnh sửa
+                                </button>
                             </div>
-                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
-
-
         @* Emote Grid *@
-        <div class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+        <div class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 emotes-grid">
             @if (emotes.Any())
             {
                 @foreach (var emote in emotes)
                 {
                     var emoteUrl = emote.Files?.FirstOrDefault()?.Url ?? "";
-                    <div class="group relative cursor-pointer rounded-lg border border-blue-500 bg-zinc-900 p-2 transition-all duration-200 hover:border-blue-400 hover:shadow-lg">
-                        @* Active indicator *@
-                        @* <div class="absolute -top-1 -right-1 rounded-full bg-blue-600 p-1"> *@
-                        @*     <i class="fas fa-bolt text-xs text-white"></i> *@
-                        @* </div> *@
-
-                        @* Emote Image *@
-                        <div class="aspect-square w-full overflow-hidden rounded-md bg-zinc-800">
+                    <div class="emote-card" data-emote-id="@emote.Id">
+                        <div class="emote-thumbnail">
                             @if (!string.IsNullOrEmpty(emoteUrl))
                             {
-                                <img src="@emoteUrl"
-                                     alt="@emote.Name"
-                                     class="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105">
+                                <img src="@emoteUrl" alt="@emote.Name" loading="lazy"
+                                     onerror="this.src='/images/placeholder-emote.png'">
                             }
                             else
                             {
-                                <div class="flex h-full w-full items-center justify-center text-zinc-500">
-                                    <i class="fas fa-image text-2xl"></i>
-                                </div>
+                                <img src="/images/placeholder-emote.png" alt="placeholder" loading="lazy">
                             }
                         </div>
-
-                        @* Emote Name *@
-                        <div class="mt-2 text-center">
-                            <div class="truncate text-sm font-medium text-white">@Html.Raw(emote.Name)</div>
-                            <div class="text-xs text-zinc-400">@(owner?.Username ?? "Không xác định")</div>
+                        <div class="emote-info">
+                            <div class="emote-name">@Html.Raw(emote.Name)</div>
+                            <div class="emote-owner">@(owner?.Username ?? "Không xác định")</div>
                         </div>
                     </div>
                 }
@@ -274,25 +279,24 @@
         @* No More Emotes Message *@
         @if (emotes.Any())
         {
-            <div class="mt-8 text-center text-zinc-400">
+            <div class="mt-8 text-center text-gray-400">
                 Không còn emote nào
             </div>
         }
     </div>
 </div>
 
-
 @section Scripts {
+    <link rel="stylesheet" href="~/css/emotes-directory.css">
     <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             console.log('Search script loaded');
 
             // Enhanced search functionality
             const searchInput = document.querySelector('#searchBar');
-            const emoteCards = document.querySelectorAll('.group');
-            const emoteGrid = document.querySelector('.grid');
+            const emoteCards = document.querySelectorAll('.emote-card');
             let searchTimeout;
 
             console.log('Search input found:', searchInput);
@@ -306,8 +310,8 @@
                 let hasResults = false;
 
                 emoteCards.forEach((card, index) => {
-                    const emoteName = card.querySelector('.font-medium')?.textContent?.toLowerCase() || '';
-                    const ownerName = card.querySelector('.text-zinc-400')?.textContent?.toLowerCase() || '';
+                    const emoteName = card.querySelector('.emote-name')?.textContent?.toLowerCase() || '';
+                    const ownerName = card.querySelector('.emote-owner')?.textContent?.toLowerCase() || '';
 
                     console.log(`Card ${index}: emoteName="${emoteName}", ownerName="${ownerName}"`);
 
@@ -360,7 +364,7 @@
 
             // Search input event listener with debouncing
             if (searchInput) {
-                searchInput.addEventListener('input', function(e) {
+                searchInput.addEventListener('input', function (e) {
                     console.log('Search input changed:', e.target.value);
                     const query = e.target.value;
 
@@ -378,7 +382,7 @@
                 });
 
                 // Clear search function (accessible globally)
-                window.clearSearch = function() {
+                window.clearSearch = function () {
                     console.log('Clearing search');
                     searchInput.value = '';
                     performSearch('');
@@ -386,7 +390,7 @@
                 };
 
                 // Keyboard shortcuts
-                searchInput.addEventListener('keydown', function(e) {
+                searchInput.addEventListener('keydown', function (e) {
                     // Escape key clears search
                     if (e.key === 'Escape') {
                         clearSearch();
@@ -398,20 +402,12 @@
                     }
                 });
 
-                // Search input focus/blur effects
-                searchInput.addEventListener('focus', function() {
-                    this.parentElement.classList.add('ring-2', 'ring-blue-500/50');
-                });
-
-                searchInput.addEventListener('blur', function() {
-                    this.parentElement.classList.remove('ring-2', 'ring-blue-500/50');
-                });
             } else {
                 console.error('Search input not found!');
             }
 
             // Focus search with Ctrl/Cmd + K anywhere on page
-            document.addEventListener('keydown', function(e) {
+            document.addEventListener('keydown', function (e) {
                 if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                     e.preventDefault();
                     if (searchInput) {
@@ -422,12 +418,12 @@
 
             // Emote card hover effects
             emoteCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
+                card.addEventListener('mouseenter', function () {
                     this.style.transform = 'translateY(-2px)';
                     this.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.3)';
                 });
 
-                card.addEventListener('mouseleave', function() {
+                card.addEventListener('mouseleave', function () {
                     this.style.transform = 'translateY(0)';
                     this.style.boxShadow = '';
                 });
@@ -439,13 +435,13 @@
         });
 
         // Toggle Active Status functionality
-        (function() {
+        (function () {
             const toggleBtn = document.getElementById('toggle-active-btn');
             const toggleBtnText = document.getElementById('toggle-btn-text');
             const activeStatusDisplay = document.querySelector('.bg-blue-600\\/80');
 
             if (toggleBtn) {
-                toggleBtn.addEventListener('click', async function() {
+                toggleBtn.addEventListener('click', async function () {
                     try {
                         // Disable button during API call
                         toggleBtn.disabled = true;
@@ -494,8 +490,9 @@
                                 }
                             }
 
-                            // Show success message
+                            // Show success message then reload to reflect changes
                             showNotification(result.message, 'success');
+                            window.location.reload();
                         } else {
                             // Show error message
                             showNotification(result.message, 'error');
@@ -521,7 +518,7 @@
         })();
 
         // Edit Modal functionality
-        (function() {
+        (function () {
             const editButton = document.querySelector('button:has(.fa-edit)');
             const editModal = document.getElementById('edit-modal');
             const closeEditBtn = document.getElementById('close-edit-modal');
@@ -595,17 +592,17 @@
 
                 // Reset tags to current emote set tags
                 editTags = [];
-        @if (emoteSet.Tags != null && emoteSet.Tags.Count > 0)
-        {
-            <text>
-                        editTags = [
-                @foreach (var tag in emoteSet.Tags)
+                @if (emoteSet.Tags != null && emoteSet.Tags.Count > 0)
                 {
-                    <text>"@Html.Raw(tag)"@(tag != emoteSet.Tags.Last() ? "," : "")</text>
-                }
+                    <text>
+                        editTags = [
+                            @foreach (var tag in emoteSet.Tags)
+                            {
+                                <text>"@Html.Raw(tag)"@(tag != emoteSet.Tags.Last() ? "," : "")</text>
+                            }
                         ];
-            </text>
-        }
+                    </text>
+                }
                 updateEditTagsDisplay();
                 updateEditHiddenInput();
             }
@@ -681,14 +678,14 @@
             }
 
             // Make removeEditTagFromModal globally accessible
-            window.removeEditTagFromModal = function(tag) {
+            window.removeEditTagFromModal = function (tag) {
                 const decodedTag = decodeHtml(tag);
                 console.log(`Tag to remove (decoded): ${decodedTag}`);
                 removeEditTag(decodedTag);
             };
 
             // Handle space key press for tag creation
-            editTagsInput?.addEventListener('keydown', function(e) {
+            editTagsInput?.addEventListener('keydown', function (e) {
                 if (e.key === ' ' || e.key === 'Space') {
                     e.preventDefault();
                     const currentValue = this.value.trim();
@@ -700,7 +697,7 @@
             });
 
             // Handle comma key press as alternative
-            editTagsInput?.addEventListener('keydown', function(e) {
+            editTagsInput?.addEventListener('keydown', function (e) {
                 if (e.key === ',') {
                     e.preventDefault();
                     const currentValue = this.value.trim();
@@ -713,7 +710,7 @@
 
             // Form submission handler
             const editForm = editModal?.querySelector('form');
-            editForm?.addEventListener('submit', function(e) {
+            editForm?.addEventListener('submit', function (e) {
                 // Ensure tags are included in the form submission
                 updateEditHiddenInput();
 
@@ -730,7 +727,7 @@
             });
 
             const deleteBtn = document.getElementById('delete-btn');
-            deleteBtn?.addEventListener('click', function() {
+            deleteBtn?.addEventListener('click', function () {
                 Swal.fire({
                     title: 'Bạn có chắc chắn?',
                     text: "Hành động này không thể hoàn tác. Bộ emote sẽ bị xóa vĩnh viễn!",

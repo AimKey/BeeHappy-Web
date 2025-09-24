@@ -135,24 +135,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Handle form submissions (if any forms are added later)
-    document.addEventListener("submit", (e) => {
-        const form = e.target
-        if (form.tagName === "FORM") {
-            e.preventDefault()
+    // document.addEventListener("submit", (e) => {
+    //     const form = e.target
+    //     if (form.tagName === "FORM") {
+    //         // e.preventDefault()
 
-            // Add loading state to submit button
-            const submitBtn = form.querySelector('button[type="submit"]')
-            if (submitBtn) {
-                submitBtn.classList.add("loading")
+    //         // Add loading state to submit button
+    //         const submitBtn = form.querySelector('button[type="submit"]')
+    //         if (submitBtn) {
+    //             submitBtn.classList.add("loading")
 
-                // Simulate form submission
-                setTimeout(() => {
-                    submitBtn.classList.remove("loading")
-                    // Handle success/error states
-                }, 2000)
-            }
-        }
-    })
+    //             // Simulate form submission
+    //             setTimeout(() => {
+    //                 submitBtn.classList.remove("loading")
+    //                 // Handle success/error states
+    //             }, 2000)
+    //         }
+    //     }
+    // })
 
     // Performance optimization: Lazy load images
     if ("IntersectionObserver" in window) {
