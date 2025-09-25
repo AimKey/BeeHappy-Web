@@ -13,5 +13,7 @@ namespace Services.Interfaces
         Task<bool> DeleteEmoteSetByIdAsync(ObjectId id, CancellationToken ct = default);
         Task<bool> DeleteEmoteSetAsync(EmoteSet emoteSet, CancellationToken ct = default);
         Task<long> CountEmoteSetsAsync(System.Linq.Expressions.Expression<Func<EmoteSet, bool>>? filter = null, CancellationToken ct = default);
+        Task<bool> AddEmoteToSetAsync(ObjectId emoteSetId, ObjectId emoteId, CancellationToken ct = default);
+
     }
 }

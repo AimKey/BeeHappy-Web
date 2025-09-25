@@ -101,5 +101,27 @@ namespace BeeHappy.Controllers
             var user = await userService.GetUserByIdAsync(ObjectId.Parse(userId));
             return user;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEmote(string setId, string emoteId)
+        {
+            if (!ObjectId.TryParse(setId, out var setObjectId) ||
+                !ObjectId.TryParse(emoteId, out var emoteObjectId))
+            {
+                return BadRequest("Invalid id");
+            }
+
+            try
+            {
+                var result = await emoteSetService.AddEmoteToSetAsync(setObjectId, emoteObjectId);
+                if (!result) return NotFound("EmoteSet not found");
+                return RedirectToAction(nameof(Details), new { id = setId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Error: {ex.Message}");
+                return RedirectToAction(nameof(Details), new { id = setId });
+            }
+        }
     }
 }

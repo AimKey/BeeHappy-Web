@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Repositories.Generics;
 using Repositories.Implementations;
 using Repositories.Interfaces;
+using Services.HelperServices;
 using Services.Implementations;
 using Services.Interfaces;
 
@@ -93,6 +94,9 @@ public class Program
         builder.Services.AddScoped<IEmoteSetService, EmoteSetService>();
         builder.Services.AddScoped<IPaintService, PaintService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+
+
     }
 
     private static void SetupRepos(WebApplicationBuilder builder)

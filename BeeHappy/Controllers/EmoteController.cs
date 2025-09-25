@@ -9,15 +9,26 @@ namespace BeeHappy.Controllers
     public class EmoteController : Controller
     {
         private readonly IEmoteService _emoteService;
+        private readonly IUserService _userService;
 
-        public EmoteController(IEmoteService emoteService)
+
+        public EmoteController(IEmoteService emoteService, IUserService userService)
         {
             _emoteService = emoteService;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var emotes = await _emoteService.GetAllEmotesAsync();
+            var currentUser = await GetCurrentUser();
+            if (currentUser == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Chỉ lấy emotes của user này
+            var emotes = await _emoteService.GetEmotesAsync(e => e.OwnerId == currentUser.Id);
+
             var vm = emotes.Select(e => new EmoteViewModel
             {
                 Id = e.Id.ToString(),
@@ -64,10 +75,14 @@ namespace BeeHappy.Controllers
                 return View(vm);
             }
             try
-            {                
+            {
+                var currentUser = await GetCurrentUser();
+                if (currentUser == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
 
-                // Tạm thời generate OwnerId (sau này lấy từ User.Identity)
-                var ownerId = ObjectId.GenerateNewId();
+                
 
                 var emoteId = ObjectId.GenerateNewId();
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
@@ -82,7 +97,7 @@ namespace BeeHappy.Controllers
                 {
                     Id = emoteId,
                     Name = vm.Name,
-                    OwnerId = ownerId,
+                    OwnerId = currentUser.Id,
                     Tags = vm.Tags ?? new List<string>(), // bind trực tiếp từ form
                     IsOverlaying = vm.IsOverlaying,
                     Visibility = ["public"], // mặc định
@@ -228,7 +243,13 @@ namespace BeeHappy.Controllers
 
             return View(vm);
         }
+        private async Task<User?> GetCurrentUser()
+        {
+            var userId = HttpContext.Session.GetString("userId");
+            if (string.IsNullOrEmpty(userId)) return null;
 
+            return await _userService.GetUserByIdAsync(ObjectId.Parse(userId));
+        }
 
     }
 }

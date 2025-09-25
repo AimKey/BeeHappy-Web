@@ -46,5 +46,26 @@ namespace Services.Implementations
         {
             return await emoteSetRepository.CountAsync(filter, ct);
         }
+
+        public async Task<bool> AddEmoteToSetAsync(ObjectId emoteSetId, ObjectId emoteId, CancellationToken ct = default)
+        {
+            var set = await emoteSetRepository.GetByIdAsync(emoteSetId, ct);
+            if (set == null) return false;
+
+            if (set.Emotes == null)
+                set.Emotes = new List<ObjectId>();
+
+            // check duplicate
+            if (!set.Emotes.Contains(emoteId))
+            {
+                // check capacity
+                if (set.Capacity > 0 && set.Emotes.Count >= set.Capacity)
+                    throw new InvalidOperationException("EmoteSet reached its capacity.");
+
+                set.Emotes.Add(emoteId);                
+                return await emoteSetRepository.ReplaceAsync(set, false, ct);
+            }
+            return true;
+        }
     }
 }
