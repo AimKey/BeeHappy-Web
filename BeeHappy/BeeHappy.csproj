@@ -21,6 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Controllers\Payment\" />
 		<Folder Include="Extensions\" />
 		<Folder Include="ViewComponents\" />
 	</ItemGroup>

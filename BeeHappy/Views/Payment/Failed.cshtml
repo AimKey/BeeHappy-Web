@@ -1,0 +1,139 @@
+﻿@* filepath: e:\FPT\2025_Fall\EXE202\projects\BeeHappy\BeeHappy\Views\Payment\Failed.cshtml *@
+@using CommonObjects.ViewModels.PaymentVMs
+@model PaymentResultVM
+@{
+    ViewData["Title"] = "Thanh toán thất bại";
+}
+
+<div class="min-h-screen bg-dark-bg flex items-center justify-center px-6 py-12">
+    <div class="max-w-md w-full">
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-8 shadow-lg text-center">
+            <!-- Error Icon -->
+            <div class="mb-6">
+                <div class="mx-auto w-16 h-16 bg-red-500 rounded-full flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-2xl font-bold text-white mb-4">@Model.Title</h1>
+
+            <!-- Message -->
+            <p class="text-zinc-400 mb-6 leading-relaxed">@Model.Message</p>
+
+            <!-- Common Reasons -->
+            <div class="bg-dark-bg border border-dark-border rounded-lg p-4 mb-6 text-left">
+                <h3 class="text-sm font-semibold text-zinc-300 mb-3">Nguyên nhân có thể xảy ra:</h3>
+                <ul class="text-sm text-zinc-400 space-y-2">
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">•</span>
+                        Số dư tài khoản không đủ
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">•</span>
+                        Thông tin thẻ không chính xác
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">•</span>
+                        Kết nối mạng bị gián đoạn
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">•</span>
+                        Giao dịch bị từ chối bởi ngân hàng
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Transaction Details -->
+            @if (!string.IsNullOrEmpty(Model.OrderCode) || !string.IsNullOrEmpty(Model.TransactionId))
+            {
+                <div class="bg-dark-bg border border-dark-border rounded-lg p-4 mb-6 text-left">
+                    <h3 class="text-sm font-semibold text-zinc-300 mb-3">Chi tiết giao dịch</h3>
+
+                    @if (!string.IsNullOrEmpty(Model.OrderCode))
+                    {
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-zinc-500 text-sm">Mã đơn hàng:</span>
+                            <span class="text-zinc-300 text-sm font-mono">@Model.OrderCode</span>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.TransactionId))
+                    {
+                        <div class="flex justify-between items-center">
+                            <span class="text-zinc-500 text-sm">Mã giao dịch:</span>
+                            <span class="text-zinc-300 text-sm font-mono">@Model.TransactionId</span>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <a asp-controller="Store" asp-action="Index"
+                    class="w-full bg-primary hover:bg-primary/90 text-dark-bg font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-block">
+                    Thử lại thanh toán
+                </a>
+
+                <a asp-controller="Emotes" asp-action="Directory"
+                    class="w-full bg-dark-border hover:bg-zinc-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 border border-zinc-600 hover:border-zinc-500 inline-block">
+                    Về trang chủ
+                </a>
+            </div>
+
+            <!-- Support Section -->
+            <div class="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                <h4 class="text-sm font-semibold text-yellow-400 mb-2">Cần hỗ trợ?</h4>
+                <p class="text-xs text-zinc-400 mb-3">
+                    Đội ngũ hỗ trợ của chúng tôi sẵn sàng giúp bạn giải quyết vấn đề
+                </p>
+                <div class="flex gap-2 text-xs">
+                    <a href="mailto:support@beehappy.com" class="text-primary hover:underline">
+                        Email hỗ trợ
+                    </a>
+                    <span class="text-zinc-600">•</span>
+                    <a href="tel:+84123456789" class="text-primary hover:underline">
+                        Hotline: 0123 456 789
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Track failed payment for analytics
+            console.log('Payment failed:', {
+                orderCode: '@Model.OrderCode',
+                transactionId: '@Model.TransactionId',
+                timestamp: new Date().toISOString()
+            });
+
+            // Auto focus on retry button after 3 seconds
+            setTimeout(function () {
+                const retryButton = document.querySelector('a[href*="Payment"]');
+                if (retryButton) {
+                    retryButton.focus();
+                    retryButton.style.animation = 'pulse 1s infinite';
+                }
+            }, 3000);
+        });
+
+        // Copy transaction details to clipboard
+        function copyTransactionDetails() {
+            const details = [
+                '@Model.OrderCode' ? 'Mã đơn hàng: @Model.OrderCode' : '',
+                '@Model.TransactionId' ? 'Mã giao dịch: @Model.TransactionId' : '',
+                'Thời gian: ' + new Date().toLocaleString('vi-VN')
+            ].filter(Boolean).join('\n');
+
+            navigator.clipboard.writeText(details).then(() => {
+                alert('Đã sao chép thông tin giao dịch');
+            });
+        }
+    </script>
+}

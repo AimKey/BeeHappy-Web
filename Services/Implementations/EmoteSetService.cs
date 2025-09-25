@@ -86,9 +86,9 @@ namespace Services.Implementations
         public async Task<EmoteSetDetailVM> GetEmoteSetDetailByIdAsync(ObjectId id)
         {
             var emoteSet = await GetEmoteSetByIdAsync(id) ?? throw new Exception("Không tìm thấy bộ emote");
-            if (emoteSet.OwnerId == null)
+            if (emoteSet == null)
             {
-                throw new Exception("Bộ emote không có chủ sở hữu");
+                throw new Exception("Không tìm thấy bộ emote");
             }
 
             var owner = await userService.GetUserByIdAsync(emoteSet.OwnerId);

@@ -27,19 +27,6 @@ namespace BeeHappy.Controllers
         public IActionResult Index()
         {
             return View("LandingPage");
-            // return RedirectToAction("LandingPage");
-            // Test MongoDB connection
-            // try
-            // {
-            //     var users = await _userService.GetAllUsersAsync();
-            //     ViewBag.Message += "Current user in DB: " + users.Count;
-            //     ViewBag.Items = users;
-            // }
-            // catch (Exception e)
-            // {
-            //     ViewBag.Message += "MongoDB Error: " + e.Message;
-            // }
-            // return View();
         }
 
         public IActionResult Test()

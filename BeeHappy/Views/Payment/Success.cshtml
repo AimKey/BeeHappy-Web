@@ -1,0 +1,119 @@
+﻿@* filepath: e:\FPT\2025_Fall\EXE202\projects\BeeHappy\BeeHappy\Views\Payment\Success.cshtml *@
+@using CommonObjects.ViewModels.PaymentVMs
+@model PaymentResultVM
+@{
+    ViewData["Title"] = "Thanh toán thành công";
+}
+
+<div class="min-h-screen bg-dark-bg flex items-center justify-center px-6 py-12">
+    <div class="max-w-md w-full">
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-8 shadow-lg text-center">
+            <!-- Success Icon -->
+            <div class="mb-6">
+                <div class="mx-auto w-16 h-16 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-2xl font-bold text-white mb-4">@Model.Title</h1>
+
+            <!-- Message -->
+            <p class="text-zinc-400 mb-6 leading-relaxed">@Model.Message</p>
+
+            <!-- Transaction Details -->
+            @if (!string.IsNullOrEmpty(Model.OrderCode) || !string.IsNullOrEmpty(Model.TransactionId))
+            {
+                <div class="bg-dark-bg border border-dark-border rounded-lg p-4 mb-6 text-left">
+                    <h3 class="text-sm font-semibold text-zinc-300 mb-3">Chi tiết giao dịch</h3>
+
+                    @if (!string.IsNullOrEmpty(Model.OrderCode))
+                    {
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-zinc-500 text-sm">Mã đơn hàng:</span>
+                            <span class="text-zinc-300 text-sm font-mono">@Model.OrderCode</span>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.TransactionId))
+                    {
+                        <div class="flex justify-between items-center">
+                            <span class="text-zinc-500 text-sm">Mã giao dịch:</span>
+                            <span class="text-zinc-300 text-sm font-mono">@Model.TransactionId</span>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <a asp-controller="Store" asp-action="Index"
+                    class="w-full bg-primary hover:bg-primary/90 text-dark-bg font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-block">
+                    Về trang chủ
+                </a>
+
+                <a asp-controller="User" asp-action="Profile"
+                    class="w-full bg-dark-border hover:bg-zinc-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 border border-zinc-600 hover:border-zinc-500 inline-block">
+                    Xem hồ sơ
+                </a>
+            </div>
+
+            <!-- Support Note -->
+            <p class="text-xs text-zinc-500 mt-6">
+                Nếu bạn có thắc mắc, vui lòng liên hệ
+                <a href="mailto:support@beehappy.com" class="text-primary hover:underline">support@beehappy.com</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto redirect after 10 seconds
+        setTimeout(function () {
+            if (confirm('Bạn có muốn chuyển về trang chủ không?')) {
+                window.location.href = '@Url.Action("Index", "EmoteSets")';
+            }
+        }, 10000);
+
+        // Confetti animation for success
+        document.addEventListener('DOMContentLoaded', function () {
+            // Simple confetti effect
+            const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
+
+            function createConfetti() {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-10px';
+                confetti.style.borderRadius = '50%';
+                confetti.style.pointerEvents = 'none';
+                confetti.style.zIndex = '9999';
+
+                document.body.appendChild(confetti);
+
+                const fall = confetti.animate([
+                    { transform: 'translateY(0px) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight + 100}px) rotate(360deg)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 2000 + 3000,
+                    easing: 'linear'
+                });
+
+                fall.addEventListener('finish', () => {
+                    confetti.remove();
+                });
+            }
+
+            // Create confetti particles
+            for (let i = 0; i < 50; i++) {
+                setTimeout(createConfetti, Math.random() * 3000);
+            }
+        });
+    </script>
+}

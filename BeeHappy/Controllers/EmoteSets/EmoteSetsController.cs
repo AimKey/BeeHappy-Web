@@ -20,7 +20,7 @@ namespace BeeHappy.Controllers.EmoteSets
             var currentUser = await GetCurrentUserAsync();
             if (currentUser == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Index", "Home");
             }
             var userEmoteSets = await emoteSetService.GetEmoteSetPreviewsOfUserAsync(currentUser.Id);
             return View(userEmoteSets);

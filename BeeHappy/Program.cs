@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using BeeHappy.Controllers.Payment;
 using DataAccessObjects;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using MongoDB.Driver;
+using Net.payOS;
 using Repositories.Generics;
 using Repositories.Implementations;
 using Repositories.Interfaces;
@@ -21,6 +23,9 @@ public class Program
         // Add our services
         SetupServices(builder);
 
+
+
+
         // Configure database
         builder.Services.AddScoped<MongoDBContext>();
 
@@ -38,10 +43,11 @@ public class Program
 
         // Configure authentication with cookies
         // Cookie Authentication setup
-        builder.Services.AddAuthentication(options => {
+        builder.Services.AddAuthentication(options =>
+        {
             options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-            })
+        })
             .AddCookie(options =>
             {
                 options.LoginPath = "/Home/LandingPage"; // redirect if not logged in
@@ -98,12 +104,25 @@ public class Program
         builder.Services.AddScoped<IEmoteSetService, EmoteSetService>();
         builder.Services.AddScoped<IPaintService, PaintService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IStoreService, StoreService>();
+        builder.Services.AddScoped<IPaymentService, PaymentService>();
 
         // Auto Mapper Configurations
         builder.Services.AddAutoMapper(cfg =>
         {
             cfg.AddProfile<MappingProfile>();
         });
+
+        // PayOS
+        SetupPayOS(builder);
+    }
+
+    private static void SetupPayOS(WebApplicationBuilder builder)
+    {
+        PayOS payOS = new PayOS(builder.Configuration["PayOS:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+                        builder.Configuration["PayOS:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+                        builder.Configuration["PayOS:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
+        builder.Services.AddSingleton(payOS);
     }
 
     private static void SetupRepos(WebApplicationBuilder builder)
@@ -115,5 +134,7 @@ public class Program
         builder.Services.AddScoped<IEmoteSetRepository, EmoteSetRepository>();
         builder.Services.AddScoped<IPaintRepository, PaintRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IPurchaseHistoryRepository, PurchaseHistoryRepository>();
+        builder.Services.AddScoped<IPremiumPlanRepository, PremiumPlanRepository>();
     }
 }
