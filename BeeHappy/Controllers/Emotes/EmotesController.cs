@@ -93,7 +93,7 @@ public class EmotesController : Controller
             })
             .Cast<object>()
             .ToList();
-
+       
         return new PagedResult<object>
         {
             Items = emotes,
