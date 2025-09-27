@@ -110,4 +110,23 @@ public class PaymentService(
         var status = await purchaseHistoryRepository.ReplaceAsync(userHistory);
         return status;
     }
+    
+    public async Task<bool> CheckUserHasActivePremium(User currentUser)
+    {
+        // Check if user has an active premium plan
+        var userPurchases = await GetUserPurchaseHistories(currentUser.Id);
+        var activePurchase = userPurchases
+            .OrderByDescending(p => p.PurchasedDate)
+            .FirstOrDefault(p => p.Status == PaymentConstants.PAYMENT_SUCCESS && p.ExpireDate > DateTime.Now);
+
+        if (activePurchase == null)
+        {
+            // Update user premium status
+            currentUser.IsPremium = false;
+            await userService.ReplaceUserAsync(currentUser);
+            return false;
+        }
+        return true;
+    }
+
 }

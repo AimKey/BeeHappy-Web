@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CommonObjects.ViewModels.PaymentVMs;
+using CommonObjects.ViewModels.StoreVMs;
 
 namespace Services.HelperServices
 {
@@ -17,6 +17,7 @@ namespace Services.HelperServices
             CreateMap<CreateEmoteSetDto, EmoteSet>().ReverseMap();
             CreateMap<EditEmoteSetDto, EmoteSet>().ReverseMap();
             CreateMap<SubscriptionPlanVM, PremiumPlan>().ReverseMap();
+            CreateMap<ThemeVM, Paint>().ReverseMap();
         }
     }
 }

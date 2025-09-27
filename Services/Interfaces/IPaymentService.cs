@@ -2,7 +2,7 @@ using BusinessObjects;
 using MongoDB.Bson;
 using Net.payOS.Types;
 
-namespace Services.Implementations;
+namespace Services.Interfaces;
 
 public interface IPaymentService
 {
@@ -13,4 +13,5 @@ public interface IPaymentService
 
     Task<bool> CompletePurchaseHistoryForUser(long orderCode);
     Task<bool> CancelPurchaseHistoryForUser(long orderCode);
+    Task<bool> CheckUserHasActivePremium(User currentUser);
 }

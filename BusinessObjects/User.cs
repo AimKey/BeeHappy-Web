@@ -21,7 +21,7 @@ namespace BusinessObjects
         public Profile Profile { get; set; }
         public List<Editor> Editors { get; set; }
         public List<ObjectId> Badges { get; set; }
-        public List<ObjectId> Paints { get; set; }
+        public List<UserPaint> Paints { get; set; }
         public bool IsPremium { get; set; }
     }
 }

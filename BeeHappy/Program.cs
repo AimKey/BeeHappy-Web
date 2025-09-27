@@ -22,10 +22,6 @@ public class Program
         SetupRepos(builder);
         // Add our services
         SetupServices(builder);
-
-
-
-
         // Configure database
         builder.Services.AddScoped<MongoDBContext>();
 
@@ -99,11 +95,15 @@ public class Program
     {
         builder.Services.AddScoped<ITestObjectService, TestObjectService>();
         builder.Services.AddScoped<IAuditLogService, AuditLogService>();
-        builder.Services.AddScoped<IBadgeService, BadgeService>();
+        // User related services
+        builder.Services.AddScoped<IUserService, UserService>();
+        // Emote related services
         builder.Services.AddScoped<IEmoteService, EmoteService>();
         builder.Services.AddScoped<IEmoteSetService, EmoteSetService>();
+        // Premium related services
+        builder.Services.AddScoped<IBadgeService, BadgeService>();
         builder.Services.AddScoped<IPaintService, PaintService>();
-        builder.Services.AddScoped<IUserService, UserService>();
+        // Payment & Store
         builder.Services.AddScoped<IStoreService, StoreService>();
         builder.Services.AddScoped<IPaymentService, PaymentService>();
 

@@ -1,4 +1,7 @@
-namespace CommonObjects.ViewModels.PaymentVMs;
+using BusinessObjects;
+using BusinessObjects.NestedObjects;
+
+namespace CommonObjects.ViewModels.StoreVMs;
 
 public class StoreIndexVM
 {
@@ -7,4 +10,5 @@ public class StoreIndexVM
     public BadgeProgressVM BadgeProgress { get; set; } = new();
     public List<ThemeVM> MonthlyThemes { get; set; } = new();
     public CurrentUserPlanVm? CurrentUserPlan { get; set; } = new();
+    public List<UserPaint> CurrentUserPaints { get; set; }
 }

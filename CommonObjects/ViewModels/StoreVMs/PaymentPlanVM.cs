@@ -1,6 +1,4 @@
-using MongoDB.Bson;
-
-namespace CommonObjects.ViewModels.PaymentVMs;
+namespace CommonObjects.ViewModels.StoreVMs;
 
 public class PaymentPlanVM
 {

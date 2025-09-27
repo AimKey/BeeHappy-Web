@@ -1,6 +1,5 @@
 ﻿@* filepath: e:\FPT\2025_Fall\EXE202\projects\BeeHappy\BeeHappy\Views\Store\Index.cshtml *@
-@using CommonObjects.ViewModels.PaymentVMs
-@model StoreIndexVM
+@model CommonObjects.ViewModels.StoreVMs.StoreIndexVM
 @{
     ViewData["Title"] = "Mở khóa đặc quyền đặc biệt";
 }
@@ -298,11 +297,22 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3">
                         @foreach (var theme in Model.MonthlyThemes)
                         {
-                            <div
-                                class="flex items-center gap-3 p-3 bg-dark-bg rounded-xl border border-dark-border hover:border-primary/50 hover:bg-dark-surface/50 transition-all duration-200 cursor-pointer">
+                            var isOwned = Model.CurrentUserPaints?.Any(up => up.PaintId == theme.Id) ?? false;
+                            var borderClass = isOwned ? "border-green-500" : "border-dark-border";
+                            var hoverClass = isOwned ? "hover:border-green-400" : "hover:border-primary/50";
+                            var bgClass = isOwned ? "bg-green-600/10" : "bg-dark-bg";
+                            
+                            <div class="paint-item flex items-center gap-3 p-3 @bgClass rounded-xl border @borderClass @hoverClass hover:bg-dark-surface/50 transition-all duration-200 cursor-pointer"
+                                 data-paint-id="@theme.Id"
+                                 data-paint-name="@theme.Name"
+                                 data-is-owned="@isOwned.ToString().ToLower()">
                                 <div class="w-5 h-5 rounded-full shadow-lg border-2 border-white/20"
                                      style="background-color: @theme.Color"></div>
-                                <span class="text-white font-medium" style="color: @theme.Color">@theme.Name</span>
+                                <span class="text-white font-medium flex-1" style="color: @theme.Color">@theme.Name</span>
+                                @if (isOwned)
+                                {
+                                    <i class="fas fa-check-circle text-green-400 text-sm"></i>
+                                }
                             </div>
                         }
                     </div>
@@ -365,6 +375,72 @@
                 setTimeout(() => {
                     icon.style.animation = `float 3s ease-in-out infinite ${index * 0.5}s`;
                 }, 1000);
+            });
+
+            // Handle paint selection
+            const paintItems = document.querySelectorAll('.paint-item');
+            paintItems.forEach(item => {
+                item.addEventListener('click', async function() {
+                    const paintId = this.getAttribute('data-paint-id');
+                    const paintName = this.getAttribute('data-paint-name');
+                    const isOwned = this.getAttribute('data-is-owned') === 'true';
+                    
+                    // Check if user has premium access
+                    const hasPremium = @(Model.CurrentUserPlan != null ? "true" : "false");
+                    
+                    if (!hasPremium) {
+                        return;
+                    }
+                    
+                    if (isOwned) {
+                        return;
+                    }
+                    
+                    // Store original content and colors
+                    const originalContent = this.innerHTML;
+                    const colorCircle = this.querySelector('.w-5');
+                    const colorText = this.querySelector('span');
+                    const backgroundColor = colorCircle.style.backgroundColor;
+                    const textColor = colorText.style.color;
+                    
+                    // Show loading state
+                    this.innerHTML = '<div class="flex items-center gap-3 p-3"><i class="fas fa-spinner fa-spin text-primary"></i><span>Đang thêm...</span></div>';
+                    this.style.pointerEvents = 'none';
+                    
+                    try {
+                        const response = await fetch('@Url.Action("AddPaintToUser", "Store")', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `paintId=${paintId}`
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            // Update UI to show as owned
+                            this.setAttribute('data-is-owned', 'true');
+                            this.classList.remove('border-dark-border', 'hover:border-primary/50', 'bg-dark-bg');
+                            this.classList.add('border-green-500', 'hover:border-green-400', 'bg-green-600/10');
+                            
+                            // Add check icon with proper layout
+                            this.innerHTML = `
+                                <div class="w-5 h-5 rounded-full shadow-lg border-2 border-white/20" style="background-color: ${backgroundColor}"></div>
+                                <span class="text-white font-medium flex-1" style="color: ${textColor}">${paintName}</span>
+                                <i class="fas fa-check-circle text-green-400 text-sm"></i>
+                            `;
+                        } else {
+                            console.error('Error adding paint:', result.message);
+                            this.innerHTML = originalContent;
+                        }
+                    } catch (error) {
+                        console.error('Error adding paint:', error);
+                        this.innerHTML = originalContent;
+                    } finally {
+                        this.style.pointerEvents = 'auto';
+                    }
+                });
             });
 
             // Theme menu dropdown toggle
