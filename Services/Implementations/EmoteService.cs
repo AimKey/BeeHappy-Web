@@ -57,7 +57,7 @@ namespace Services.Implementations
         public Task<List<Emote>> GetEmotesAsync(System.Linq.Expressions.Expression<Func<Emote, bool>>? filter, CancellationToken ct = default)
             => emoteRepository.GetAsync(filter, ct);
 
-        public async Task<PagedResult<Emote>> GetFilteredEmotesAsync(int page, int pageSize, string userId, string search = "", string tags = "", string[] filters = null)
+        public async Task<PagedResult<Emote>> GetFilteredEmotesAsync(int page, int pageSize, string userId, string search = "", string tags = "", string[]? filters = null)
         {
             // Get all emotes from repository
             var allEmotes = await emoteRepository.GetAllAsync();
@@ -69,19 +69,6 @@ namespace Services.Implementations
             if (!string.IsNullOrEmpty(userId))
             {
                 query = query.Where(e => e.OwnerId.ToString().Equals(userId));
-            }
-
-            // Apply search filter
-            if (!string.IsNullOrEmpty(search))
-            {
-                if (filters != null && filters.Contains("exact"))
-                {
-                    query = query.Where(e => e.Name.Equals(search, StringComparison.OrdinalIgnoreCase));
-                }
-                else
-                {
-                    query = query.Where(e => e.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
-                }
             }
 
             // Apply tags filter
@@ -113,9 +100,9 @@ namespace Services.Implementations
                         case "overlaying":
                             query = query.Where(e => e.IsOverlaying);
                             break;
-                        //case "personal":
-                        //    query = query.Where(e => e.Visibility != null && e.Visibility.Contains("personal"));
-                        //    break;
+                        case "mine":
+                            query = query.Where(e => e.OwnerId.Equals(ObjectId.Parse(userId)));
+                            break;
                             // "exact" is handled in search section above
                     }
                 }

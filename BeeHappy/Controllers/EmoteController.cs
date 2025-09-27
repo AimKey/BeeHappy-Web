@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Services.Implementations;
 using Services.Interfaces;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -15,10 +16,14 @@ namespace BeeHappy.Controllers
     public class EmoteController : Controller
     {
         private readonly IEmoteService _emoteService;
+        private readonly IUserService _userService;
+        private readonly IEmoteSetService _emoteSetService;
 
-        public EmoteController(IEmoteService emoteService)
+        public EmoteController(IEmoteService emoteService, IUserService userService, IEmoteSetService emoteSetService)
         {
             _emoteService = emoteService;
+            _userService = userService;
+            _emoteSetService = emoteSetService;
         }
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 20, string search = "", string tags = "", string[] filters = null)
@@ -29,7 +34,22 @@ namespace BeeHappy.Controllers
             ViewBag.CurrentPage = page;
             ViewBag.PageSize = pageSize;
 
-            var emotes = await _emoteService.GetFilteredEmotesAsync(page, pageSize, userId: "", search, tags, filters);
+            PagedResult<Emote> emotes = new();
+
+            // get current user
+            if(filters!= null && filters.Contains("mine"))
+            {
+                var currentUser = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (currentUser == null)
+                {
+                    return NotFound();
+                }
+                emotes = await _emoteService.GetFilteredEmotesAsync(page, pageSize, userId: currentUser, search, tags, filters);
+            }
+            else
+            {
+                emotes = await _emoteService.GetFilteredEmotesAsync(page, pageSize, userId: "", search, tags, filters);
+            }
 
             var vm = emotes.Items.Select(e => new EmoteViewModel
             {
@@ -83,7 +103,6 @@ namespace BeeHappy.Controllers
 
             try
             {
-                //var ownerId = ObjectId.GenerateNewId();
                 var ownerId = "";
                 try
                 {
@@ -128,7 +147,7 @@ namespace BeeHappy.Controllers
                 {
                     Id = emoteId,
                     Name = vm.Name,
-                    OwnerId = ownerId,
+                    OwnerId = ObjectId.Parse(ownerId),
                     Tags = tags,
                     IsOverlaying = vm.IsOverlaying,
                     Visibility = vm.Visibility,
@@ -259,20 +278,46 @@ namespace BeeHappy.Controllers
         {
             if (string.IsNullOrEmpty(id)) return BadRequest();
 
+            // get emote
             var emote = await _emoteService.GetEmoteByIdAsync(ObjectId.Parse(id));
             if (emote == null) return NotFound();
 
+            // get owner of emote
+            var owner = await _userService.GetUserByIdAsync(emote.OwnerId);
+            if (owner == null) return NotFound();
+
+            // get all sets have this emote
+            var sets = await _emoteSetService.GetEmoteSetsAsync(s => s.Id.Equals(emote.Id));
+            var channels = new List<EmoteViewModel.ChannelViewModel>();
+            foreach (var set in sets)
+            {
+                var user = await _userService.GetUserByIdAsync(set.OwnerId);
+                if (user != null)
+                {
+                    channels.Add(new EmoteViewModel.ChannelViewModel
+                    {
+                        Name = user.Username,
+                        Avatar = user.Profile?.AvatarUrl ?? DefaultUser.AVATAR,
+                    });
+                }
+            }
+
+            // return viewmodel
             var vm = new EmoteViewModel
             {
                 Id = emote.Id.ToString(),
                 Name = emote.Name,
                 OwnerId = emote.OwnerId.ToString(),
+                OwnerName = owner.Username,
+                OwnerAvatar = owner.Profile?.AvatarUrl ?? DefaultUser.AVATAR, 
+                Channels = channels,
                 Tags = emote.Tags,
                 Visibility = emote.Visibility,
                 Status = emote.Status,
                 IsOverlaying = emote.IsOverlaying,
                 CreatedAt = emote.CreatedAt,
                 UpdatedAt = emote.UpdatedAt,
+                TotalChannels = channels.Count,
                 Files = emote.Files?.Select(f => new EmoteFileViewModel
                 {
                     Format = f.Format,
