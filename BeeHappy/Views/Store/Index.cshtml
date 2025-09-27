@@ -145,17 +145,6 @@
                     <!-- Subscription Plans -->
                     <div class="bg-dark-surface border border-dark-border rounded-xl p-5">
                         <h3 class="text-lg font-semibold text-white mb-4">Trở thành thành viên</h3>
-                        @* <div class="bg-dark-bg border border-dark-border rounded-xl p-4"> *@
-                            @* <div class="flex items-center justify-between mb-4"> *@
-                            @*     <span class="text-purple-400 text-sm font-medium">Chọn gói đăng ký</span> *@
-                            @*     <div class="flex items-center gap-2"> *@
-                            @*         <div *@
-                            @*             class="w-8 h-8 bg-black/80 rounded-lg flex items-center justify-center border border-white/10"> *@
-                            @*             <i class="fas fa-star text-yellow-300 text-sm"></i> *@
-                            @*         </div> *@
-                            @*         <span class="text-zinc-300 text-sm font-medium">Premium</span> *@
-                            @*     </div> *@
-                            @* </div> *@
                             <!-- Subscription Options -->
                             <div class="grid grid-cols-2 gap-3">
                                 @foreach (var plan in Model.SubscriptionPlans)
@@ -176,7 +165,7 @@
                                                 @* <p class="text-white font-bold text-lg">@plan.Price.ToString("N0") <span
                                                         class="text-xs text-zinc-400">VND - </span><span class="text-zinc-400 text-xs">@plan.DurationInDays ngày</span></p> *@
                                                         @* No duration in days version *@
-                                                        <p class="text-white font-bold text-lg">@plan.Price.ToString("N0")<span class="text-xs text-zinc-400">VND</span></p>
+                                                        <p class="text-white font-bold text-lg">@plan.Price.ToString("N0")<span class="text-xs text-zinc-400">VND / @plan.DurationInDays ngày</span></p>
                                             </div>
                                         </button>
                                         @if (plan.IsPopular)

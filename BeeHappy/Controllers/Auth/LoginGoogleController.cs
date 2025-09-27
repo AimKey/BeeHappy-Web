@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using System.Security.Claims;
 using BusinessObjects;
+using BusinessObjects.NestedObjects;
 using CommonObjects.AppConstants;
 
 namespace BeeHappy.Controllers.Auth;
@@ -63,7 +64,10 @@ public class LoginGoogleController : Controller
                 Roles = new List<string> { RoleConstants.User },
                 Badges = new(),
                 Paints = new(),
-                IsPremium = false
+                IsPremium = false,
+                Profile = new(),
+                Editors = new(),
+                GoogleId = googleId,
             };
 
             await _userService.InsertUserAsync(user);
@@ -76,7 +80,7 @@ public class LoginGoogleController : Controller
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(UserConstants.USER_AVATAR,
-                string.IsNullOrEmpty(user.Profile.AvatarUrl)
+                string.IsNullOrEmpty(user.Profile?.AvatarUrl)
                     ? UserConstants.DEFAULT_USER_AVATAR_LINK
                     : user.Profile.AvatarUrl)
         };

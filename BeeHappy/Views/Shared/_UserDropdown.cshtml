@@ -1,0 +1,116 @@
+﻿@* User Dropdown Component *@
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="relative" id="beetv-user-dropdown-container">
+        <!-- User Button -->
+        <button id="beetv-user-button"
+                class="flex items-center space-x-3 bg-dark-surface hover:bg-dark-hover border border-dark-border rounded-lg px-3 py-2 transition-all focus:outline-none focus:ring-2 focus:ring-primary/50"
+                aria-expanded="false"
+                aria-haspopup="true">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                <span class="text-sm font-bold">
+                    @(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "U")
+                </span>
+            </div>
+            <span class="text-white font-medium hidden sm:block">@User.Identity.Name</span>
+            <svg class="w-4 h-4 text-gray-400 transition-transform duration-200" id="beetv-dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="beetv-user-dropdown-menu"
+             class="absolute right-0 mt-2 w-64 bg-dark-surface border border-dark-border rounded-lg shadow-2xl opacity-0 invisible transform translate-y-2 transition-all duration-200 z-50"
+             role="menu"
+             aria-orientation="vertical">
+
+            <!-- User Info Header -->
+            <div class="p-4 border-b border-dark-border">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                        <span class="text-lg font-bold">
+                            @(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "U")
+                        </span>
+                    </div>
+                    <div>
+                        <div class="text-white font-semibold">@User.Identity.Name</div>
+                        <div class="text-gray-400 text-sm">Online</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Items -->
+            <div class="py-2">
+                <!-- Cosmetics -->
+                <a asp-action="Index" asp-controller="Cosmetics" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-dark-hover transition-colors" role="menuitem">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5H9a2 2 0 00-2 2v12a4 4 0 004 4h10a2 2 0 002-2V7a2 2 0 00-2-2z"></path>
+                    </svg>
+                    <span>Cosmetics</span>
+                </a>
+
+                <!-- Theme -->
+                <div class="relative group">
+                    <button class="flex items-center justify-between w-full px-4 py-3 text-gray-300 hover:text-white hover:bg-dark-hover transition-colors" role="menuitem">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                            </svg>
+                            <span>Theme</span>
+                        </div>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Settings -->
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-dark-hover transition-colors" role="menuitem">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </div>
+
+            <!-- Divider and Additional Options -->
+            <div class="border-t border-dark-border py-2">
+                <!-- Privacy Policy -->
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-dark-hover transition-colors" role="menuitem">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    <span>Privacy Policy</span>
+                </a>
+
+                <!-- Terms of Service -->
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-dark-hover transition-colors" role="menuitem">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Terms of Service</span>
+                </a>
+
+                <!-- Sign Out -->
+                <a asp-controller="Logout" asp-action="Logout"
+                   class="flex items-center space-x-3 w-full px-4 py-3 text-red-400 hover:text-red-300 hover:bg-dark-hover transition-colors"
+                   role="menuitem">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span>Sign Out</span>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Sign In Button for non-authenticated users -->
+    <button id="signInBtn"
+            class="bg-white text-dark-bg px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-all shadow-md hover:shadow-lg">
+        Sign In
+    </button>
+}
