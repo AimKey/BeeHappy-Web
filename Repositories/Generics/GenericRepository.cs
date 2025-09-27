@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BusinessObjects.Base;
 using DataAccessObjects;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Repositories.Generics
@@ -32,7 +33,7 @@ namespace Repositories.Generics
             return _collection.Find(f).ToListAsync(ct);
         }
 
-        public Task<TEntity> GetByIdAsync(string id, CancellationToken ct = default)
+        public Task<TEntity> GetByIdAsync(ObjectId id, CancellationToken ct = default)
             => _collection.Find(x => x.Id == id).FirstOrDefaultAsync(ct);
 
         public Task InsertAsync(TEntity entity, CancellationToken ct = default)
@@ -50,7 +51,7 @@ namespace Repositories.Generics
             return result.IsAcknowledged && (result.ModifiedCount > 0 || (upsert && result.UpsertedId != null));
         }
 
-        public async Task<bool> DeleteByIdAsync(string id, CancellationToken ct = default)
+        public async Task<bool> DeleteByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             var result = await _collection.DeleteOneAsync(x => x.Id == id, ct);
             return result.DeletedCount > 0;

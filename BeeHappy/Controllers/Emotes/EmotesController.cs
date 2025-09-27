@@ -113,7 +113,7 @@ public class EmotesController : Controller
         {
             mockEmotes.Add(new Emote
             {
-                Id = ObjectId.GenerateNewId().ToString(),
+                Id = ObjectId.GenerateNewId(),
                 Name = emoteNames[i],
                 OwnerId = ObjectId.GenerateNewId(),
                 Files = new List<EmoteFile>

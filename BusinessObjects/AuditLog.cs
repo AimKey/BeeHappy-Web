@@ -13,9 +13,9 @@ namespace BusinessObjects
     public class AuditLog : MongoEntity
     {
         public ObjectId ActorId { get; set; }
-        public string Action { get; set; }
+        public string Action { get; set; } = "Not specified";
         public ObjectId TargetId { get; set; }
-        public AuditMetadata Metadata { get; set; }
+        public AuditMetadata? Metadata { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

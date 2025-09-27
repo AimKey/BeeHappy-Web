@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using BusinessObjects.Base;
+using MongoDB.Bson;
 
 namespace Repositories.Generics
 {
@@ -39,7 +40,7 @@ namespace Repositories.Generics
         /// <returns>
         /// The entity with the matching identifier, or <c>null</c> if no document is found.
         /// </returns>
-        Task<TEntity> GetByIdAsync(string id, CancellationToken ct = default);
+        Task<TEntity> GetByIdAsync(ObjectId id, CancellationToken ct = default);
 
         /// <summary>
         /// Inserts a new entity into the collection.
@@ -71,7 +72,7 @@ namespace Repositories.Generics
         /// <returns>
         /// <c>true</c> if a document was found and deleted; otherwise, <c>false</c>.
         /// </returns>
-        Task<bool> DeleteByIdAsync(string id, CancellationToken ct = default);
+        Task<bool> DeleteByIdAsync(ObjectId id, CancellationToken ct = default);
 
         /// <summary>
         /// Deletes the specified entity from the collection.

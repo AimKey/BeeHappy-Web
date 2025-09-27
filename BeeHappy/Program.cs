@@ -20,9 +20,8 @@ public class Program
         SetupServices(builder);
 
         // Configure database
-        builder.Services.AddSqlServer<BeeHappyContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
+        builder.Services.AddSqlServer<BeeHappyContext>(builder.Configuration.GetConnectionString("LocalMongoDB"));
         builder.Services.AddScoped<MongoDBContext>();
-
 
         // Allow page to access the session directly
         builder.Services.AddHttpContextAccessor();
@@ -34,6 +33,7 @@ public class Program
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
+
         // Configure authentication with cookies
         // Cookie Authentication setup
         builder.Services.AddAuthentication(options => {

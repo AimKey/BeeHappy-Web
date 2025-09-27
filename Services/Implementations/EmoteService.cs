@@ -1,4 +1,5 @@
 using BusinessObjects;
+using MongoDB.Bson;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -16,7 +17,7 @@ namespace Services.Implementations
             return await emoteRepository.GetAsync(filter, ct);
         }
 
-        public async Task<Emote?> GetEmoteByIdAsync(string id, CancellationToken ct = default)
+        public async Task<Emote?> GetEmoteByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await emoteRepository.GetByIdAsync(id, ct);
         }
@@ -31,7 +32,7 @@ namespace Services.Implementations
             return await emoteRepository.ReplaceAsync(emote, upsert, ct);
         }
 
-        public async Task<bool> DeleteEmoteByIdAsync(string id, CancellationToken ct = default)
+        public async Task<bool> DeleteEmoteByIdAsync(ObjectId id, CancellationToken ct = default)
         {
             return await emoteRepository.DeleteByIdAsync(id, ct);
         }
