@@ -1,0 +1,268 @@
+﻿@model BeeHappy.ViewModels.EmoteViewModel
+@{
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    bool isOwner = Model.OwnerId == currentUserId;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Name - Emote Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        discord: {
+                            dark: '#1e1f22',
+                            darker: '#1a1b1e',
+                            darkest: '#0d0e10',
+                            blurple: '#5865f2',
+                            green: '#57f287',
+                            yellow: '#fee75c',
+                            red: '#ed4245',
+                            gray: '#4e5058',
+                            lightgray: '#6d6f78',
+                            text: '#dbdee1',
+                            muted: '#b5bac1'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for dropdown and animations */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+        }
+
+            .dropdown-menu.show {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+
+        .dropdown-arrow {
+            transition: transform 0.2s ease;
+        }
+
+        .dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .notification {
+            animation: slideIn 0.3s ease;
+        }
+
+        @@keyframes slideIn {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        /* Custom scrollbar */
+        .channels-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .channels-grid::-webkit-scrollbar-track {
+            background: #1a1b1e;
+        }
+
+        .channels-grid::-webkit-scrollbar-thumb {
+            background: #4e5058;
+            border-radius: 4px;
+        }
+
+            .channels-grid::-webkit-scrollbar-thumb:hover {
+                background: #6d6f78;
+            }
+
+        /* Modal styles */
+        .modal {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+            .modal.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .modal-content {
+            transform: scale(0.9) translateY(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .tag-item {
+            animation: fadeIn 0.2s ease;
+        }
+
+        @@keyframes fadeIn {
+            from
+
+        {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        }
+
+        /* Toggle switch styles */
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background-color: #4e5058;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .toggle-switch.active {
+                background-color: #5865f2;
+            }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+    </style>
+</head>
+<body class="bg-discord-darkest text-white font-sans">
+    <div class="flex h-screen">
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col">
+            <!-- Header Section -->
+            <header class="bg-discord-darker p-6 border-b border-discord-dark">
+                <!-- Owner Info -->
+                <div class="flex items-center space-x-4 mb-8">
+                    <img src="/images/avatar.jpg" class="w-12 h-12 rounded-full">
+                    <span class="text-xl font-semibold text-white">Naruto</span>
+                </div>
+
+                <!-- Emote Display -->
+                <section class="text-center">
+                    <h1 class="text-4xl font-bold mb-10 text-white">@Model.Name</h1>
+
+                    <!-- Tag Variants -->
+                    @if (Model.Tags != null && Model.Tags.Any())
+                    {
+                        <div class="flex flex-wrap justify-center gap-2 mb-10">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <span class="bg-discord-gray text-white text-sm px-3 py-1 rounded-full">
+                                    @tag
+                                </span>
+                            }
+                        </div>
+                    }
+
+                    <!-- Emote Variants -->
+                    <div class="flex justify-center items-end space-x-6 mb-10">
+                        @foreach (var file in Model.Files)
+                        {
+                            <div class="flex flex-col items-center">
+                                <div class="bg-discord-dark rounded-lg p-3 mb-3 hover:bg-discord-gray hover:scale-105 transition-all duration-200 cursor-pointer">
+                                    <img src="@file.Url"
+                                         class="object-contain" />
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-center space-x-4">
+                        <button class="bg-white text-black px-6 py-2.5 rounded-md font-medium hover:bg-gray-200 transition-colors flex items-center space-x-2"
+                                data-action="add-to-anime">
+                            <span class="text-lg">+</span>
+                            <span>Add Emote to Anime</span>
+                        </button>
+
+                        <!-- Add -->
+                        <button class="bg-discord-gray text-white px-6 py-2.5 rounded-md font-medium hover:bg-discord-lightgray transition-colors flex items-center space-x-2"
+                                data-action="add-to-collection">
+                            <span>📁</span>
+                            <span>Add to...</span>
+                        </button>
+
+                        <!-- Edit -->
+                        @* @if (isOwner) *@
+                        @* { *@
+                            <!-- Updated Edit button to use data-action instead of onclick -->
+                            <button class="bg-discord-gray text-white px-4 py-2.5 rounded-md font-medium hover:bg-discord-lightgray transition-colors flex items-center space-x-2"
+                                    data-action="edit">
+                                <span>✏️</span>
+                                <span>Edit</span>
+                            </button>
+                        @* } *@
+
+                        <!-- More -->
+                        <div class="relative dropdown">
+                            <button class="bg-discord-gray text-white px-4 py-2.5 rounded-md font-medium hover:bg-discord-lightgray transition-colors flex items-center space-x-2"
+                                    data-dropdown="more-menu">
+                                <span>More</span>
+                                <span class="dropdown-arrow text-xs">▼</span>
+                            </button>
+                            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-discord-darker rounded-md shadow-lg border border-discord-dark z-10"
+                                 id="more-menu">
+                                <a href="#" class="block px-4 py-2 text-sm hover:bg-discord-dark text-white no-underline" data-action="download">Download</a>
+                                <a href="#" class="block px-4 py-2 text-sm hover:bg-discord-dark text-white no-underline" data-action="report">Report</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </header>
+
+        </main>
+    </div>
+
+    <!-- Include the modal ViewPartial -->
+    @Html.Partial("_EditModal", Model)
+
+    <!-- Removed inline JavaScript - now handled by external JS file -->
+</body>
+</html>
+
+@section Scripts {
+    <!-- Updated script references to include the modal JS file first -->
+    <script src="~/js/emote-edit-modal.js"></script>
+    <script src="~/js/emote-detail.js"></script>
+}

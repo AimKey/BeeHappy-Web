@@ -1,16 +1,17 @@
-﻿// Emote Details Page JavaScript
+﻿// Simplified Emote Details Page JavaScript for Index Page
+console.log("[v0] Emote Details script loaded successfully!")
+
 class EmoteDetailsPage {
     constructor() {
-        this.currentPage = 1
-        this.channelsPerPage = 32 // Increased for tighter grid
-        this.activeTab = "channels"
+        console.log("[v0] EmoteDetailsPage constructor called")
         this.init()
     }
 
     init() {
+        console.log("[v0] Initializing EmoteDetailsPage")
         this.bindEvents()
         this.setupDropdowns()
-        this.loadChannels()
+        this.setupModalEvents()
     }
 
     bindEvents() {
@@ -19,32 +20,67 @@ class EmoteDetailsPage {
             btn.addEventListener("click", (e) => this.handleAction(e))
         })
 
-        // Tab switching
-        document.querySelectorAll("[data-tab]").forEach((tab) => {
-            tab.addEventListener("click", (e) => this.switchTab(e))
-        })
-
-        // Pagination
-        document.querySelectorAll("[data-direction]").forEach((btn) => {
-            btn.addEventListener("click", (e) => this.handlePagination(e))
-        })
-
-        // Channel selection
-        document.querySelectorAll("[data-channel]").forEach((channel) => {
-            channel.addEventListener("click", (e) => this.selectChannel(e))
-        })
-
         // Close dropdowns when clicking outside
         document.addEventListener("click", (e) => this.handleOutsideClick(e))
     }
 
     setupDropdowns() {
-        document.querySelectorAll("[data-dropdown]").forEach((toggle) => {
+        console.log("[v0] Setting up dropdowns...")
+        const dropdownToggles = document.querySelectorAll("[data-dropdown]")
+        console.log("[v0] Found dropdown toggles:", dropdownToggles.length)
+
+        dropdownToggles.forEach((toggle) => {
+            console.log("[v0] Found dropdown toggle:", toggle.dataset.dropdown)
             toggle.addEventListener("click", (e) => {
+                console.log("[v0] Dropdown clicked:", toggle.dataset.dropdown)
+                e.preventDefault()
                 e.stopPropagation()
                 this.toggleDropdown(toggle.dataset.dropdown)
             })
         })
+    }
+
+    toggleDropdown(dropdownId) {
+        console.log("[v0] Toggling dropdown:", dropdownId)
+        const dropdown = document.getElementById(dropdownId)
+        const toggle = document.querySelector(`[data-dropdown="${dropdownId}"]`)
+
+        console.log("[v0] Dropdown element:", dropdown)
+        console.log("[v0] Toggle element:", toggle)
+
+        if (dropdown && toggle) {
+            const isOpen = dropdown.classList.contains("show")
+            console.log("[v0] Dropdown is currently open:", isOpen)
+
+            // Close all dropdowns first
+            this.closeAllDropdowns()
+
+            if (!isOpen) {
+                console.log("[v0] Opening dropdown")
+                dropdown.classList.add("show")
+                toggle.closest(".dropdown").classList.add("active")
+            }
+        } else {
+            console.log("[v0] Dropdown or toggle not found!")
+        }
+    }
+
+    closeAllDropdowns() {
+        console.log("[v0] Closing all dropdowns")
+        document.querySelectorAll(".dropdown-menu").forEach((menu) => {
+            menu.classList.remove("show")
+        })
+        document.querySelectorAll(".dropdown").forEach((dropdown) => {
+            dropdown.classList.remove("active")
+        })
+    }
+
+    handleOutsideClick(event) {
+        console.log("[v0] Outside click detected")
+        if (!event.target.closest(".dropdown")) {
+            console.log("[v0] Click outside dropdown, closing all")
+            this.closeAllDropdowns()
+        }
     }
 
     handleAction(event) {
@@ -61,11 +97,14 @@ class EmoteDetailsPage {
             case "add-to-collection":
                 this.addToCollection()
                 break
+            case "edit":
+                this.editEmote()
+                break
             case "download":
                 this.downloadEmote()
                 break
-            case "copy-link":
-                this.copyLink()
+            case "copy-image":
+                this.copyImage()
                 break
             case "report":
                 this.reportEmote()
@@ -78,80 +117,6 @@ class EmoteDetailsPage {
         setTimeout(() => this.setLoading(button, false), 1000)
     }
 
-    switchTab(event) {
-        const tabName = event.currentTarget.dataset.tab
-
-        // Update active tab
-        document.querySelectorAll(".tab").forEach((tab) => {
-            tab.classList.remove("active", "bg-discord-dark", "text-white")
-            tab.classList.add("text-gray-400")
-        })
-
-        event.currentTarget.classList.remove("text-gray-400")
-        event.currentTarget.classList.add("active", "bg-discord-dark", "text-white")
-
-        this.activeTab = tabName
-        this.loadTabContent(tabName)
-    }
-
-    handlePagination(event) {
-        const direction = event.currentTarget.dataset.direction
-
-        if (direction === "prev" && this.currentPage > 1) {
-            this.currentPage--
-        } else if (direction === "next") {
-            this.currentPage++
-        }
-
-        this.loadChannels()
-        this.showNotification(`Page ${this.currentPage}`, "info")
-    }
-
-    selectChannel(event) {
-        const channelName = event.currentTarget.dataset.channel
-
-        // Add selection visual feedback
-        document.querySelectorAll(".channel-item").forEach((item) => {
-            item.classList.remove("bg-discord-blurple")
-        })
-        event.currentTarget.classList.add("bg-discord-blurple")
-
-        console.log("Selected channel:", channelName)
-        this.onChannelSelected(channelName)
-    }
-
-    toggleDropdown(dropdownId) {
-        const dropdown = document.getElementById(dropdownId)
-        const toggle = document.querySelector(`[data-dropdown="${dropdownId}"]`)
-
-        if (dropdown && toggle) {
-            const isOpen = dropdown.classList.contains("show")
-
-            // Close all dropdowns first
-            this.closeAllDropdowns()
-
-            if (!isOpen) {
-                dropdown.classList.add("show")
-                toggle.closest(".dropdown").classList.add("active")
-            }
-        }
-    }
-
-    closeAllDropdowns() {
-        document.querySelectorAll(".dropdown-menu").forEach((menu) => {
-            menu.classList.remove("show")
-        })
-        document.querySelectorAll(".dropdown").forEach((dropdown) => {
-            dropdown.classList.remove("active")
-        })
-    }
-
-    handleOutsideClick(event) {
-        if (!event.target.closest(".dropdown")) {
-            this.closeAllDropdowns()
-        }
-    }
-
     setLoading(element, isLoading) {
         if (isLoading) {
             element.classList.add("opacity-50", "pointer-events-none")
@@ -162,27 +127,125 @@ class EmoteDetailsPage {
         }
     }
 
-    loadChannels() {
-        const grid = document.querySelector(".channels-grid")
-        if (grid) {
-            // Add loading animation
-            grid.style.opacity = "0.7"
-            setTimeout(() => {
-                grid.style.opacity = "1"
-            }, 300)
+    downloadEmote() {
+        console.log("Downloading emote")
+
+        // Get all emote images from the page
+        const emoteImages = document.querySelectorAll('img[src*="@"]')
+
+        if (emoteImages.length === 0) {
+            // Fallback: get any image in the emote variants section
+            const variantImages = document.querySelectorAll(".bg-discord-dark img")
+            if (variantImages.length > 0) {
+                const lastImage = variantImages[variantImages.length - 1]
+                this.downloadImage(lastImage.src, "emote")
+            } else {
+                this.showNotification("No emote image found to download", "error")
+            }
+            return
         }
 
-        console.log(`Loading channels page ${this.currentPage}`)
+        // If multiple variants, download the first one (or you could show a selection)
+        if (emoteImages.length === 1) {
+            this.downloadImage(emoteImages[0].src, "emote")
+        } else {
+            // Download all variants
+            emoteImages.forEach((img, index) => {
+                setTimeout(() => {
+                    this.downloadImage(img.src, `emote_variant_${index + 1}`)
+                }, index * 500) // Stagger downloads
+            })
+            this.showNotification(`Downloading ${emoteImages.length} emote variants...`, "success")
+            return
+        }
+
+        this.showNotification("Download started!", "success")
     }
 
-    loadTabContent(tabName) {
-        console.log(`Loading ${tabName} content`)
+    downloadImage(imageUrl, filename) {
+        // Create a temporary anchor element
+        const link = document.createElement("a")
+        link.href = imageUrl
+        link.download = filename || "emote"
 
-        if (tabName === "activity") {
-            this.loadActivity()
-        } else {
-            this.loadChannels()
+        // Handle cross-origin images by fetching and creating blob URL
+        fetch(imageUrl)
+            .then((response) => response.blob())
+            .then((blob) => {
+                const blobUrl = window.URL.createObjectURL(blob)
+                link.href = blobUrl
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+                window.URL.revokeObjectURL(blobUrl)
+            })
+            .catch((error) => {
+                console.error("Download failed:", error)
+                // Fallback: try direct download
+                document.body.appendChild(link)
+                link.click()
+                document.body.removeChild(link)
+            })
+    }
+
+    copyImage() {
+        console.log("Copying emote image")
+
+        // Get the first emote image
+        const emoteImage = document.querySelector(".bg-discord-dark img")
+
+        if (!emoteImage) {
+            this.showNotification("No emote image found to copy", "error")
+            return
         }
+
+        // Create a canvas to convert image to blob
+        const canvas = document.createElement("canvas")
+        const ctx = canvas.getContext("2d")
+
+        // Create a new image element to ensure it's loaded
+        const img = new Image()
+        img.crossOrigin = "anonymous" // Handle CORS
+
+        img.onload = () => {
+            canvas.width = img.width
+            canvas.height = img.height
+            ctx.drawImage(img, 0, 0)
+
+            canvas.toBlob(async (blob) => {
+                try {
+                    await navigator.clipboard.write([
+                        new ClipboardItem({
+                            "image/png": blob,
+                        }),
+                    ])
+                    this.showNotification("Image copied to clipboard!", "success")
+                } catch (error) {
+                    console.error("Failed to copy image:", error)
+                    // Fallback: copy image URL
+                    this.copyImageUrl(emoteImage.src)
+                }
+            }, "image/png")
+        }
+
+        img.onerror = () => {
+            console.error("Failed to load image for copying")
+            // Fallback: copy image URL
+            this.copyImageUrl(emoteImage.src)
+        }
+
+        img.src = emoteImage.src
+    }
+
+    copyImageUrl(imageUrl) {
+        navigator.clipboard
+            .writeText(imageUrl)
+            .then(() => {
+                this.showNotification("Image URL copied to clipboard!", "success")
+            })
+            .catch(() => {
+                this.showNotification("Failed to copy image", "error")
+            })
     }
 
     // Action Methods
@@ -196,36 +259,210 @@ class EmoteDetailsPage {
         this.showNotification("Choose a collection to add to", "info")
     }
 
-    downloadEmote() {
-        console.log("Downloading emote")
-        this.showNotification("Download started!", "success")
-    }
-
-    copyLink() {
-        console.log("Copying emote link")
-        navigator.clipboard
-            .writeText(window.location.href)
-            .then(() => {
-                this.showNotification("Link copied to clipboard!", "success")
-            })
-            .catch(() => {
-                this.showNotification("Failed to copy link", "error")
-            })
+    editEmote() {
+        console.log("[v0] Opening edit emote modal")
+        if (window.editEmoteModal) {
+            window.editEmoteModal.show()
+        } else {
+            console.error("[v0] EditEmoteModal not found")
+            this.showNotification("Modal not available", "error")
+        }
     }
 
     reportEmote() {
         console.log("Reporting emote")
         this.showNotification("Report submitted", "info")
+        // Add actual report logic here
     }
 
-    onChannelSelected(channelName) {
-        console.log(`Channel selected: ${channelName}`)
-        this.showNotification(`Selected: ${channelName}`, "info")
+    // Modal functionality methods
+    showEditModal() {
+        const modal = document.getElementById("editEmoteModal")
+        if (modal) {
+            // Populate modal with current emote data
+            this.populateModalData()
+            modal.classList.remove("hidden")
+            modal.classList.add("flex")
+            document.body.style.overflow = "hidden"
+        }
     }
 
-    loadActivity() {
-        console.log("Loading activity data")
-        // Add your activity loading logic here
+    hideEditModal() {
+        const modal = document.getElementById("editEmoteModal")
+        if (modal) {
+            modal.classList.add("hidden")
+            modal.classList.remove("flex")
+            document.body.style.overflow = "auto"
+        }
+    }
+
+    populateModalData() {
+        // Get current emote data from the page
+        const emoteName = document.querySelector(".text-2xl.font-bold")?.textContent || ""
+        const tags = Array.from(document.querySelectorAll(".bg-discord-dark.text-discord-text")).map((tag) =>
+            tag.textContent.trim(),
+        )
+
+        // Populate form fields
+        const nameInput = document.getElementById("emoteName")
+        if (nameInput) nameInput.value = emoteName
+
+        // Clear and populate tags
+        const tagsContainer = document.getElementById("currentTags")
+        if (tagsContainer) {
+            tagsContainer.innerHTML = ""
+            tags.forEach((tag) => this.addTagToModal(tag))
+        }
+    }
+
+    setupModalEvents() {
+        // Close modal events
+        const closeButtons = document.querySelectorAll("[data-modal-close]")
+        closeButtons.forEach((btn) => {
+            btn.addEventListener("click", () => this.hideEditModal())
+        })
+
+        // Close on backdrop click
+        const modal = document.getElementById("editEmoteModal")
+        if (modal) {
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    this.hideEditModal()
+                }
+            })
+        }
+
+        // Tag input handling
+        const tagInput = document.getElementById("tagInput")
+        if (tagInput) {
+            tagInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault()
+                    this.addTag()
+                }
+            })
+        }
+
+        // Form submission
+        const saveBtn = document.getElementById("saveEmote")
+        if (saveBtn) {
+            saveBtn.addEventListener("click", () => this.saveEmoteChanges())
+        }
+
+        // Delete button
+        const deleteBtn = document.getElementById("deleteEmote")
+        if (deleteBtn) {
+            deleteBtn.addEventListener("click", () => this.deleteEmote())
+        }
+
+        // Toggle switches
+        const overlayingToggle = document.getElementById("overlayingToggle")
+        const privateToggle = document.getElementById("privateToggle")
+
+        if (overlayingToggle) {
+            overlayingToggle.addEventListener("change", () => this.handleToggleChange("overlaying", overlayingToggle.checked))
+        }
+
+        if (privateToggle) {
+            privateToggle.addEventListener("change", () => this.handleToggleChange("private", privateToggle.checked))
+        }
+    }
+
+    addTag() {
+        const tagInput = document.getElementById("tagInput")
+        const tagText = tagInput.value.trim()
+
+        if (tagText && tagText.length > 0) {
+            this.addTagToModal(tagText)
+            tagInput.value = ""
+        }
+    }
+
+    addTagToModal(tagText) {
+        const tagsContainer = document.getElementById("currentTags")
+        if (!tagsContainer) return
+
+        // Check if tag already exists
+        const existingTags = Array.from(tagsContainer.children).map((tag) => tag.textContent.replace("×", "").trim())
+        if (existingTags.includes(tagText)) return
+
+        const tagElement = document.createElement("span")
+        tagElement.className = "inline-flex items-center gap-1 px-2 py-1 bg-discord-dark text-discord-text rounded text-sm"
+        tagElement.innerHTML = `
+            ${tagText}
+            <button type="button" class="text-discord-muted hover:text-discord-red transition-colors" onclick="this.parentElement.remove()">×</button>
+        `
+
+        tagsContainer.appendChild(tagElement)
+    }
+
+    handleToggleChange(setting, isEnabled) {
+        console.log(`${setting} toggle changed to:`, isEnabled)
+        // Store the setting change for when form is submitted
+        if (!this.pendingChanges) this.pendingChanges = {}
+        this.pendingChanges[setting] = isEnabled
+    }
+
+    saveEmoteChanges() {
+        const nameInput = document.getElementById("emoteName")
+        const tagsContainer = document.getElementById("currentTags")
+
+        const formData = {
+            name: nameInput?.value || "",
+            tags: Array.from(tagsContainer?.children || []).map((tag) => tag.textContent.replace("×", "").trim()),
+            settings: this.pendingChanges || {},
+        }
+
+        console.log("Saving emote changes:", formData)
+
+        // Add loading state
+        const saveBtn = document.getElementById("saveEmote")
+        this.setLoading(saveBtn, true)
+
+        // Simulate API call
+        setTimeout(() => {
+            this.setLoading(saveBtn, false)
+            this.hideEditModal()
+            this.showNotification("Emote updated successfully!", "success")
+
+            // Update the page with new data
+            this.updatePageData(formData)
+        }, 1000)
+    }
+
+    updatePageData(formData) {
+        // Update emote name on page
+        const nameElement = document.querySelector(".text-2xl.font-bold")
+        if (nameElement && formData.name) {
+            nameElement.textContent = formData.name
+        }
+
+        // Update tags on page
+        const tagsContainer = document.querySelector(".flex.flex-wrap.gap-2")
+        if (tagsContainer && formData.tags) {
+            // Clear existing tags
+            tagsContainer.innerHTML = ""
+
+            // Add new tags
+            formData.tags.forEach((tag) => {
+                const tagElement = document.createElement("span")
+                tagElement.className = "px-2 py-1 bg-discord-dark text-discord-text rounded text-sm"
+                tagElement.textContent = tag
+                tagsContainer.appendChild(tagElement)
+            })
+        }
+    }
+
+    deleteEmote() {
+        if (confirm("Are you sure you want to delete this emote? This action cannot be undone.")) {
+            console.log("Deleting emote...")
+            this.showNotification("Emote deleted successfully!", "success")
+
+            // Simulate redirect after deletion
+            setTimeout(() => {
+                window.location.href = "/emotes"
+            }, 1500)
+        }
     }
 
     showNotification(message, type = "info") {
@@ -289,6 +526,7 @@ const EmoteUtils = {
 
 // Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("[v0] DOM loaded, initializing EmoteDetailsPage")
     new EmoteDetailsPage()
 })
 

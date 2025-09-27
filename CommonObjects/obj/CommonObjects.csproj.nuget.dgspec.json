@@ -103,6 +103,9 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+              "D:\\fpt\\exe\\BeeHappy-Web\\BusinessObjects\\BusinessObjects.csproj": {
+                "projectPath": "D:\\fpt\\exe\\BeeHappy-Web\\BusinessObjects\\BusinessObjects.csproj"
+              },
               "D:\\fpt\\exe\\BeeHappy-Web\\DataAccessObjects\\DataAccessObjects.csproj": {
                 "projectPath": "D:\\fpt\\exe\\BeeHappy-Web\\DataAccessObjects\\DataAccessObjects.csproj"
               }

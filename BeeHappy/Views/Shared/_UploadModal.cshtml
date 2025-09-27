@@ -1,0 +1,133 @@
+﻿@* Upload Modal *@
+<div id="beetv-upload-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-dark-surface border border-dark-border rounded-2xl p-8 max-w-2xl w-full relative shadow-2xl max-h-[90vh] overflow-y-auto">
+        @* Close Button *@
+        <button id="beetv-upload-close" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2 rounded-lg hover:bg-dark-hover transition-all">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+
+        @* Modal Header *@
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-white">Upload Emote</h2>
+        </div>
+
+        @* Upload Form *@
+        <form id="beetv-upload-form" class="space-y-6">
+            @* Emote Name *@
+            <div>
+                <label for="beetv-emote-name" class="block text-sm font-medium text-gray-300 mb-2">Emote Name</label>
+                <input type="text"
+                       id="beetv-emote-name"
+                       name="emoteName"
+                       placeholder="Emote Name"
+                       class="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all">
+            </div>
+
+            @* Tags *@
+            <div>
+                <label for="beetv-emote-tags" class="block text-sm font-medium text-gray-300 mb-2">Tags</label>
+                <div class="relative">
+                    <svg class="absolute left-3 top-3.5 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                    </svg>
+                    <input type="text"
+                           id="beetv-emote-tags"
+                           name="tags"
+                           placeholder="Enter tags"
+                           class="w-full bg-dark-bg border border-dark-border rounded-lg pl-10 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all">
+                </div>
+                <div id="beetv-tags-container" class="flex flex-wrap gap-2 mt-2"></div>
+            </div>
+
+            @* Checkboxes *@
+            <div class="space-y-3">
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <input type="checkbox"
+                           id="beetv-overlaying"
+                           name="overlaying"
+                           class="w-4 h-4 text-primary bg-dark-bg border-dark-border rounded focus:ring-primary focus:ring-2">
+                    <span class="text-gray-300">Overlaying</span>
+                </label>
+
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <input type="checkbox"
+                           id="beetv-private"
+                           name="private"
+                           class="w-4 h-4 text-primary bg-dark-bg border-dark-border rounded focus:ring-primary focus:ring-2">
+                    <span class="text-gray-300">Private</span>
+                </label>
+
+                <label class="flex items-center space-x-3 cursor-pointer">
+                    <input type="checkbox"
+                           id="beetv-accept-rules"
+                           name="acceptRules"
+                           class="w-4 h-4 text-primary bg-dark-bg border-dark-border rounded focus:ring-primary focus:ring-2">
+                    <span class="text-gray-300">I accept the rules and guidelines</span>
+                </label>
+            </div>
+
+            @* File Upload Area *@
+            <div class="border-2 border-dashed border-dark-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
+                <div id="beetv-upload-area" class="space-y-4">
+                    <div class="flex justify-center">
+                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-lg font-medium text-white mb-2">Drag & Drop to upload, or</p>
+                        <button type="button"
+                                id="beetv-browse-files"
+                                class="bg-dark-bg hover:bg-dark-hover border border-dark-border text-white px-6 py-2 rounded-lg font-medium transition-all">
+                            Browse Files
+                        </button>
+                    </div>
+                    <div class="text-sm text-gray-400 space-y-1">
+                        <p>7MB max file size</p>
+                        <p>1000×1000 max resolution</p>
+                        <p>1000 max frames</p>
+                    </div>
+                </div>
+
+                @* File Preview Area (hidden by default) *@
+                <div id="beetv-file-preview" class="hidden space-y-4">
+                    <div id="beetv-preview-container" class="flex justify-center">
+                        File preview will be inserted here
+                    </div>
+                    <div class="text-sm text-gray-400">
+                        <p id="beetv-file-info"></p>
+                    </div>
+                    <button type="button"
+                            id="beetv-remove-file"
+                            class="text-red-400 hover:text-red-300 text-sm font-medium">
+                        Remove File
+                    </button>
+                </div>
+
+                @* Hidden file input *@
+                <input type="file"
+                       id="beetv-file-input"
+                       name="file"
+                       accept="image/*,.gif"
+                       class="hidden">
+            </div>
+
+            @* Action Buttons *@
+            <div class="flex justify-end space-x-4 pt-4">
+                <button type="button"
+                        id="beetv-upload-discard"
+                        class="px-6 py-2 text-gray-300 hover:text-white border border-dark-border hover:border-gray-500 rounded-lg font-medium transition-all">
+                    Discard
+                </button>
+                <button type="submit"
+                        id="beetv-upload-submit"
+                        disabled
+                        class="px-6 py-2 bg-primary hover:bg-primary-dark disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all">
+                    Upload
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
