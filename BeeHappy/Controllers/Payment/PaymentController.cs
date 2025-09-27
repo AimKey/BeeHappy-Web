@@ -15,7 +15,6 @@ using Services.Interfaces;
 namespace BeeHappy.Controllers.Payment;
 
 public class PaymentController(
-    PayOS payOs,
     IUserService userService,
     IPaymentService paymentService,
     IConfiguration configuration) : Controller

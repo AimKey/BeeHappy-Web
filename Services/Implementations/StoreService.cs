@@ -25,6 +25,7 @@ public class StoreService(
         var existingPaints = await paintService.GetAllPaintsAsync();
         var plansVm = mapper.Map<List<SubscriptionPlanVM>>(existingPlans);
         var paintsVm = mapper.Map<List<ThemeVM>>(existingPaints);
+        paintsVm = paintsVm.Slice(0, 7).ToList();
         var userCurrentPlan = await GetUserCurrentPlanVm(currentUser);
         var userCurrentPaints = currentUser?.Paints;
         // Ngoài premium plan ra thì các giá trị còn lại tạm thời hardcode
@@ -112,20 +113,24 @@ public class StoreService(
         {
             // Get user newest purchased and check if it's expired
             var userPurchases = await paymentService.GetUserPurchaseHistories(currentUser.Id);
-            var newestPurchase = userPurchases
-                .OrderByDescending(p => p.PurchasedDate)
-                .FirstOrDefault(p => p.Status == PaymentConstants.PAYMENT_SUCCESS && p.ExpireDate > DateTime.Now);
+            var isPremium = await paymentService.CheckUserHasActivePremium(currentUser);
 
-            if (newestPurchase != null)
+            if (isPremium)
             {
-                // Get the plan
-                var plan = await premiumPlanRepository.GetByIdAsync(newestPurchase.PlanId);
-                userCurrentPlan = new CurrentUserPlanVm
+                var newestPurchase = userPurchases
+                    .OrderByDescending(p => p.PurchasedDate)
+                    .FirstOrDefault(p => p.Status == PaymentConstants.PAYMENT_SUCCESS && p.ExpireDate > DateTime.Now);
+                if (newestPurchase != null)
                 {
-                    PlanId = plan.Id,
-                    PlanName = plan.Name,
-                    ExpiryDate = newestPurchase.ExpireDate,
-                };
+                    // Get the plan
+                    var plan = await premiumPlanRepository.GetByIdAsync(newestPurchase.PlanId);
+                    userCurrentPlan = new CurrentUserPlanVm
+                    {
+                        PlanId = plan.Id,
+                        PlanName = plan.Name,
+                        ExpiryDate = newestPurchase.ExpireDate,
+                    };
+                }
             }
         }
 

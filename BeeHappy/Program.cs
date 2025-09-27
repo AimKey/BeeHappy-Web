@@ -1,16 +1,14 @@
-﻿using AutoMapper;
-using BeeHappy.Controllers.Payment;
-using DataAccessObjects;
+﻿using DataAccessObjects;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-using MongoDB.Driver;
 using Net.payOS;
-using Repositories.Generics;
 using Repositories.Implementations;
 using Repositories.Interfaces;
 using Services.HelperServices;
 using Services.Implementations;
 using Services.Interfaces;
+
+namespace BeeHappy;
 
 public class Program
 {
@@ -40,10 +38,10 @@ public class Program
         // Configure authentication with cookies
         // Cookie Authentication setup
         builder.Services.AddAuthentication(options =>
-        {
-            options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-        })
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
             .AddCookie(options =>
             {
                 options.LoginPath = "/Home/LandingPage"; // redirect if not logged in
@@ -100,9 +98,10 @@ public class Program
         // Emote related services
         builder.Services.AddScoped<IEmoteService, EmoteService>();
         builder.Services.AddScoped<IEmoteSetService, EmoteSetService>();
-        // Premium related services
+        // Cosmetic related services
         builder.Services.AddScoped<IBadgeService, BadgeService>();
         builder.Services.AddScoped<IPaintService, PaintService>();
+        builder.Services.AddScoped<ICosmeticsService, CosmeticsService>();
         // Payment & Store
         builder.Services.AddScoped<IStoreService, StoreService>();
         builder.Services.AddScoped<IPaymentService, PaymentService>();
@@ -114,15 +113,15 @@ public class Program
         });
 
         // PayOS
-        SetupPayOS(builder);
+        SetupPayOs(builder);
     }
 
-    private static void SetupPayOS(WebApplicationBuilder builder)
+    private static void SetupPayOs(WebApplicationBuilder builder)
     {
-        PayOS payOS = new PayOS(builder.Configuration["PayOS:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
-                        builder.Configuration["PayOS:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
-                        builder.Configuration["PayOS:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
-        builder.Services.AddSingleton(payOS);
+        PayOS payOs = new PayOS(builder.Configuration["PayOS:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+            builder.Configuration["PayOS:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+            builder.Configuration["PayOS:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
+        builder.Services.AddSingleton(payOs);
     }
 
     private static void SetupRepos(WebApplicationBuilder builder)

@@ -1,0 +1,373 @@
+@model CommonObjects.ViewModels.UserCosmeticsVMs.UserCosmeticsViewModel
+@{
+    Layout = "_UserSettingsLayout";
+    ViewData["Title"] = "Cosmetics";
+}
+
+<partial name="_Notification"/>
+
+<div class="min-h-screen bg-dark-bg">
+    <!-- Main Content -->
+    <div class="px-6 py-6 max-w-4xl mx-auto space-y-6">
+
+        <!-- Paints Section -->
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-white">Paints</h2>
+                <div class="flex items-center gap-3">
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-zinc-400"></i>
+                        </div>
+                        <input type="text"
+                               id="paintSearch"
+                               placeholder="Search"
+                               class="w-48 pl-10 pr-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paints Content -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <!-- None Option -->
+                @{
+                    var hasActivePaint = Model?.OwnedPaints?.Any(p => p.IsActive) ?? false;
+                    var noneIsActive = !hasActivePaint;
+                }
+                <div
+                    class="paint-option flex items-center gap-3 p-3 bg-dark-bg border @(noneIsActive ? "border-white" : "border-dark-border") rounded-lg hover:border-primary/50 hover:bg-dark-surface/50 transition-all duration-200 cursor-pointer"
+                    data-paint-id="none"
+                    data-paint-name="None"
+                    data-is-active="@noneIsActive.ToString().ToLower()">
+                    <div
+                        class="w-4 h-4 border-2 @(noneIsActive ? "border-white" : "border-dark-border") rounded-full flex items-center justify-center">
+                        <div class="w-1.5 h-1.5 @(noneIsActive ? "bg-white" : "bg-transparent") rounded-full"></div>
+                    </div>
+                    <span class="text-white font-medium text-sm">None</span>
+                </div>
+
+                <!-- User's Paints -->
+                @if (Model?.OwnedPaints != null && Model.OwnedPaints.Any())
+                {
+                    @foreach (var userPaint in Model.OwnedPaints)
+                    {
+                        var isActive = userPaint.IsActive;
+                        var borderClass = isActive ? "border-white" : "border-dark-border";
+                        var radioClass = isActive ? "border-white" : "border-dark-border";
+                        var radioInnerClass = isActive ? "bg-white" : "bg-transparent";
+
+                        <div
+                            class="paint-option flex items-center gap-3 p-3 bg-dark-bg border @borderClass rounded-lg hover:border-primary/50 hover:bg-dark-surface/50 transition-all duration-200 cursor-pointer"
+                            data-paint-id="@userPaint.PaintId"
+                            data-paint-name="@userPaint.Name"
+                            data-paint-color="@userPaint.ColorCode"
+                            data-is-active="@isActive.ToString().ToLower()">
+                            <div class="w-4 h-4 border-2 @radioClass rounded-full flex items-center justify-center">
+                                <div class="w-1.5 h-1.5 @radioInnerClass rounded-full"></div>
+                            </div>
+                            <span class="text-white font-medium text-sm"
+                                  style="color: @userPaint.ColorCode">@userPaint.Name</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-span-full text-zinc-400 text-sm">No paints available yet</div>
+                }
+            </div>
+        </div>
+
+        <!-- Badges Section -->
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-white">Badges</h2>
+                <div class="flex items-center gap-3">
+                    <!-- Search Bar -->
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-zinc-400"></i>
+                        </div>
+                        <input type="text"
+                               id="badgeSearch"
+                               placeholder="Search"
+                               class="w-48 pl-10 pr-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badges Content -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <!-- None Option -->
+                @{
+                    var hasActiveBadge = Model?.OwnedBadges?.Any(b => b.IsActivated) ?? false;
+                    var noneBadgeIsActive = !hasActiveBadge;
+                }
+                <div
+                    class="badge-option flex items-center gap-3 p-3 bg-dark-bg border @(noneBadgeIsActive ? "border-white" : "border-dark-border") rounded-lg hover:border-primary/50 hover:bg-dark-surface/50 transition-all duration-200 cursor-pointer"
+                    data-badge-id="none"
+                    data-badge-name="None"
+                    data-is-active="@noneBadgeIsActive.ToString().ToLower()">
+                    <div
+                        class="w-4 h-4 border-2 @(noneBadgeIsActive ? "border-white" : "border-dark-border") rounded-full flex items-center justify-center">
+                        <div
+                            class="w-1.5 h-1.5 @(noneBadgeIsActive ? "bg-white" : "bg-transparent") rounded-full"></div>
+                    </div>
+                    <span class="text-white font-medium text-sm">None</span>
+                </div>
+
+                <!-- User's Badges -->
+                @if (Model?.OwnedBadges != null && Model.OwnedBadges.Any())
+                {
+                    @foreach (var userBadge in Model.OwnedBadges)
+                    {
+                        var isActive = userBadge.IsActivated;
+                        var borderClass = isActive ? "border-white" : "border-dark-border";
+                        var radioClass = isActive ? "border-white" : "border-dark-border";
+                        var radioInnerClass = isActive ? "bg-white" : "bg-transparent";
+
+                        <div
+                            class="badge-option flex items-center gap-3 p-3 bg-dark-bg border @borderClass rounded-lg hover:border-primary/50 hover:bg-dark-surface/50 transition-all duration-200 cursor-pointer"
+                            data-badge-id="@userBadge.BadgeId"
+                            data-badge-name="@userBadge.Name"
+                            data-is-active="@isActive.ToString().ToLower()">
+                            <div class="w-4 h-4 border-2 @radioClass rounded-full flex items-center justify-center">
+                                <div class="w-1.5 h-1.5 @radioInnerClass rounded-full"></div>
+                            </div>
+                            <span class="text-white font-medium text-sm">@userBadge.Name</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-span-full text-zinc-400 text-sm">No badges available yet</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Badge search functionality
+            const badgeSearch = document.getElementById('badgeSearch');
+            if (badgeSearch) {
+                badgeSearch.addEventListener('input', function () {
+                    const searchTerm = this.value.toLowerCase();
+                    const badgeItems = document.querySelectorAll('.badge-option');
+
+                    badgeItems.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        if (text.includes(searchTerm)) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Paint search functionality
+            const paintSearch = document.getElementById('paintSearch');
+            if (paintSearch) {
+                paintSearch.addEventListener('input', function () {
+                    const searchTerm = this.value.toLowerCase();
+                    const paintItems = document.querySelectorAll('.paint-option');
+
+                    paintItems.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        if (text.includes(searchTerm)) {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Badge selection functionality
+            const badgeOptions = document.querySelectorAll('.badge-option');
+            badgeOptions.forEach(option => {
+                option.addEventListener('click', async function () {
+                    const badgeId = this.getAttribute('data-badge-id');
+                    const badgeName = this.getAttribute('data-badge-name');
+                    const isActive = this.getAttribute('data-is-active') === 'true';
+
+                    // Don't do anything if already selected
+                    if (isActive) {
+                        return;
+                    }
+
+                    try {
+                        let response;
+                        if (badgeId === 'none') {
+                            // Deselect all badges (placeholder for future implementation)
+                            response = await fetch('@Url.Action("DeselectBadge", "Cosmetics")', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                }
+                            });
+                        } else {
+                            // Select specific badge (placeholder for future implementation)
+                            response = await fetch('@Url.Action("SelectBadge", "Cosmetics")', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: `badgeId=${badgeId}`
+                            });
+                        }
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Update all badge options to unselected state
+                            badgeOptions.forEach(opt => {
+                                opt.setAttribute('data-is-active', 'false');
+                                opt.classList.remove('border-white');
+                                opt.classList.add('border-dark-border');
+
+                                const radio = opt.querySelector('.w-4.h-4.border-2');
+                                const radioInner = opt.querySelector('.w-1\\.5.h-1\\.5');
+                                if (radio && radioInner) {
+                                    radio.classList.remove('border-white');
+                                    radio.classList.add('border-dark-border');
+                                    radioInner.classList.remove('bg-white');
+                                    radioInner.classList.add('bg-transparent');
+                                }
+                            });
+
+                            // Update clicked option to selected state
+                            this.setAttribute('data-is-active', 'true');
+                            this.classList.remove('border-dark-border');
+                            this.classList.add('border-white');
+
+                            const radio = this.querySelector('.w-4.h-4.border-2');
+                            const radioInner = this.querySelector('.w-1\\.5.h-1\\.5');
+                            if (radio && radioInner) {
+                                radio.classList.remove('border-dark-border');
+                                radio.classList.add('border-white');
+                                radioInner.classList.remove('bg-transparent');
+                                radioInner.classList.add('bg-white');
+                            }
+                        } else {
+                            showNotification(result.message, 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error selecting badge:', error);
+                        showNotification('Có lỗi xảy ra khi chọn huy hiệu. Vui lòng thử lại!', 'error');
+                    }
+                });
+            });
+
+
+            // Paint selection functionality
+            const paintOptions = document.querySelectorAll('.paint-option');
+            paintOptions.forEach(option => {
+                option.addEventListener('click', async function () {
+                    const paintId = this.getAttribute('data-paint-id');
+                    const paintName = this.getAttribute('data-paint-name');
+                    const paintColor = this.getAttribute('data-paint-color') || '#666';
+                    const isActive = this.getAttribute('data-is-active') === 'true';
+
+                    // Don't do anything if already selected
+                    if (isActive) {
+                        return;
+                    }
+
+                    try {
+                        let response;
+                        if (paintId === 'none') {
+                            // Deselect all paints
+                            response = await fetch('@Url.Action("DeselectPaint", "Cosmetics")', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                }
+                            });
+                        } else {
+                            // Select specific paint
+                            response = await fetch('@Url.Action("SelectPaint", "Cosmetics")', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: `paintId=${paintId}`
+                            });
+                        }
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // Update all paint options to unselected state
+                            paintOptions.forEach(opt => {
+                                opt.setAttribute('data-is-active', 'false');
+                                opt.classList.remove('border-white');
+                                opt.classList.add('border-dark-border');
+
+                                const radio = opt.querySelector('.w-4.h-4.border-2');
+                                const radioInner = opt.querySelector('.w-1\\.5.h-1\\.5');
+                                if (radio && radioInner) {
+                                    radio.classList.remove('border-white');
+                                    radio.classList.add('border-dark-border');
+                                    radioInner.classList.remove('bg-white');
+                                    radioInner.classList.add('bg-transparent');
+                                }
+                            });
+
+                            // Update clicked option to selected state
+                            this.setAttribute('data-is-active', 'true');
+                            this.classList.remove('border-dark-border');
+                            this.classList.add('border-white');
+
+                            const radio = this.querySelector('.w-4.h-4.border-2');
+                            const radioInner = this.querySelector('.w-1\\.5.h-1\\.5');
+                            if (radio && radioInner) {
+                                radio.classList.remove('border-dark-border');
+                                radio.classList.add('border-white');
+                                radioInner.classList.remove('bg-transparent');
+                                radioInner.classList.add('bg-white');
+                            }
+                        } else {
+                            showNotification(result.message, 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error selecting paint:', error);
+                        showNotification('Có lỗi xảy ra khi chọn màu. Vui lòng thử lại!', 'error');
+                    }
+                });
+            });
+        });
+
+        // Notification function
+        function showNotification(message, type = "info") {
+            const notification = document.createElement("div");
+            notification.className = "notification fixed top-5 right-5 px-4 py-2 rounded-lg text-white font-medium z-50 text-sm";
+            notification.textContent = message;
+
+            // Set background color based on type
+            const typeClasses = {
+                success: "bg-green-600",
+                error: "bg-red-600",
+                info: "bg-blue-600",
+                warning: "bg-yellow-600 text-black",
+            };
+            notification.classList.add(typeClasses[type] || typeClasses.info);
+
+            document.body.appendChild(notification);
+
+            // Remove after delay
+            setTimeout(() => {
+                notification.style.opacity = "0";
+                notification.style.transition = "opacity 0.3s ease-out";
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    </script>
+}

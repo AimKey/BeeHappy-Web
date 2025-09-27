@@ -75,6 +75,10 @@ public class LoginGoogleController : Controller
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Email, user.Email),
+            new Claim(UserConstants.USER_AVATAR,
+                string.IsNullOrEmpty(user.Profile.AvatarUrl)
+                    ? UserConstants.DEFAULT_USER_AVATAR_LINK
+                    : user.Profile.AvatarUrl)
         };
 
         if (user.Roles != null && user.Roles.Any())
@@ -100,6 +104,4 @@ public class LoginGoogleController : Controller
 
         return RedirectToAction("LandingPage", "Home");
     }
-
-
 }

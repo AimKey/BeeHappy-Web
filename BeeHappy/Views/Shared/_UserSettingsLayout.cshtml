@@ -1,0 +1,15 @@
+@{
+    Layout = "_Layout";
+}
+<div class="flex h-full w-full">
+    <aside class="w-1/4">
+        @await Html.PartialAsync("PartialViews/_UserSettingSideBar")
+    </aside>
+    <section class="w-3/4">
+        @RenderBody()
+    </section>
+</div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

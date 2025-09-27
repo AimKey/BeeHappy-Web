@@ -1,0 +1,51 @@
+@using CommonObjects.AppConstants
+@{
+    var userName = User.Identity?.Name ?? "Guest";
+    var userAvatarUrl = User.Claims.FirstOrDefault(c => c.Type == UserConstants.USER_AVATAR)?.Value ?? UserConstants.DEFAULT_USER_AVATAR_LINK;
+}
+@* Side bar stuff *@
+<div class="min-h-screen flex-[1] border border-dark-border bg-dark-surface/40 rounded-lg mr-4 p-6">
+    <div class="flex flex-col gap-6">
+        @* User name and avatar *@
+        <div class="flex flex-col gap-3">
+            <div class="w-12 h-12 rounded-full overflow-hidden mb-1 object-cover border-2 border-white/10">
+                <img src="@userAvatarUrl" alt="@userName" class="w-full h-full object-cover" />
+            </div>
+            <span class="text-lg font-semibold text-white">@userName</span>
+        </div>
+
+        @* Personal Information Group *@
+        <div class="flex flex-col gap-2">
+            <a asp-action="Index" asp-controller="Home" class="flex items-center gap-3 px-3 py-2.5 text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 hover:shadow-sm">
+                <i class="fas fa-user text-sm w-4"></i>
+                <span class="text-sm font-medium">Thông tin cá nhân</span>
+            </a>
+        </div>
+
+        @* Divider *@
+        <div class="border-t border-white/10"></div>
+
+        @* Emote Management Group *@
+        <div class="flex flex-col gap-2">
+            <a asp-action="Index" asp-controller="Home" class="flex items-center gap-3 px-3 py-2.5 text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 hover:shadow-sm">
+                <i class="fas fa-smile text-sm w-4"></i>
+                <span class="text-sm font-medium">Emote đã upload</span>
+            </a>
+            <a asp-action="Index" asp-controller="EmoteSets" class="flex items-center gap-3 px-3 py-2.5 text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 hover:shadow-sm">
+                <i class="fas fa-layer-group text-sm w-4"></i>
+                <span class="text-sm font-medium">Quản lý bộ emote</span>
+            </a>
+        </div>
+
+        @* Divider *@
+        <div class="border-t border-white/10"></div>
+
+        @* Cosmetics Management Group *@
+        <div class="flex flex-col gap-2">
+            <a asp-action="Index" asp-controller="Cosmetics" class="flex items-center gap-3 px-3 py-2.5 text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200 hover:shadow-sm">
+                <i class="fas fa-palette text-sm w-4"></i>
+                <span class="text-sm font-medium">Quản lý các trang trí</span>
+            </a>
+        </div>
+    </div>
+</div>
