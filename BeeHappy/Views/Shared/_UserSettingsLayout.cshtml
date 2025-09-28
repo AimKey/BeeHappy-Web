@@ -1,11 +1,15 @@
 @{
     Layout = "_Layout";
 }
-<div class="flex h-full w-full">
-    <aside class="w-1/4">
-        @await Html.PartialAsync("PartialViews/_UserSettingSideBar")
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/emotes-directory.css" />
+}
+<div class="emotes-directory">
+    <aside>
+        @await Component.InvokeAsync("UserSidebar")
     </aside>
-    <section class="w-3/4">
+    <section class="main-content">
         @RenderBody()
     </section>
 </div>

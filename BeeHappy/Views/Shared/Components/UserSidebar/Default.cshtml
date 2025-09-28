@@ -1,8 +1,8 @@
+@model BusinessObjects.User
 @using CommonObjects.AppConstants
 @{
-    var userName = User.Identity?.Name ?? "Guest";
-    var userAvatarUrl = User.Claims.FirstOrDefault(c => c.Type == UserConstants.USER_AVATAR)?.Value ?? UserConstants.DEFAULT_USER_AVATAR_LINK;
-    
+    var userName = Model.Username;
+    var userAvatarUrl = Model.Profile?.AvatarUrl ?? UserConstants.DEFAULT_USER_AVATAR_LINK;
     // Get current controller and action for navigation highlighting
     var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
     var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
@@ -45,7 +45,7 @@
     }
 }
 @* Side bar stuff *@
-<div class="min-h-screen flex-[1] border border-dark-border bg-dark-surface/40 rounded-lg mr-4 p-6">
+<div class="min-h-screen flex-[1] border border-dark-border bg-dark-surface/40 mr-4 p-6">
     <div class="flex flex-col gap-6">
         @* User name and avatar *@
         <div class="flex flex-col gap-3">

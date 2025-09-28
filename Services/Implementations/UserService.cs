@@ -1,5 +1,6 @@
 using BusinessObjects;
 using CommonObjects.AppConstants;
+using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using Repositories.Interfaces;
 using Services.Interfaces;
@@ -46,6 +47,45 @@ namespace Services.Implementations
         public async Task<long> CountUsersAsync(System.Linq.Expressions.Expression<Func<User, bool>>? filter = null, CancellationToken ct = default)
         {
             return await userRepository.CountAsync(filter, ct);
+        }
+
+        public async Task UpdateUserAvatar(IFormFile file, User user, CancellationToken ct = default)
+        {
+            // First check for file type, if it is animated image type, check if user is premium
+            var permittedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" };
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+            {
+                throw new Exception("Loại tệp không được phép. Vui lòng tải lên tệp hình ảnh hợp lệ.");
+            }
+            if (ext == ".gif" || ext == ".webp")
+            {
+                if (user.IsPremium == false)
+                {
+                    throw new Exception("Chỉ người dùng Premium mới có thể tải lên hình đại diện động.");
+                }
+            }
+            // Save file to wwwroot/images/avatars with a user objectId as the file name
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "userAvatars");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var uniqueFileName = user.Id.ToString() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            // Overwrite if exists
+            await using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(fileStream);
+            }
+            // In case user does not have a profile, create one
+            if (user.Profile == null)
+            {
+                user.Profile = new ();
+            }
+            user.Profile.AvatarUrl = $"/uploads/userAvatars/{uniqueFileName}";
+            await ReplaceUserAsync(user, false, ct);
         }
     }
 }

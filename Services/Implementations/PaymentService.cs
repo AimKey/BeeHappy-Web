@@ -98,9 +98,15 @@ public class PaymentService(
         if (userHistory == null) throw new Exception("Lịch sử mua hàng không tồn tại.");
         userHistory.Status = PaymentConstants.PAYMENT_SUCCESS;
         var status = await purchaseHistoryRepository.ReplaceAsync(userHistory);
+
+        // Update user premium status
+        var user = await userService.GetUserByIdAsync(userHistory.OwnerId);
+        if (user == null) throw new Exception("Người dùng không tồn tại.");
+        user.IsPremium = true;
+        await userService.ReplaceUserAsync(user);
         return status;
     }
-    
+
     public async Task<bool> CancelPurchaseHistoryForUser(long orderCode)
     {
         var history = await purchaseHistoryRepository.GetAsync(h => h.OrderCode == orderCode);
@@ -110,7 +116,8 @@ public class PaymentService(
         var status = await purchaseHistoryRepository.ReplaceAsync(userHistory);
         return status;
     }
-    
+
+    // TODO: Currently this method sucks, please use a background job to check and update user premium status
     public async Task<bool> CheckUserHasActivePremium(User currentUser)
     {
         // Check if user has an active premium plan
@@ -126,7 +133,7 @@ public class PaymentService(
             await userService.ReplaceUserAsync(currentUser);
             return false;
         }
+
         return true;
     }
-
 }

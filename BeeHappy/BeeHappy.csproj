@@ -25,8 +25,8 @@
 		<Folder Include="Controllers\Emotes\" />
 		<Folder Include="Controllers\Payment\" />
 		<Folder Include="Extensions\" />
-		<Folder Include="ViewComponents\" />
 		<Folder Include="wwwroot\uploads\emotes\" />
+		<Folder Include="wwwroot\uploads\userAvatars\" />
 	</ItemGroup>
 
 	<ItemGroup>
