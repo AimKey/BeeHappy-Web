@@ -44,12 +44,12 @@ namespace DataAccessObjects
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(BeeHappyContext).Assembly);
             // modelBuilder.ApplyConfiguration(new UserDetailConfiguration());
 
-            modelBuilder.Entity<TestObject>().HasData(
-                [
-                    new TestObject { Id = ObjectId.GenerateNewId().ToString(), UserName = "User 1" },
-                    new TestObject { Id = ObjectId.GenerateNewId().ToString(), UserName = "User 2" },
-                ]
-            );
+            //modelBuilder.Entity<TestObject>().HasData(
+            //    [
+            //        new TestObject { Id = ObjectId.GenerateNewId().ToString(), UserName = "User 1" },
+            //        new TestObject { Id = ObjectId.GenerateNewId().ToString(), UserName = "User 2" },
+            //    ]
+            //);
         }
 
         // DbSet

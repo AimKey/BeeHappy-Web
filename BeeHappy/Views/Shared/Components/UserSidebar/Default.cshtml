@@ -1,0 +1,119 @@
+@model BusinessObjects.User
+@using CommonObjects.AppConstants
+@{
+    var userName = Model.Username;
+    var userAvatarUrl = Model.Profile?.AvatarUrl ?? UserConstants.DEFAULT_USER_AVATAR_LINK;
+    // Get current controller and action for navigation highlighting
+    var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString();
+
+    // Helper function to check if a navigation item should be active
+    bool IsActive(string controller, string? action = null)
+    {
+        if (string.IsNullOrEmpty(controller)) return false;
+
+        var controllerMatch = string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase);
+
+        if (action == null)
+        {
+            return controllerMatch;
+        }
+
+        var actionMatch = string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase);
+        return controllerMatch && actionMatch;
+    }
+
+    // Helper function to check if any of the provided controller/action combinations are active
+    bool IsAnyActive(params (string controller, string? action)[] routes)
+    {
+        return routes.Any(route => IsActive(route.controller, route.action));
+    }
+
+    // Helper function to get CSS classes for navigation items
+    string GetNavClasses(string controller, string? action = null, bool isActive = false)
+    {
+        var baseClasses = "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 hover:shadow-sm";
+
+        if (isActive)
+        {
+            return $"{baseClasses} text-white bg-blue-600/20 border border-blue-500/30 shadow-lg";
+        }
+        else
+        {
+            return $"{baseClasses} text-zinc-300 hover:text-white hover:bg-white/5";
+        }
+    }
+}
+@* Side bar stuff *@
+<div class="min-h-screen flex-[1] border border-dark-border bg-dark-surface/40 mr-4 p-6 h-full">
+    <div class="flex flex-col gap-6">
+        @* User name and avatar *@
+        <div class="flex flex-col gap-3">
+            <div class="w-12 h-12 rounded-full overflow-hidden mb-1 object-cover border-2 border-white/10">
+                <img src="@userAvatarUrl" alt="@userName" class="w-full h-full object-cover"/>
+            </div>
+            <span class="text-lg font-semibold text-white">@userName</span>
+        </div>
+
+        @* Personal Information Group *@
+        <div class="flex flex-col gap-2">
+            @{
+                var isPersonalInfoActive = IsActive("User", "Index");
+            }
+            <a asp-action="Index" asp-controller="User" class="@GetNavClasses("User", "Index", isPersonalInfoActive)">
+                <i class="fas fa-user text-sm w-4"></i>
+                <span class="text-sm font-medium">Thông tin cá nhân</span>
+            </a>
+        </div>
+
+        @* Divider *@
+        <div class="border-t border-white/10"></div>
+
+        @* Emote Management Group *@
+        <div class="flex flex-col gap-2">
+            @{
+                var isEmoteUploadActive = IsAnyActive(
+                    ("Emote", "Index"),
+                    ("Emote", "Details"),
+                    ("Emote", "Create"),
+                    ("Emote", "Edit")
+                );
+                var isEmoteSetActive = IsAnyActive(
+                    ("EmoteSets", "Index"),
+                    ("EmoteSets", "Details"),
+                    ("EmoteSets", "Create"),
+                    ("EmoteSets", "Edit"),
+                    ("EmoteSets", "UploadedEmote")
+                );
+            }
+            <a asp-action="UploadedEmote" asp-controller="Emote"
+               class="@GetNavClasses("Emote", "UploadedEmote", isEmoteUploadActive)">
+                <i class="fas fa-smile text-sm w-4"></i>
+                <span class="text-sm font-medium">Emote đã upload</span>
+            </a>
+            <a asp-action="Index" asp-controller="EmoteSets"
+               class="@GetNavClasses("EmoteSets", "Index", isEmoteSetActive)">
+                <i class="fas fa-layer-group text-sm w-4"></i>
+                <span class="text-sm font-medium">Quản lý bộ emote</span>
+            </a>
+        </div>
+
+        @* Divider *@
+        <div class="border-t border-white/10"></div>
+
+        @* Cosmetics Management Group *@
+        <div class="flex flex-col gap-2">
+            @{
+                var isCosmeticsActive = IsAnyActive(
+                    ("Cosmetics", "Index"),
+                    ("Cosmetics", "SelectPaint")
+                );
+            }
+            <a asp-action="Index" asp-controller="Cosmetics"
+               class="@GetNavClasses("Cosmetics", "Index", isCosmeticsActive)">
+                <i class="fas fa-palette text-sm w-4"></i>
+                <span class="text-sm font-medium">Quản lý các trang trí</span>
+            </a>
+        </div>
+    </div>
+</div>

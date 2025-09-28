@@ -1,0 +1,49 @@
+﻿@using BeeHappy.ViewModels
+@model EmoteViewModel
+
+@{
+    ViewData["Title"] = "Edit Emote";
+}
+
+<h2>Edit Emote</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Tags</label>
+        @for (int i = 0; i < (Model.Tags?.Count ?? 1); i++)
+        {
+            <input asp-for="@Model.Tags[i]" class="form-control mb-2" />
+        }
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IsOverlaying"></label>
+        <input asp-for="IsOverlaying" type="checkbox" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Visibility"></label>
+        <select asp-for="Visibility" class="form-control" multiple>
+            <option>public</option>
+            <option>private</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <select asp-for="Status" class="form-control" multiple>
+            <option>active</option>
+            <option>inactive</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

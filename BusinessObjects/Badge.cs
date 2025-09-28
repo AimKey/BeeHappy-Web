@@ -9,7 +9,8 @@ namespace BusinessObjects
 {
     public class Badge : MongoEntity
     {
-        public string Name { get; set; }
-        public string Image { get; set; }
+        public string Name { get; set; } = "Not specified";
+        public string Image { get; set; } = "Not specified";
+        public string StyleString { get; set; } = "Not specified"; // CSS style string for customizing badge appearance
     }
 }

@@ -1,0 +1,19 @@
+@{
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/emotes-directory.css" />
+}
+<div class="emotes-directory">
+    <aside>
+        @await Component.InvokeAsync("UserSidebar")
+    </aside>
+    <section class="main-content">
+        @RenderBody()
+    </section>
+</div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}

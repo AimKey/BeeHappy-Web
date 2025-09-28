@@ -22,6 +22,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+**/bin/
+**/obj/
 
 # .NET Core
 project.lock.json
@@ -61,5 +63,12 @@ node_modules
 .vs
 .vscode
 
+# AI Configuration Files
+.github/copilot-instructions.md
+
 # Local publish
 publish
+
+# Auto generated tailwind file
+/BeeHappy/wwwroot/css/styles.css
+/BeeHappy/wwwroot/uploads/

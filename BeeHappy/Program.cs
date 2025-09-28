@@ -1,11 +1,14 @@
-using DataAccessObjects;
+﻿using DataAccessObjects;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using MongoDB.Driver;
-using Repositories.Generics;
+using Microsoft.AspNetCore.Authentication.Google;
+using Net.payOS;
 using Repositories.Implementations;
 using Repositories.Interfaces;
+using Services.HelperServices;
 using Services.Implementations;
 using Services.Interfaces;
+
+namespace BeeHappy;
 
 public class Program
 {
@@ -17,41 +20,43 @@ public class Program
         SetupRepos(builder);
         // Add our services
         SetupServices(builder);
-
         // Configure database
-        builder.Services.AddSqlServer<BeeHappyContext>(builder.Configuration.GetConnectionString("DefaultConnection"));
         builder.Services.AddScoped<MongoDBContext>();
-
 
         // Allow page to access the session directly
         builder.Services.AddHttpContextAccessor();
 
         // Add session
+        builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {
             options.IdleTimeout = System.TimeSpan.FromMinutes(60);
             options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
         });
+
         // Configure authentication with cookies
         // Cookie Authentication setup
-        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
             .AddCookie(options =>
             {
-                options.LoginPath = "/Account/Login"; // redirect if not logged in
-                options.AccessDeniedPath = "/Account/AccessDenied"; // redirect if not authorized
+                options.LoginPath = "/Home/LandingPage"; // redirect if not logged in
+                options.AccessDeniedPath = "/Auth/AccessDenied"; // redirect if not authorized
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
             })
-            .AddGoogle(options =>
+            .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
             {
                 options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                options.CallbackPath = "/Account/signin-google";
             });
 
         // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");
-        Console.WriteLine($"SQL string: {builder.Configuration.GetConnectionString("DefaultConnection")}");
+        Console.WriteLine($"SQL string: {builder.Configuration.GetConnectionString("MongoDB")}");
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
@@ -88,11 +93,35 @@ public class Program
     {
         builder.Services.AddScoped<ITestObjectService, TestObjectService>();
         builder.Services.AddScoped<IAuditLogService, AuditLogService>();
-        builder.Services.AddScoped<IBadgeService, BadgeService>();
+        // User related services
+        builder.Services.AddScoped<IUserService, UserService>();
+        // Emote related services
         builder.Services.AddScoped<IEmoteService, EmoteService>();
         builder.Services.AddScoped<IEmoteSetService, EmoteSetService>();
+        // Cosmetic related services
+        builder.Services.AddScoped<IBadgeService, BadgeService>();
         builder.Services.AddScoped<IPaintService, PaintService>();
-        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ICosmeticsService, CosmeticsService>();
+        // Payment & Store
+        builder.Services.AddScoped<IStoreService, StoreService>();
+        builder.Services.AddScoped<IPaymentService, PaymentService>();
+
+        // Auto Mapper Configurations
+        builder.Services.AddAutoMapper(cfg =>
+        {
+            cfg.AddProfile<MappingProfile>();
+        });
+
+        // PayOS
+        SetupPayOs(builder);
+    }
+
+    private static void SetupPayOs(WebApplicationBuilder builder)
+    {
+        PayOS payOs = new PayOS(builder.Configuration["PayOS:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+            builder.Configuration["PayOS:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+            builder.Configuration["PayOS:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
+        builder.Services.AddSingleton(payOs);
     }
 
     private static void SetupRepos(WebApplicationBuilder builder)
@@ -104,5 +133,7 @@ public class Program
         builder.Services.AddScoped<IEmoteSetRepository, EmoteSetRepository>();
         builder.Services.AddScoped<IPaintRepository, PaintRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IPurchaseHistoryRepository, PurchaseHistoryRepository>();
+        builder.Services.AddScoped<IPremiumPlanRepository, PremiumPlanRepository>();
     }
 }

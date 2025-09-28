@@ -1,0 +1,67 @@
+@model System.Collections.Generic.List<BusinessObjects.Emote>
+@using CommonObjects.AppConstants
+
+@{
+    ViewBag.Title = "Emote đã upload";
+    Layout = "_UserSettingsLayout";
+}
+
+<link rel="stylesheet" href="~/css/emotes-directory.css" />
+
+<div class="">
+    <!-- Main Content -->
+    <div class="main-content" style="width: 100%;">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Emote đã upload</h1>
+            <p class="text-gray-400">Quản lý các emote bạn đã tạo và upload</p>
+        </div>
+
+        <!-- Emotes Grid -->
+        <div class="emotes-container">
+            <div id="emotesGrid" class="emotes-grid">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var emote in Model)
+                    {
+                        <a href="/Emote/Details/@emote.Id" class="emote-card" data-emote-id="@emote.Id">
+                            <div class="emote-thumbnail">
+                                @{
+                                    var thumbnailUrl = emote.Files?.LastOrDefault()?.Url ?? "/images/placeholder-emote.png";
+                                }
+                                <img src="@thumbnailUrl" alt="@emote.Name" loading="lazy" onerror="this.src='/images/placeholder-emote.png'">
+                            </div>
+
+                            <div class="emote-info">
+                                <div class="emote-name" title="@emote.Name">@emote.Name</div>
+                            </div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <!-- Empty State -->
+                    <div class="empty-state">
+                        <div class="empty-icon">😔</div>
+                        <div class="empty-title">Chưa có emote nào</div>
+                        <div class="empty-description">Bạn chưa upload emote nào. Hãy tạo emote đầu tiên của bạn!</div>
+                        <a href="/Emote/Create" class="empty-action">
+                            <i class="fas fa-plus"></i>
+                            Tạo emote mới
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add any JavaScript functionality here if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any interactive features
+            console.log('Uploaded emotes page loaded');
+        });
+    </script>
+}

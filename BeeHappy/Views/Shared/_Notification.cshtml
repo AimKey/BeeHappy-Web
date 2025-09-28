@@ -1,0 +1,120 @@
+﻿@using System.Text.Encodings.Web
+@using CommonObjects.AppConstants
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (TempData[MessageConstants.MESSAGE] != null)
+{
+    var rawMsg = JavaScriptEncoder.Default.Encode(TempData[MessageConstants.MESSAGE]?.ToString() ?? "");
+    var msgType = TempData[MessageConstants.MESSAGE_TYPE]?.ToString()?.ToLower();
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const message = '@Html.Raw(rawMsg)';
+          const type = ('@msgType' || '').trim();
+
+          if (Swal.isVisible()) Swal.close();
+
+          let fallbackClose;
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            background: '#1f2937',
+            color: '#ffffff',
+            width: '400px',
+            padding: '1.25rem',
+            backdrop: false,
+            allowEscapeKey: true,
+            showCloseButton: true,
+            customClass: {
+              container: 'swal2-container-fix',   // we'll set pointer-events in CSS
+              popup: 'swal-toast-popup',
+              title: 'swal-toast-title',
+              htmlContainer: 'swal-toast-text',
+              timerProgressBar: 'swal-toast-progress',
+              icon: 'swal-toast-icon'
+            },
+            didOpen: (toast) => {
+              // Close if you click anywhere on the toast
+              toast.addEventListener('click', () => Swal.close());
+
+              // Also wire the close button explicitly and stop event bubbling
+              const x = toast.querySelector('.swal2-close');
+              if (x) {
+                x.addEventListener('click', (e) => { e.stopPropagation(); Swal.close(); });
+              }
+
+              // Fallback auto-close in case internal timer stalls
+              const ms = Number(Swal.getTimerLeft()) || 5000;
+              fallbackClose = setTimeout(() => {
+                if (Swal.isVisible()) Swal.close();
+              }, ms + 250);
+            },
+            didClose: () => { if (fallbackClose) clearTimeout(fallbackClose); }
+          });
+
+          let config = {
+            title: message,
+            icon: 'info',
+            iconColor: '#3b82f6'
+          };
+
+          switch (type) {
+            case '@MessageConstants.SUCCESS':
+              config = { ...config, icon: 'success', iconColor: '#10b981', background: '#064e3b', color: '#d1fae5', timer: 4000 };
+              break;
+            case '@MessageConstants.ERROR':
+              config = { ...config, icon: 'error', iconColor: '#ef4444', background: '#7f1d1d', color: '#fecaca', timer: 7000 };
+              break;
+            case '@MessageConstants.WARNING':
+              config = { ...config, icon: 'warning', iconColor: '#f59e0b', background: '#78350f', color: '#fef3c7', timer: 5000 };
+              break;
+            case '@MessageConstants.INFO':
+              config = { ...config, icon: 'info', iconColor: '#3b82f6', background: '#1e3a8a', color: '#dbeafe', timer: 5000 };
+              break;
+            default:
+              // keep defaults
+              break;
+          }
+
+          Toast.fire(config);
+        });
+    </script>
+
+}
+<style>
+    .swal-toast-popup {
+        border-radius: 12px !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,.3) !important;
+        border: 1px solid rgba(255,255,255,.1) !important;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    .swal-toast-title {
+        font-weight: 600 !important;
+        font-size: .95rem !important;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+    }
+
+    .swal-toast-icon {
+        margin-right: .75rem !important;
+    }
+
+    .swal-toast-progress {
+        background: linear-gradient(90deg, rgba(255,255,255,.2), rgba(255,255,255,.4)) !important;
+        border-radius: 2px !important;
+    }
+
+    .swal-toast-popup:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 15px 35px rgba(0,0,0,.4) !important;
+        transition: all .3s ease !important;
+    }
+</style>
+
+<link rel="stylesheet" href="~/css/Layout/notification.css" />
