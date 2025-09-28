@@ -1,4 +1,5 @@
-﻿@model BeeHappy.ViewModels.EmoteViewModel
+﻿@using MongoDB.Bson
+@model BeeHappy.ViewModels.EmoteViewModel
 @{
     var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
     bool isOwner = Model.OwnerId == currentUserId;
@@ -6,7 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/emotes-directory.css" />
+<link rel="stylesheet" href="~/css/emotes-directory.css"/>
 
 <div class="emotes-directory">
     <!-- Main Content -->
@@ -33,30 +34,31 @@
                     var url64 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("64x64") == true)?.Url ?? Model.Files?.Skip(1).FirstOrDefault()?.Url ?? url32;
                     var url96 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("96x96") == true)?.Url ?? Model.Files?.Skip(2).FirstOrDefault()?.Url ?? url64;
                     var url128 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("128x128") == true)?.Url ?? Model.Files?.LastOrDefault()?.Url ?? url96;
-                    var activeSetId = Model.UserEmoteSets?.FirstOrDefault(s => s.IsActive)?.Id.ToString() ?? "";
+                    var activeSet = Model.UserEmoteSets?.FirstOrDefault(s => s.IsActive);
+                    var activeSetId = activeSet?.Id == null ? "" : activeSet.Id.ToString();
                 }
                 <div class="flex justify-center items-end gap-6 mb-8">
                     <div class="flex flex-col items-center">
                         <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-2 mb-2">
-                            <img src="@url32" alt="@Model.Name 32x32" class="w-8 h-8 object-contain" />
+                            <img src="@url32" alt="@Model.Name 32x32" class="w-8 h-8 object-contain"/>
                         </div>
                         <span class="text-xs text-gray-400">32x32</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-3 mb-2">
-                            <img src="@url64" alt="@Model.Name 64x64" class="w-16 h-16 object-contain" />
+                            <img src="@url64" alt="@Model.Name 64x64" class="w-16 h-16 object-contain"/>
                         </div>
                         <span class="text-xs text-gray-400">64x64</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-4 mb-2">
-                            <img src="@url96" alt="@Model.Name 96x96" class="w-24 h-24 object-contain" />
+                            <img src="@url96" alt="@Model.Name 96x96" class="w-24 h-24 object-contain"/>
                         </div>
                         <span class="text-xs text-gray-400">96x96</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-5 mb-2">
-                            <img src="@url128" alt="@Model.Name 128x128" class="w-32 h-32 object-contain" />
+                            <img src="@url128" alt="@Model.Name 128x128" class="w-32 h-32 object-contain"/>
                         </div>
                         <span class="text-xs text-gray-400">128x128</span>
                     </div>
@@ -68,7 +70,7 @@
                     <div class="flex flex-wrap justify-center gap-2 mb-8">
                         @foreach (var tag in Model.Tags)
                         {
-                            <span class="rounded-md border border-dark-border bg-dark-surface px-4 py-2">
+                            <span class="tag-item bg-dark-surface/60 text-white text-sm px-3 py-1 rounded-full flex items-center space-x-2 border border-dark-border">
                                 @tag
                             </span>
                         }
@@ -77,20 +79,37 @@
 
                 <!-- Action Buttons -->
                 <div class="btn-group items-center justify-center">
-                    <button class="btn-primary @(string.IsNullOrEmpty(activeSetId) ? "btn-disabled" : "")"
-                            data-action="add-to-active-set"
-                            id="add-to-active-btn"
-                            data-active-set-id="@activeSetId"
-                            @(string.IsNullOrEmpty(activeSetId) ? "disabled" : "")>
-                        <i class="fas fa-plus"></i>
-                        <span>Thêm vào bộ hiện tại</span>
+                    @{
+                        var isThisEmoteInActiveSet = Model.UserEmoteSets?
+                            .Any(s => s.IsActive && s.Emotes?.Contains(ObjectId.Parse(Model.Id)) == true) == true;
+                    }
+                    @if (!string.IsNullOrEmpty(activeSetId))
+                    {
+                    <button
+                        class="btn-primary text-ellipsis max-w-60 @(string.IsNullOrEmpty(activeSetId) ? "btn-disabled" : "")"
+                        data-action="add-to-active-set"
+                        id="add-to-active-btn"
+                        data-active-set-id="@activeSetId"
+                        @(string.IsNullOrEmpty(activeSetId) ? "disabled" : "")>
+                        <p>
+                            @if (isThisEmoteInActiveSet)
+                            {
+                                <i class="fas fa-check"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-plus"></i>
+                            }
+                            Thêm vào @activeSet?.Name
+                        </p>
                     </button>
+                    }
 
                     <button class="btn-secondary"
                             data-action="add-to-collection"
                             id="open-emote-set-modal">
                         <i class="fas fa-folder-plus"></i>
-                        <span>Chọn bộ emote</span>
+                        <span>Thêm vào bộ emote...</span>
                     </button>
 
                     @if (isOwner)
@@ -108,35 +127,45 @@
                             <span>Thêm</span>
                             <i class="fas fa-chevron-down dropdown-arrow"></i>
                         </button>
-                        <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-dark-surface border border-dark-border rounded-lg shadow-lg z-10"
-                             id="more-menu">
+                        <div
+                            class="dropdown-menu absolute right-0 mt-2 w-48 bg-dark-surface border border-dark-border rounded-lg shadow-lg z-10"
+                            id="more-menu">
                             <div class="px-4 py-2 text-xs text-gray-400 border-b border-dark-border">Tải xuống</div>
                             @if (!string.IsNullOrEmpty(url32))
                             {
-                                <a href="@url32" download="@(Model.Name)_32x32.@(url32.Split('.').LastOrDefault() ?? "png")" class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
+                                <a href="@url32"
+                                   download="@(Model.Name)_32x32.@(url32.Split('.').LastOrDefault() ?? "png")"
+                                   class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
                                     <i class="fas fa-download mr-2"></i>32x32
                                 </a>
                             }
                             @if (!string.IsNullOrEmpty(url64))
                             {
-                                <a href="@url64" download="@(Model.Name)_64x64.@(url64.Split('.').LastOrDefault() ?? "png")" class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
+                                <a href="@url64"
+                                   download="@(Model.Name)_64x64.@(url64.Split('.').LastOrDefault() ?? "png")"
+                                   class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
                                     <i class="fas fa-download mr-2"></i>64x64
                                 </a>
                             }
                             @if (!string.IsNullOrEmpty(url96))
                             {
-                                <a href="@url96" download="@(Model.Name)_96x96.@(url96.Split('.').LastOrDefault() ?? "png")" class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
+                                <a href="@url96"
+                                   download="@(Model.Name)_96x96.@(url96.Split('.').LastOrDefault() ?? "png")"
+                                   class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
                                     <i class="fas fa-download mr-2"></i>96x96
                                 </a>
                             }
                             @if (!string.IsNullOrEmpty(url128))
                             {
-                                <a href="@url128" download="@(Model.Name)_128x128.@(url128.Split('.').LastOrDefault() ?? "png")" class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
+                                <a href="@url128"
+                                   download="@(Model.Name)_128x128.@(url128.Split('.').LastOrDefault() ?? "png")"
+                                   class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
                                     <i class="fas fa-download mr-2"></i>128x128
                                 </a>
                             }
                             <div class="px-4 py-2 text-xs text-gray-400 border-t border-dark-border mt-1">Khác</div>
-                            <a href="#" class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline" data-action="report">
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline"
+                               data-action="report">
                                 <i class="fas fa-flag mr-2"></i>Báo cáo
                             </a>
                         </div>
@@ -149,39 +178,46 @@
         <div class="bg-dark-surface/40 border border-dark-border rounded-lg p-6">
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center space-x-6">
-                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium bg-primary/20 text-primary border border-primary/30 tab active"
-                            data-tab="channels">
+                    <button
+                        class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium bg-primary/20 text-primary border border-primary/30 tab active"
+                        data-tab="channels">
                         <i class="fas fa-users"></i>
                         <span>Kênh (@Model.TotalChannels)</span>
                     </button>
-                    <button class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-dark-surface/60 transition-colors tab"
-                            data-tab="activity">
+                    <button
+                        class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-dark-surface/60 transition-colors tab"
+                        data-tab="activity">
                         <i class="fas fa-bolt"></i>
                         <span>Hoạt động</span>
                     </button>
                 </div>
                 <div class="flex space-x-2">
-                    <button class="p-2 hover:bg-dark-surface/60 rounded text-gray-400 hover:text-white transition-colors"
-                            data-direction="prev">
+                    <button
+                        class="p-2 hover:bg-dark-surface/60 rounded text-gray-400 hover:text-white transition-colors"
+                        data-direction="prev">
                         <i class="fas fa-chevron-left"></i>
                     </button>
-                    <button class="p-2 hover:bg-dark-surface/60 rounded text-gray-400 hover:text-white transition-colors"
-                            data-direction="next">
+                    <button
+                        class="p-2 hover:bg-dark-surface/60 rounded text-gray-400 hover:text-white transition-colors"
+                        data-direction="next">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Channels Grid -->
-            <div class="grid grid-cols-8 xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-4 gap-4 channels-grid">
+            <div
+                class="grid grid-cols-8 xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-4 gap-4 channels-grid">
                 @foreach (var channel in Model.Channels)
                 {
-                    <div class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-surface/60 transition-colors cursor-pointer channel-item group"
-                         data-channel="@channel.Name">
+                    <div
+                        class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-surface/60 transition-colors cursor-pointer channel-item group"
+                        data-channel="@channel.Name">
                         <div class="relative flex-shrink-0">
                             <img src="@channel.Avatar" alt="@channel.Name" class="w-8 h-8 rounded-full">
                         </div>
-                        <span class="text-sm font-medium truncate group-hover:text-white transition-colors text-gray-300">
+                        <span
+                            class="text-sm font-medium truncate group-hover:text-white transition-colors text-gray-300">
                             @(channel?.Name ?? "Unknown")
                         </span>
                     </div>
@@ -236,7 +272,7 @@
                             var capacity = emoteSet.Capacity > 0 ? emoteSet.Capacity : 1000;
                             var percent = (int)Math.Round((double)emoteCount * 100 / capacity);
                             var isActive = emoteSet.IsActive;
-                            
+
                             <label class="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-dark-hover"
                                    data-name="@name.ToLowerInvariant()">
                                 <input type="radio"
@@ -276,7 +312,7 @@
                     </button>
 
                     <button type="button" id="confirm-emote-set"
-                            class="btn-primary btn-sm btn-disabled"
+                            class="btn-primary btn-sm"
                             disabled>
                         <i class="fas fa-plus"></i>
                         <span>Thêm vào bộ</span>
@@ -288,13 +324,13 @@
 </div>
 
 <!-- Include the modal ViewPartial -->
-<partial name="_EditModal" model="Model" />
+<partial name="_EditModal" model="Model"/>
 
 @section Scripts {
     <!-- Updated script references to include the modal JS file first -->
     <script src="~/js/emote-edit-modal.js"></script>
     <script src="~/js/emote-detail.js"></script>
-    
+
     <script>
         // Emote Set Selection Modal functionality
         (function () {
@@ -391,6 +427,7 @@
                     if (result.success) {
                         alert('Đã thêm emote vào bộ thành công!');
                         closeModal();
+                        window.location.reload();
                     } else {
                         alert(result.message || 'Có lỗi xảy ra khi thêm emote vào bộ');
                     }
@@ -405,17 +442,17 @@
         })();
 
         // Add to active set functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const addToActiveBtn = document.getElementById('add-to-active-btn');
             const activeSetId = addToActiveBtn?.getAttribute('data-active-set-id') || '';
-            
+
             if (!activeSetId && addToActiveBtn) {
                 addToActiveBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
 
-            addToActiveBtn?.addEventListener('click', async function(e) {
+            addToActiveBtn?.addEventListener('click', async function (e) {
                 e.preventDefault();
-                
+
                 if (!activeSetId) {
                     alert('Không có bộ emote nào đang được kích hoạt');
                     return;
@@ -437,6 +474,7 @@
 
                     if (result.success) {
                         alert('Đã thêm emote vào bộ hiện tại thành công!');
+                        window.location.reload();
                     } else {
                         alert(result.message || 'Có lỗi xảy ra khi thêm emote vào bộ');
                     }

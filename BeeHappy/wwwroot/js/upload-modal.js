@@ -285,6 +285,7 @@
                     alert("Tải lên thành công!");
                     console.log(result);
                     closeModal();
+                    window.location.reload();
                 } else {
                     const errorText = await response.text();
                     alert("Tải lên thất bại: " + errorText);

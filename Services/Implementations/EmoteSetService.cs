@@ -222,5 +222,18 @@ namespace Services.Implementations
             set.Emotes.Add(emoteId);
             return await emoteSetRepository.ReplaceAsync(set, false, ct);
         }
+
+        public Task RemoveEmoteFromSetAsync(ObjectId emoteSetId, ObjectId emoteId)
+        {
+            var emoteSet = emoteSetRepository.GetByIdAsync(emoteSetId)
+                .Result ?? throw new Exception("Bộ emote không tồn tại.");
+            if (emoteSet.Emotes == null || !emoteSet.Emotes.Contains(emoteId))
+            {
+                emoteSet.Emotes = new List<ObjectId>();
+                throw new Exception("Emote không tồn tại trong bộ emote.");
+            }
+            emoteSet.Emotes.Remove(emoteId);
+            return emoteSetRepository.ReplaceAsync(emoteSet, false);
+        }
     }
 }

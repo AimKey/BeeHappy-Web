@@ -221,6 +221,34 @@ namespace BeeHappy.Controllers.EmoteSets
             }
         }
 
+        // API
+        [HttpPost]
+        public async Task<IActionResult> RemoveEmoteFromSet(ObjectId emoteSetId, ObjectId emoteId)
+        {
+            try
+            {
+                var currentUser = await GetCurrentUserAsync();
+                if (currentUser == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                await emoteSetService.RemoveEmoteFromSetAsync(emoteSetId, emoteId);
+                return Ok(new EmoteSetResponseDto
+                {
+                    message = "Xoá emote khỏi bộ thành công",
+                    success = true,
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new EmoteSetResponseDto
+                {
+                    message = "Xoá emote khỏi bộ thất bại: " + e.Message,
+                    success = false,
+                });
+            }
+        }
+        
         private async Task<User?> GetCurrentUserAsync()
         {
             // var userId = HttpContext.Session.GetString(UserConstants.UserId);

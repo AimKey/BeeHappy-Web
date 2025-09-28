@@ -124,18 +124,17 @@
         </div>
 
         @* Edit emote set modal *@
-        <div id="edit-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300 ease-in-out">
+        <div id="edit-modal" class="fixed inset-0 z-50 hidden">
             <!-- overlay -->
-            <div class="absolute inset-0 bg-black/50 transition-opacity duration-300 ease-in-out"></div>
+            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
             <!-- panel -->
             <div class="absolute inset-0 flex items-center justify-center p-4">
-                <div
-                    class="w-full max-w-xl translate-y-4 scale-95 transform rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-100 shadow-2xl transition-all duration-300 ease-in-out">
-                    <div class="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+                <div class="w-full max-w-xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl">
+                    <div class="flex items-center justify-between border-b border-dark-border px-4 py-3">
                         <h3 class="text-lg font-semibold">Chỉnh sửa bộ emote</h3>
                         <button type="button" id="close-edit-modal"
-                                class="cursor-pointer rounded-md p-2 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100">
+                                class="cursor-pointer rounded-lg p-2 text-gray-400 transition-all hover:bg-dark-hover hover:text-white">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -155,19 +154,17 @@
                                    name="Name"
                                    value="@Html.Raw(emoteSet.Name)"
                                    required
-                                   class="placeholder-gray-500 w-full rounded-lg bg-zinc-950 px-3 py-2 text-sm 
-                text-white outline-none focus:ring-2 focus:ring-primary"
+                                   class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors"
                                    placeholder="Nhập tên bộ emote"/>
                         </div>
 
                         <!-- Tags Field -->
                         <div class="mb-4">
-                            <label for="TagsString" class="mb-2 block text-sm font-medium text-zinc-300">Tags</label>
+                            <label for="TagsString" class="mb-2 block text-sm font-medium text-zinc-300">Thẻ</label>
                             <div class="relative">
                                 <input type="text"
                                        id="TagsString"
-                                       class="placeholder-gray-500 w-full rounded-lg bg-zinc-950 px-3 py-2 text-sm
- text-white outline-none focus:ring-2 focus:ring-primary"
+                                       class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors"
                                        placeholder="Nhập thẻ và nhấn phím cách để thêm"/>
                                 <!-- Hidden input for database -->
                                 <input type="hidden" id="TagsStringHidden" name="TagsString" value=""/>
@@ -178,7 +175,12 @@
                                     {
                                         foreach (var tag in emoteSet.Tags)
                                         {
-                                            <span class="existing-tag" data-tag="@Html.Raw(tag)">@Html.Raw(tag)</span>
+                                            <span class="existing-tag bg-dark-surface/60 text-white text-sm px-3 py-1 rounded-full flex items-center space-x-2 border border-dark-border" data-tag="@Html.Raw(tag)">
+                                                <span>@Html.Raw(tag)</span>
+                                                <button type="button" class="remove-tag text-gray-400 hover:text-white">
+                                                    <i class="fas fa-times text-xs"></i>
+                                                </button>
+                                            </span>
                                         }
                                     }
                                 </div>
@@ -196,21 +198,19 @@
                                    min="1"
                                    max="1000"
                                    value="@Html.Raw(Model.EmoteSet.Capacity)"
-                                   class="placeholder-gray-500 w-full rounded-lg bg-zinc-950 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-primary"/>
+                                   class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors"/>
                         </div>
                         
                         <!-- Is Active Field -->
                         <div class="mb-4 mt-2">
-                            @* <label for="IsActive" class="mb-2 block text-sm font-medium text-zinc-300">Trạng thái hoạt *@
-                                @* động</label> *@
                             <div class="flex items-center gap-3">
                                 <input type="checkbox"
                                        id="IsActive"
                                        name="IsActive"
                                        value="true"
                                        @(emoteSet.IsActive ? "checked" : "")
-                                       class="h-4 w-4 rounded border-zinc-700 bg-zinc-950 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900"/>
-                                <label for="IsActive" class="cursor-pointer text-sm text-zinc-300">
+                                       class="h-4 w-4 rounded border-dark-border bg-dark-surface text-primary focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-surface"/>
+                                <label for="IsActive" class="cursor-pointer text-sm text-white">
                                     Đặt làm bộ emote hoạt động
                                 </label>
                             </div>
@@ -219,20 +219,21 @@
                         </div>
 
                         <!-- Action Buttons -->
-                        <div class="mt-6 flex items-center justify-between">
+                        <div class="flex items-center justify-between p-4 border-t border-dark-border">
                             <button id="delete-btn" type="button"
-                                    class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 focus:outline-none">
+                                    class="text-red-400 hover:text-red-300 font-medium transition-colors">
                                 Xóa bộ emote này
                             </button>
-                            <div class="flex items-center gap-3">
+                            <div class="flex space-x-3">
                                 <button type="button"
                                         id="cancel-edit"
-                                        class="rounded-lg bg-dark-surface px-4 py-2 text-sm font-semibold text-gray-200 hover:bg-dark-hover">
+                                        class="btn-secondary-sm">
                                     Hủy
                                 </button>
                                 <button type="submit"
-                                        class="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark focus:outline-none">
-                                    Chỉnh sửa
+                                        class="btn-primary btn-sm">
+                                    <i class="fas fa-save"></i>
+                                    <span>Chỉnh sửa</span>
                                 </button>
                             </div>
                         </div>
@@ -247,21 +248,23 @@
                 @foreach (var emote in emotes)
                 {
                     var emoteUrl = emote.Files?.LastOrDefault()?.Url ?? "";
-                    <a class="emote-card" data-emote-id="@emote.Id" asp-action="Details" asp-controller="Emote" asp-route-id="@emote.Id">
-                        <div class="emote-thumbnail">
-                            @if (!string.IsNullOrEmpty(emoteUrl))
-                            {
-                                <img src="@emoteUrl" alt="@emote.Name" loading="lazy">
-                            }
-                            else
-                            {
-                                <img src="/images/placeholder-emote.png" alt="placeholder" loading="lazy">
-                            }
-                        </div>
-                        <div class="emote-info">
-                            <div class="emote-name">@Html.Raw(emote.Name)</div>
-                        </div>
-                    </a>
+                    <div class="emote-card relative" data-emote-id="@emote.Id">
+                        <a asp-action="Details" asp-controller="Emote" asp-route-id="@emote.Id" class="block">
+                            <div class="emote-thumbnail">
+                                @if (!string.IsNullOrEmpty(emoteUrl))
+                                {
+                                    <img src="@emoteUrl" alt="@emote.Name" loading="lazy">
+                                }
+                                else
+                                {
+                                    <img src="/images/placeholder-emote.png" alt="placeholder" loading="lazy">
+                                }
+                            </div>
+                            <div class="emote-info">
+                                <div class="emote-name">@Html.Raw(emote.Name)</div>
+                            </div>
+                        </a>
+                    </div>
                 }
             }
             else
@@ -283,6 +286,14 @@
             </div>
         }
     </div>
+</div>
+
+<!-- Context Menu -->
+<div id="context-menu" class="fixed z-50 hidden bg-dark-surface border border-dark-border rounded-lg shadow-lg py-1 min-w-48">
+    <button id="remove-from-set" class="w-full px-4 py-2 text-left text-sm text-white hover:bg-dark-hover flex items-center gap-2">
+        <i class="fas fa-trash text-red-400"></i>
+        <span>Xóa khỏi bộ emote</span>
+    </button>
 </div>
 
 @section Scripts {
@@ -318,12 +329,12 @@
                     const isVisible = emoteName.includes(searchTerm) || ownerName.includes(searchTerm);
 
                     if (isVisible) {
-                        card.style.display = 'block';
+                        card.style.display = 'flex';
                         card.style.opacity = '1';
                         visibleCount++;
                         hasResults = true;
                     } else {
-                        card.style.display = 'none';
+                        card.style.display = 'flex';
                         card.style.opacity = '0';
                     }
                 });
@@ -405,33 +416,151 @@
                 console.error('Search input not found!');
             }
 
-            // Focus search with Ctrl/Cmd + K anywhere on page
-            document.addEventListener('keydown', function (e) {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                    e.preventDefault();
-                    if (searchInput) {
-                        searchInput.focus();
-                    }
-                }
-            });
-
-            // Emote card hover effects
-            emoteCards.forEach(card => {
-                card.addEventListener('mouseenter', function () {
-                    this.style.transform = 'translateY(-2px)';
-                    this.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.3)';
-                });
-
-                card.addEventListener('mouseleave', function () {
-                    this.style.transform = 'translateY(0)';
-                    this.style.boxShadow = '';
-                });
-            });
-
             // Initialize search state
             performSearch('');
 
         });
+
+        // Context Menu functionality
+        (function () {
+            const contextMenu = document.getElementById('context-menu');
+            const removeFromSetBtn = document.getElementById('remove-from-set');
+            const emoteCards = document.querySelectorAll('.emote-card');
+            let selectedEmoteId = null;
+            let selectedEmoteSetId = '@emoteSet.Id';
+
+            // Show context menu on right-click
+            emoteCards.forEach(card => {
+                card.addEventListener('contextmenu', function (e) {
+                    e.preventDefault();
+                    selectedEmoteId = this.getAttribute('data-emote-id');
+                    
+                    // Position the context menu
+                    const x = e.clientX;
+                    const y = e.clientY;
+                    
+                    contextMenu.style.left = x + 'px';
+                    contextMenu.style.top = y + 'px';
+                    contextMenu.classList.remove('hidden');
+                });
+            });
+
+            // Hide context menu when clicking elsewhere
+            document.addEventListener('click', function (e) {
+                if (!contextMenu.contains(e.target)) {
+                    contextMenu.classList.add('hidden');
+                }
+            });
+
+            // Hide context menu on escape key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    contextMenu.classList.add('hidden');
+                }
+            });
+
+            // Handle remove from set action
+            removeFromSetBtn.addEventListener('click', async function () {
+                if (!selectedEmoteId) return;
+
+                try {
+                    // Show confirmation dialog
+                    const result = await Swal.fire({
+                        title: 'Xác nhận xóa',
+                        text: 'Bạn có chắc chắn muốn xóa emote này khỏi bộ emote?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#dc2626',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: 'Có, xóa!',
+                        cancelButtonText: 'Hủy',
+                        background: '#18181b',
+                        color: '#ffffff',
+                        customClass: {
+                            popup: 'border border-zinc-700',
+                            title: 'text-white',
+                            htmlContainer: 'text-zinc-300'
+                        }
+                    });
+
+                    if (result.isConfirmed) {
+                        // Show loading state
+                        Swal.fire({
+                            title: 'Đang xóa...',
+                            text: 'Vui lòng chờ trong giây lát',
+                            icon: 'info',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            background: '#18181b',
+                            color: '#ffffff',
+                            customClass: {
+                                popup: 'border border-zinc-700'
+                            },
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        // Make API call to remove emote from set
+                        const formData = new FormData();
+                        formData.append('emoteSetId', selectedEmoteSetId);
+                        formData.append('emoteId', selectedEmoteId);
+                        formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+
+                        const response = await fetch('/EmoteSets/RemoveEmoteFromSet', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const apiResult = await response.json();
+
+                        if (response.ok && apiResult.success) {
+                            // Success - show success message and reload page
+                            Swal.fire({
+                                title: 'Đã xóa!',
+                                text: apiResult.message || 'Emote đã được xóa khỏi bộ thành công.',
+                                icon: 'success',
+                                background: '#18181b',
+                                color: '#ffffff',
+                                customClass: {
+                                    popup: 'border border-zinc-700'
+                                }
+                            }).then(() => {
+                                // Reload the page to reflect changes
+                                window.location.reload();
+                            });
+                        } else {
+                            // Error response
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: apiResult.message || 'Không thể xóa emote khỏi bộ. Vui lòng thử lại sau.',
+                                icon: 'error',
+                                background: '#18181b',
+                                color: '#ffffff',
+                                customClass: {
+                                    popup: 'border border-zinc-700'
+                                }
+                            });
+                        }
+                    }
+
+                    // Hide context menu
+                    contextMenu.classList.add('hidden');
+                } catch (error) {
+                    console.error('Error removing emote from set:', error);
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi xóa emote khỏi bộ. Vui lòng thử lại sau.',
+                        icon: 'error',
+                        background: '#18181b',
+                        color: '#ffffff',
+                        customClass: {
+                            popup: 'border border-zinc-700'
+                        }
+                    });
+                }
+            });
+        })();
 
         // Toggle Active Status functionality
         (function () {
@@ -531,43 +660,16 @@
 
             function openEditModal() {
                 editModal.classList.remove('hidden');
-                // Trigger reflow to ensure the hidden class is removed before adding opacity
-                editModal.offsetHeight;
-                editModal.classList.remove('opacity-0');
-                editModal.classList.add('opacity-100');
-
-                // Animate the panel
-                const panel = editModal.querySelector('.transform');
-                if (panel) {
-                    panel.classList.remove('scale-95', 'translate-y-4');
-                    panel.classList.add('scale-100', 'translate-y-0');
-                }
-
                 // Reset form to initial state (current emote set values)
                 resetFormToInitialState();
-
-                // Focus on the first input after animation starts
-                setTimeout(() => document.getElementById('Name')?.focus(), 100);
+                // Focus on the first input
+                setTimeout(() => document.getElementById('Name')?.focus(), 50);
             }
 
             function closeEditModal() {
-                // Start fade out animation
-                editModal.classList.remove('opacity-100');
-                editModal.classList.add('opacity-0');
-
-                // Animate the panel out
-                const panel = editModal.querySelector('.transform');
-                if (panel) {
-                    panel.classList.remove('scale-100', 'translate-y-0');
-                    panel.classList.add('scale-95', 'translate-y-4');
-                }
-
-                // Hide modal after animation completes
-                setTimeout(() => {
-                    editModal.classList.add('hidden');
-                    // Reset form to initial state (current emote set values)
-                    resetFormToInitialState();
-                }, 300); // Match the CSS transition duration
+                editModal.classList.add('hidden');
+                // Reset form to initial state (current emote set values)
+                resetFormToInitialState();
             }
 
             function resetFormToInitialState() {
@@ -650,12 +752,12 @@
                 editTagsDisplay.appendChild(countElement);
 
                 editTags.forEach(tag => {
-                    const tagElement = document.createElement('div');
-                    tagElement.className = 'inline-flex items-center gap-1 rounded-full bg-blue-600/80 px-3 py-1 text-sm text-white';
+                    const tagElement = document.createElement('span');
+                    tagElement.className = 'existing-tag bg-dark-surface/60 text-white text-sm px-3 py-1 rounded-full flex items-center space-x-2 border border-dark-border';
                     tagElement.innerHTML = `
                         <span>${tag}</span>
-                        <button type="button" onclick="removeEditTagFromModal('${tag}')" class="ml-1 hover:text-red-300">
-                            <i class="fas fa-times"></i>
+                        <button type="button" onclick="removeEditTagFromModal('${tag}')" class="remove-tag text-gray-400 hover:text-white">
+                            <i class="fas fa-times text-xs"></i>
                         </button>
                     `;
                     editTagsDisplay.appendChild(tagElement);
@@ -836,7 +938,7 @@
 
             // Close modal with Escape key
             document.addEventListener('keydown', (e) => {
-                if (!editModal.classList.contains('hidden') && !editModal.classList.contains('opacity-0') && e.key === 'Escape') {
+                if (!editModal.classList.contains('hidden') && e.key === 'Escape') {
                     closeEditModal();
                 }
             });

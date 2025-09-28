@@ -43,8 +43,7 @@
 
             <!-- panel -->
             <div class="absolute inset-0 flex items-center justify-center p-4">
-                <div
-                    class="w-full max-w-xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl">
+                <div class="w-full max-w-xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl">
                     <div class="flex items-center justify-between border-b border-dark-border px-4 py-3">
                         <h3 class="text-lg font-semibold">Kích hoạt bộ emote</h3>
                         <button type="button" id="close-activate-modal"
@@ -69,8 +68,7 @@
                             <input type="text"
                                    placeholder="Tìm kiếm bộ..."
                                    id="set-search"
-                                   class="border-dark-border rounded-lg border px-4 py-2 text-sm w-full
-              transition-all focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none"/>
+                                   class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors"/>
                             <svg class="absolute top-2.5 right-3 h-4 w-4 text-gray-400" fill="none"
                                  stroke="currentColor"
                                  viewBox="0 0 24 24">
@@ -281,8 +279,6 @@ px-3 py-2 text-sm text-white outline-none "/>
 
             function openModal() {
                 modal.classList.remove('hidden');
-                // small entrance animation
-                modal.querySelector('.w-full').classList.add('animate-in');
                 setTimeout(() => search?.focus(), 50);
             }
 
@@ -399,47 +395,21 @@ px-3 py-2 text-sm text-white outline-none "/>
 
             function openCreateModal() {
                 createModal.classList.remove('hidden');
-                // Trigger reflow to ensure the hidden class is removed before adding opacity
-                createModal.offsetHeight;
-                createModal.classList.remove('opacity-0');
-                createModal.classList.add('opacity-100');
-
-                // Animate the panel
-                const panel = createModal.querySelector('.transform');
-                if (panel) {
-                    panel.classList.remove('scale-95', 'translate-y-4');
-                    panel.classList.add('scale-100', 'translate-y-0');
-                }
-
-                // Focus on the first input after animation starts
-                setTimeout(() => document.getElementById('Name')?.focus(), 100);
+                // Focus on the first input
+                setTimeout(() => document.getElementById('Name')?.focus(), 50);
             }
 
             function closeCreateModal() {
-                // Start fade out animation
-                createModal.classList.remove('opacity-100');
-                createModal.classList.add('opacity-0');
-
-                // Animate the panel out
-                const panel = createModal.querySelector('.transform');
-                if (panel) {
-                    panel.classList.remove('scale-100', 'translate-y-0');
-                    panel.classList.add('scale-95', 'translate-y-4');
+                createModal.classList.add('hidden');
+                // Reset form
+                const form = createModal.querySelector('form');
+                if (form) {
+                    form.reset();
                 }
-
-                // Hide modal after animation completes
-                setTimeout(() => {
-                    createModal.classList.add('hidden');
-                    // Reset form
-                    const form = createModal.querySelector('form');
-                    if (form) {
-                        form.reset();
-                    }
-                    // Reset tags
-                    tags = [];
-                    updateTagsDisplay();
-                    updateHiddenInput();
-                }, 300); // Match the CSS transition duration
+                // Reset tags
+                tags = [];
+                updateTagsDisplay();
+                updateHiddenInput();
             }
 
             // Tag management
@@ -556,7 +526,7 @@ px-3 py-2 text-sm text-white outline-none "/>
 
             // Close modal with Escape key
             document.addEventListener('keydown', (e) => {
-                if (!createModal.classList.contains('hidden') && !createModal.classList.contains('opacity-0') && e.key === 'Escape') {
+                if (!createModal.classList.contains('hidden') && e.key === 'Escape') {
                     closeCreateModal();
                 }
             });
