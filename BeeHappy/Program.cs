@@ -53,6 +53,13 @@ public class Program
                 options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             });
+        
+        // Cookie settings
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.SameSite = SameSiteMode.None; // required for external login
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        });
 
         // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");
