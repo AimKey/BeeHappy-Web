@@ -65,10 +65,18 @@ namespace Services.Implementations
             // Convert to queryable for filtering
             var query = allEmotes.AsQueryable();
 
-            // Apply userId
+            // Apply userId => get emote of current user
             if (!string.IsNullOrEmpty(userId))
             {
-                query = query.Where(e => e.OwnerId.ToString().Equals(userId));
+                // if login => show public emote and public/private emote of login user
+                query = query.Where(e => 
+                                            e.Visibility.Contains(EmoteVisibilityConstant.PUBLIC) || 
+                                            e.OwnerId.ToString().Equals(userId)
+                );
+            }
+            else {
+                // if not login => only show public emote
+                query = query.Where(e => e.Visibility.Contains(EmoteVisibilityConstant.PUBLIC));
             }
             
             // Apply tags filter
@@ -100,9 +108,9 @@ namespace Services.Implementations
                         case "overlaying":
                             query = query.Where(e => e.IsOverlaying);
                             break;
-                        case "mine":
-                            query = query.Where(e => e.OwnerId.Equals(ObjectId.Parse(userId)));
-                            break;
+                        //case "mine":
+                        //    query = query.Where(e => e.OwnerId.Equals(ObjectId.Parse(userId)));
+                        //    break;
                             // "exact" is handled in search section above
                     }
                 }
