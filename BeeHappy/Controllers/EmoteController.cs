@@ -98,9 +98,9 @@ namespace BeeHappy.Controllers
                 ModelState.AddModelError("Name", "Tên emote không được vượt quá 20 ký tự.");
             if (vm.Files == null || vm.Files.Count == 0 || vm.Files[0].File == null)
                 ModelState.AddModelError("File", "Vui lòng tải lên một hình ảnh.");
-            if (vm.Files == null)
+            if (vm.Tags == null)
             {
-                vm.Files = new List<EmoteFileViewModel>();
+                vm.Tags = new ();
             }
 
 
