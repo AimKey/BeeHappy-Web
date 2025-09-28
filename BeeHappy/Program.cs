@@ -53,12 +53,14 @@ public class Program
                 options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             });
+
         // Cookie policy tweak
         builder.Services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.SameSite = SameSiteMode.Lax; // hoặc None nếu HTTPS
             options.Cookie.SecurePolicy = CookieSecurePolicy.None; // HTTP deploy
         });
+
         // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");
         Console.WriteLine($"SQL string: {builder.Configuration.GetConnectionString("MongoDB")}");
@@ -79,7 +81,7 @@ public class Program
         // Config notfound-forbidden
         app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
         app.UseStaticFiles();
 
         app.UseSession();
@@ -112,10 +114,7 @@ public class Program
         builder.Services.AddScoped<IPaymentService, PaymentService>();
 
         // Auto Mapper Configurations
-        builder.Services.AddAutoMapper(cfg =>
-        {
-            cfg.AddProfile<MappingProfile>();
-        });
+        builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MappingProfile>(); });
 
         // PayOS
         SetupPayOs(builder);
@@ -123,7 +122,8 @@ public class Program
 
     private static void SetupPayOs(WebApplicationBuilder builder)
     {
-        PayOS payOs = new PayOS(builder.Configuration["PayOS:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+        PayOS payOs = new PayOS(
+            builder.Configuration["PayOS:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
             builder.Configuration["PayOS:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
             builder.Configuration["PayOS:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
         builder.Services.AddSingleton(payOs);

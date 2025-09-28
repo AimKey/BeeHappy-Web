@@ -86,12 +86,12 @@
                     @if (!string.IsNullOrEmpty(activeSetId))
                     {
                     <button
-                        class="btn-primary text-ellipsis max-w-60 @(string.IsNullOrEmpty(activeSetId) ? "btn-disabled" : "")"
+                        class="btn-primary @(string.IsNullOrEmpty(activeSetId) ? "btn-disabled" : "")"
                         data-action="add-to-active-set"
                         id="add-to-active-btn"
                         data-active-set-id="@activeSetId"
                         @(string.IsNullOrEmpty(activeSetId) ? "disabled" : "")>
-                        <p>
+                        <p class="truncate max-w-60">
                             @if (isThisEmoteInActiveSet)
                             {
                                 <i class="fas fa-check"></i>
