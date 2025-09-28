@@ -1,112 +1,105 @@
 ﻿@model BeeHappy.ViewModels.EmoteViewModel
 
- @* Edit Emote Modal *@
- @* Added hidden class to hide modal by default *@
-<div id="editModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="modal-content bg-discord-darker rounded-lg w-full max-w-md mx-4">
-        @* Modal Header *@
-        <div class="flex items-center justify-between p-6 border-b border-discord-dark">
-            <h2 class="text-xl font-semibold text-white">Edit @Model.Name</h2>
-            @* Removed inline onclick, now handled by external JS *@
-            <button id="closeModalBtn" class="text-gray-400 hover:text-white transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
+@* Edit Emote Modal *@
+<div id="editModal" class="fixed inset-0 z-50 hidden">
+    <!-- overlay -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
-        @* Modal Body *@
-        @* Added form with proper action to work with controller *@
-        <form id="editEmoteForm" action="/Emote/Edit" method="post">
-            <input type="hidden" name="Id" value="@Model.Id" />
-            <div class="p-6 space-y-6">
-                @* Emote Name *@
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Emote Name</label>
-                    <input type="text" name="Name" id="emoteName" value="@Model.Name"
-                           class="w-full bg-discord-dark text-white px-3 py-2 rounded-md border border-discord-gray focus:border-discord-blurple focus:outline-none transition-colors">
-                </div>
-
-                @* Tags *@
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Tags</label>
-                    <div class="relative">
-                        <input type="text" id="tagInput" placeholder="Enter tags"
-                               class="w-full bg-discord-dark text-white px-3 py-2 rounded-md border border-discord-gray focus:border-discord-blurple focus:outline-none transition-colors">
-                        <svg class="absolute right-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                        </svg>
-                    </div>
-
-                    @* Hidden input for tags *@
-                    <input type="hidden" name="Tags" id="tagsHidden" value="@string.Join(",", Model.Tags ?? new List<string>())" />
-
-                    @* Current Tags *@
-                    <div id="tagsList" class="flex flex-wrap gap-2 mt-3">
-                        @if (Model.Tags != null && Model.Tags.Any())
-                        {
-                            @foreach (var tag in Model.Tags)
-                            {
-                                <span class="tag-item bg-discord-gray text-white text-sm px-3 py-1 rounded-full flex items-center space-x-2">
-                                    <span>@tag</span>
-                                    @* Removed inline onclick, now handled by external JS *@
-                                    <button type="button" class="remove-tag text-gray-400 hover:text-white">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                        </svg>
-                                    </button>
-                                </span>
-                            }
-                        }
-                    </div>
-                </div>
-
-                @* Settings *@
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-4">Settings</label>
-                    <div class="space-y-4">
-                        @* Overlaying Toggle *@
-                        <div class="flex items-center justify-between">
-                            <span class="text-white">Overlaying</span>
-                            <input type="hidden" name="IsOverlaying" value="false" />
-                            <input type="checkbox" name="IsOverlaying" id="overlayingToggle" value="true" @(Model.IsOverlaying ? "checked" : "") class="hidden" />
-                            @* Removed inline onclick, now handled by external JS *@
-                            <div class="toggle-switch @(Model.IsOverlaying ? "active" : "")" data-toggle="overlayingToggle">
-                                <div class="toggle-slider"></div>
-                            </div>
-                        </div>
-
-                        @* Private Toggle *@
-                        <div class="flex items-center justify-between">
-                            <span class="text-white">Private</span>
-                            <input type="hidden" name="Visibility" value="Public" />
-                            <input type="checkbox" id="privateToggle" @(Model.Visibility.Contains("Private") ? "checked" : "") class="hidden" />
-                            @* Removed inline onclick, now handled by external JS *@
-                            <div class="toggle-switch @(Model.Visibility.Contains("Private") ? "active" : "")" data-toggle="privateToggle">
-                                <div class="toggle-slider"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            @* Modal Footer *@
-            <div class="flex items-center justify-between p-6 border-t border-discord-dark">
-                @* Updated delete button to use proper form action *@
-                <button type="button" id="deleteEmoteBtn" class="text-discord-red hover:text-red-400 font-medium transition-colors">
-                    Delete
+    <!-- panel -->
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl">
+            @* Modal Header *@
+            <div class="flex items-center justify-between border-b border-dark-border px-4 py-3">
+                <h3 class="text-lg font-semibold">Chỉnh sửa @Model.Name</h3>
+                <button type="button" id="closeModalBtn"
+                        class="cursor-pointer rounded-lg p-2 text-gray-400 transition-all hover:bg-dark-hover hover:text-white">
+                    <i class="fas fa-times"></i>
                 </button>
-                <div class="flex space-x-3">
-                    @* Removed inline onclick, now handled by external JS *@
-                    <button type="button" id="cancelBtn" class="bg-discord-gray text-white px-4 py-2 rounded-md font-medium hover:bg-discord-lightgray transition-colors">
-                        Cancel
-                    </button>
-                    <button type="submit" class="bg-discord-blurple text-white px-4 py-2 rounded-md font-medium hover:bg-blue-600 transition-colors">
-                        Save
-                    </button>
-                </div>
             </div>
-        </form>
+
+            @* Modal Body *@
+            <form id="editEmoteForm" action="/Emote/Edit" method="post">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="p-4 space-y-6">
+                    @* Emote Name *@
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-2">Tên emote</label>
+                        <input type="text" name="Name" id="emoteName" value="@Model.Name"
+                               class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors">
+                    </div>
+
+                    @* Tags *@
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-2">Thẻ</label>
+                        <div class="relative">
+                            <input type="text" id="tagInput" placeholder="Nhập thẻ và nhấn Enter để thêm"
+                                   class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors">
+                        </div>
+
+                        @* Hidden input for tags *@
+                        <input type="hidden" name="Tags" id="tagsHidden" value="@string.Join(",", Model.Tags ?? new List<string>())" />
+
+                        @* Current Tags *@
+                        <div id="tagsList" class="flex flex-wrap gap-2 mt-3">
+                            @if (Model.Tags != null && Model.Tags.Any())
+                            {
+                                @foreach (var tag in Model.Tags)
+                                {
+                                    <span class="tag-item bg-dark-surface/60 text-white text-sm px-3 py-1 rounded-full flex items-center space-x-2 border border-dark-border">
+                                        <span>@tag</span>
+                                        <button type="button" class="remove-tag text-gray-400 hover:text-white">
+                                            <i class="fas fa-times text-xs"></i>
+                                        </button>
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    @* Settings *@
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-300 mb-4">Cài đặt</label>
+                        <div class="space-y-4">
+                            @* Overlaying Toggle *@
+                            <div class="flex items-center justify-between">
+                                <span class="text-white">Overlaying</span>
+                                <input type="hidden" name="IsOverlaying" value="false" />
+                                <input type="checkbox" name="IsOverlaying" id="overlayingToggle" value="true" @(Model.IsOverlaying ? "checked" : "") class="hidden" />
+                                <div class="toggle-switch @(Model.IsOverlaying ? "active" : "")" data-toggle="overlayingToggle">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+
+                            @* Private Toggle *@
+                            <div class="flex items-center justify-between">
+                                <span class="text-white">Riêng tư</span>
+                                <input type="hidden" name="Visibility" value="Public" />
+                                <input type="checkbox" id="privateToggle" @(Model.Visibility.Contains("Private") ? "checked" : "") class="hidden" />
+                                <div class="toggle-switch @(Model.Visibility.Contains("Private") ? "active" : "")" data-toggle="privateToggle">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* Modal Footer *@
+                <div class="flex items-center justify-between p-4 border-t border-dark-border">
+                    <button type="button" id="deleteEmoteBtn" class="text-red-400 hover:text-red-300 font-medium transition-colors">
+                        Xóa
+                    </button>
+                    <div class="flex space-x-3">
+                        <button type="button" id="cancelBtn" class="btn-secondary-sm">
+                            Hủy
+                        </button>
+                        <button type="submit" class="btn-primary btn-sm">
+                            <i class="fas fa-save"></i>
+                            <span>Lưu</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

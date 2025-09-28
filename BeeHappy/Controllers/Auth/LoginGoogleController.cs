@@ -106,6 +106,6 @@ public class LoginGoogleController : Controller
         HttpContext.Session.SetString("Username", user.Username);
         HttpContext.Session.SetString("Roles", string.Join(",", user.Roles ?? [RoleConstants.User]));
 
-        return RedirectToAction("LandingPage", "Home");
+        return RedirectToAction("Index", "Home");
     }
 }

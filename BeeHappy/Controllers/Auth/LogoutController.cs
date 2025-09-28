@@ -10,6 +10,6 @@ public class LogoutController : Controller
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         HttpContext.Session.Clear();
-        return RedirectToAction("LandingPage", "Home");
+        return RedirectToAction("Index", "Home");
     }
 }

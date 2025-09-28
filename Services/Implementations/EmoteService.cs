@@ -61,7 +61,7 @@ namespace Services.Implementations
         {
             // Get all emotes from repository
             var allEmotes = await emoteRepository.GetAllAsync();
-
+            
             // Convert to queryable for filtering
             var query = allEmotes.AsQueryable();
 
@@ -78,7 +78,7 @@ namespace Services.Implementations
                 // if not login => only show public emote
                 query = query.Where(e => e.Visibility.Contains(EmoteVisibilityConstant.PUBLIC));
             }
-
+            
             // Apply tags filter
             if (!string.IsNullOrEmpty(tags))
             {

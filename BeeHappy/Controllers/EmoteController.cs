@@ -1,4 +1,5 @@
-﻿using BeeHappy.ViewModels;
+﻿using System.Security.Claims;
+using BeeHappy.ViewModels;
 using BusinessObjects;
 using CommonObjects.AppConstants;
 using CommonObjects.Pagination;
@@ -26,7 +27,8 @@ namespace BeeHappy.Controllers
             _emoteSetService = emoteSetService;
         }
 
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 20, string search = "", string tags = "", string[] filters = null)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 20, string search = "", string tags = "",
+            string[] filters = null)
         {
             ViewBag.Search = search;
             ViewBag.Tags = tags;
@@ -37,14 +39,16 @@ namespace BeeHappy.Controllers
             PagedResult<Emote> emotes = new();
 
             // get current user
-            if(filters!= null && filters.Contains("mine"))
+            if (filters != null && filters.Contains("mine"))
             {
                 var currentUser = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (currentUser == null)
                 {
                     return NotFound();
                 }
-                emotes = await _emoteService.GetFilteredEmotesAsync(page, pageSize, userId: currentUser, search, tags, filters);
+
+                emotes = await _emoteService.GetFilteredEmotesAsync(page, pageSize, userId: currentUser, search, tags,
+                    filters);
             }
             else
             {
@@ -63,8 +67,8 @@ namespace BeeHappy.Controllers
                     Size = f.Size
                 }).ToList(),
                 Tags = e.Tags,
-                Visibility = e.Visibility ?? new List<string> { "Public"},
-                Status = e.Status ?? new List<string> { EmoteStatusConstants.ACTIVE},
+                Visibility = e.Visibility ?? new List<string> { "Public" },
+                Status = e.Status ?? new List<string> { EmoteStatusConstants.ACTIVE },
                 IsOverlaying = e.IsOverlaying,
                 CreatedAt = e.CreatedAt,
                 UpdatedAt = e.UpdatedAt
@@ -89,10 +93,11 @@ namespace BeeHappy.Controllers
         public async Task<IActionResult> Create(EmoteViewModel vm)
         {
             if (string.IsNullOrWhiteSpace(vm.Name))
-                ModelState.AddModelError("Name", "Name is required.");
-
+                ModelState.AddModelError("Name", "Tên emote là bắt buộc.");
+            else if (vm.Name.Length > 20)
+                ModelState.AddModelError("Name", "Tên emote không được vượt quá 20 ký tự.");
             if (vm.Files == null || vm.Files.Count == 0 || vm.Files[0].File == null)
-                ModelState.AddModelError("File", "Please upload an image.");
+                ModelState.AddModelError("File", "Vui lòng tải lên một hình ảnh.");
 
             if (!ModelState.IsValid)
             {
@@ -126,12 +131,12 @@ namespace BeeHappy.Controllers
 
                 var file = vm.Files[0].File;
                 var ext = Path.GetExtension(file.FileName).ToLower();
-
+                
                 if (!allowedExtensions.Contains(ext))
-                    return BadRequest(new { error = "Only JPG, PNG, GIF files are allowed." });
+                    return BadRequest(new { error = "Chỉ cho phép file JPG, PNG, GIF." });
 
                 if (file.Length > maxFileSize)
-                    return BadRequest(new { error = "File size cannot exceed 2 MB." });
+                    return BadRequest(new { error = "Kích thước file không được vượt quá 2 MB." });
 
                 string uploadPath = Path.Combine(
                     Directory.GetCurrentDirectory(),
@@ -157,7 +162,7 @@ namespace BeeHappy.Controllers
                     Tags = tags,
                     IsOverlaying = vm.IsOverlaying,
                     Visibility = vm.Visibility,
-                    Status = new List<string> { EmoteStatusConstants.ACTIVE},
+                    Status = new List<string> { EmoteStatusConstants.ACTIVE },
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
                     Files = new List<BusinessObjects.NestedObjects.EmoteFile>()
@@ -174,10 +179,10 @@ namespace BeeHappy.Controllers
 
                         // resize copy để không ảnh hưởng ảnh gốc
                         using (var clone = image.Clone(x => x.Resize(new SixLabors.ImageSharp.Processing.ResizeOptions
-                        {
-                            Size = new SixLabors.ImageSharp.Size(size, size),
-                            Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop
-                        })))
+                               {
+                                   Size = new SixLabors.ImageSharp.Size(size, size),
+                                   Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop
+                               })))
                         {
                             await clone.SaveAsync(filePath);
                         }
@@ -195,20 +200,19 @@ namespace BeeHappy.Controllers
                 await _emoteService.InsertEmoteAsync(emote);
 
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-                    return Json(new { success = true, emoteId = emote.Id.ToString() });
+                    return Json(new { success = true, message = "Tạo emote thành công!", emoteId = emote.Id.ToString() });
 
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-                    return BadRequest(new { error = $"Lỗi khi tạo Emote: {ex.Message}" });
+                    return BadRequest(new { error = $"Lỗi khi tạo emote: {ex.Message}" });
 
-                ModelState.AddModelError("", $"Lỗi khi tạo Emote: {ex.Message}");
+                ModelState.AddModelError("", $"Lỗi khi tạo emote: {ex.Message}");
                 return View(vm);
             }
         }
-
 
 
         [HttpGet]
@@ -279,6 +283,7 @@ namespace BeeHappy.Controllers
             await _emoteService.DeleteEmoteByIdAsync(ObjectId.Parse(id));
             return RedirectToAction(nameof(Index));
         }
+
         [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
@@ -307,7 +312,13 @@ namespace BeeHappy.Controllers
                     });
                 }
             }
-
+            // Get all set of the current user
+            var currentUser = await GetCurrentUserAsync();
+            var userSets = new List<EmoteSet>();
+            if (currentUser != null)
+            {
+                userSets = await _emoteSetService.GetEmoteSetsAsync(s => s.OwnerId.Equals(currentUser.Id));
+            }
             // return viewmodel
             var vm = new EmoteViewModel
             {
@@ -315,7 +326,7 @@ namespace BeeHappy.Controllers
                 Name = emote.Name,
                 OwnerId = emote.OwnerId.ToString(),
                 OwnerName = owner.Username,
-                OwnerAvatar = owner.Profile?.AvatarUrl ?? DefaultUser.AVATAR, 
+                OwnerAvatar = owner.Profile?.AvatarUrl ?? DefaultUser.AVATAR,
                 Channels = channels,
                 Tags = emote.Tags,
                 Visibility = emote.Visibility,
@@ -329,12 +340,49 @@ namespace BeeHappy.Controllers
                     Format = f.Format,
                     Url = f.Url,
                     Size = f.Size
-                }).ToList()
+                }).ToList(),
+                UserEmoteSets = userSets
             };
 
             return View(vm);
         }
 
 
+        public async Task<IActionResult> UploadedEmote()
+        {
+            try
+            {
+                var currentUser = await GetCurrentUserAsync();
+                if (currentUser == null)
+                {
+                    TempData[MessageConstants.MESSAGE] = "Vui lòng đăng nhập để xem emote của bạn";
+                    TempData[MessageConstants.MESSAGE_TYPE] = MessageConstants.WARNING;
+                    return RedirectToAction("Index", "Home");
+                }
+
+                var userEmotes = await _emoteService.GetEmotesAsync(e => e.OwnerId == currentUser.Id);
+                return View(userEmotes);
+            }
+            catch (Exception e)
+            {
+                TempData[MessageConstants.MESSAGE] = "Lỗi khi tải emote: " + e.Message;
+                TempData[MessageConstants.MESSAGE_TYPE] = MessageConstants.ERROR;
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        private async Task<User?> GetCurrentUserAsync()
+        {
+            // var userId = HttpContext.Session.GetString(UserConstants.UserId);
+            var userId = User.FindFirst(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return null;
+            }
+
+            var user = await _userService.GetUserByIdAsync(ObjectId.Parse(userId));
+            return user;
+        }
     }
 }

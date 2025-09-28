@@ -43,8 +43,7 @@
 
             <!-- panel -->
             <div class="absolute inset-0 flex items-center justify-center p-4">
-                <div
-                    class="w-full max-w-xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl">
+                <div class="w-full max-w-xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl">
                     <div class="flex items-center justify-between border-b border-dark-border px-4 py-3">
                         <h3 class="text-lg font-semibold">Kích hoạt bộ emote</h3>
                         <button type="button" id="close-activate-modal"
@@ -69,8 +68,7 @@
                             <input type="text"
                                    placeholder="Tìm kiếm bộ..."
                                    id="set-search"
-                                   class="border-dark-border rounded-lg border px-4 py-2 text-sm w-full
-              transition-all focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none"/>
+                                   class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors"/>
                             <svg class="absolute top-2.5 right-3 h-4 w-4 text-gray-400" fill="none"
                                  stroke="currentColor"
                                  viewBox="0 0 24 24">
@@ -121,15 +119,15 @@
                         <!-- Actions -->
                         <div class="mt-4 flex items-center justify-end gap-2">
                             <button type="button" id="cancel-activate"
-                                    class="cursor-pointer rounded-lg border border-dark-border bg-dark-surface px-4 py-2 text-sm text-gray-200 hover:bg-dark-hover">
+                                    class="btn-secondary-sm">
                                 Hủy
                             </button>
 
                             <button type="button" id="confirm-activate"
-                                    class="cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white opacity-50
-                                       transition-colors hover:bg-primary-dark disabled:cursor-not-allowed"
+                                    class="btn-primary btn-sm btn-disabled"
                                     disabled>
-                                <i class="fas fa-bolt mr-2"></i> Kích hoạt
+                                <i class="fas fa-bolt"></i>
+                                <span>Kích hoạt</span>
                             </button>
                         </div>
                     </div>
@@ -194,18 +192,17 @@
 </div>
 
 @* ---------- Modal: Create New Emote Set ---------- *@
-<div id="create-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300 ease-in-out">
+<div id="create-modal" class="fixed inset-0 z-50 hidden">
     <!-- overlay -->
-    <div class="absolute inset-0 bg-black/50 transition-opacity duration-300 ease-in-out"></div>
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
     <!-- panel -->
     <div class="absolute inset-0 flex items-center justify-center p-4">
-        <div class="w-full max-w-xl translate-y-4 scale-95 transform rounded-xl border border-zinc-700 bg-zinc-900
- text-zinc-100 shadow-2xl transition-all duration-300 ease-in-out">
-            <div class="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
+        <div class="w-full max-w-xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-dark-border px-4 py-3">
                 <h3 class="text-lg font-semibold">Tạo bộ emote mới</h3>
                 <button type="button" id="close-create-modal"
-                        class="cursor-pointer rounded-md p-2 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100">
+                        class="cursor-pointer rounded-lg p-2 text-gray-400 transition-all hover:bg-dark-hover hover:text-white">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -219,19 +216,17 @@
                            id="Name"
                            name="Name"
                            required
-                           class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950 
-px-3 py-2 text-sm text-white outline-none"
+                           class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors"
                            placeholder="Nhập tên bộ emote"/>
                 </div>
 
                 <!-- Tags Field -->
                 <div class="mb-4">
-                    <label for="TagsInputDisplay" class="mb-2 block text-sm font-medium text-zinc-300">Tags</label>
+                    <label for="TagsInputDisplay" class="mb-2 block text-sm font-medium text-zinc-300">Thẻ</label>
                     <div class="relative">
                         <input type="text"
                                id="TagsInputDisplay"
-                               class="placeholder-zinc-500 w-full rounded-md border border-zinc-700 bg-zinc-950
- px-3 py-2 text-sm text-white outline-none"
+                               class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors"
                                placeholder="Nhập thẻ và nhấn phím cách để thêm"/>
                         <input type="hidden" id="TagsString" name="TagsString" value=""/>
                         <!-- Tags display container -->
@@ -250,16 +245,20 @@ px-3 py-2 text-sm text-white outline-none"
 px-3 py-2 text-sm text-white outline-none "/>
 
                 <!-- Action Buttons -->
-                <div class="flex items-center justify-end gap-3">
-                    <button type="button"
-                            id="cancel-create"
-                            class="rounded-md border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-300 hover:bg-zinc-700">
-                        Hủy
-                    </button>
-                    <button type="submit"
-                            class="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:outline-none">
-                        Tạo bộ
-                    </button>
+                <div class="flex items-center justify-between p-4 border-t border-dark-border">
+                    <div></div>
+                    <div class="flex space-x-3">
+                        <button type="button"
+                                id="cancel-create"
+                                class="btn-secondary-sm">
+                            Hủy
+                        </button>
+                        <button type="submit"
+                                class="btn-primary btn-sm">
+                            <i class="fas fa-plus"></i>
+                            <span>Tạo bộ</span>
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -280,8 +279,6 @@ px-3 py-2 text-sm text-white outline-none "/>
 
             function openModal() {
                 modal.classList.remove('hidden');
-                // small entrance animation
-                modal.querySelector('.w-full').classList.add('animate-in');
                 setTimeout(() => search?.focus(), 50);
             }
 
@@ -398,47 +395,21 @@ px-3 py-2 text-sm text-white outline-none "/>
 
             function openCreateModal() {
                 createModal.classList.remove('hidden');
-                // Trigger reflow to ensure the hidden class is removed before adding opacity
-                createModal.offsetHeight;
-                createModal.classList.remove('opacity-0');
-                createModal.classList.add('opacity-100');
-
-                // Animate the panel
-                const panel = createModal.querySelector('.transform');
-                if (panel) {
-                    panel.classList.remove('scale-95', 'translate-y-4');
-                    panel.classList.add('scale-100', 'translate-y-0');
-                }
-
-                // Focus on the first input after animation starts
-                setTimeout(() => document.getElementById('Name')?.focus(), 100);
+                // Focus on the first input
+                setTimeout(() => document.getElementById('Name')?.focus(), 50);
             }
 
             function closeCreateModal() {
-                // Start fade out animation
-                createModal.classList.remove('opacity-100');
-                createModal.classList.add('opacity-0');
-
-                // Animate the panel out
-                const panel = createModal.querySelector('.transform');
-                if (panel) {
-                    panel.classList.remove('scale-100', 'translate-y-0');
-                    panel.classList.add('scale-95', 'translate-y-4');
+                createModal.classList.add('hidden');
+                // Reset form
+                const form = createModal.querySelector('form');
+                if (form) {
+                    form.reset();
                 }
-
-                // Hide modal after animation completes
-                setTimeout(() => {
-                    createModal.classList.add('hidden');
-                    // Reset form
-                    const form = createModal.querySelector('form');
-                    if (form) {
-                        form.reset();
-                    }
-                    // Reset tags
-                    tags = [];
-                    updateTagsDisplay();
-                    updateHiddenInput();
-                }, 300); // Match the CSS transition duration
+                // Reset tags
+                tags = [];
+                updateTagsDisplay();
+                updateHiddenInput();
             }
 
             // Tag management
@@ -555,7 +526,7 @@ px-3 py-2 text-sm text-white outline-none "/>
 
             // Close modal with Escape key
             document.addEventListener('keydown', (e) => {
-                if (!createModal.classList.contains('hidden') && !createModal.classList.contains('opacity-0') && e.key === 'Escape') {
+                if (!createModal.classList.contains('hidden') && e.key === 'Escape') {
                     closeCreateModal();
                 }
             });

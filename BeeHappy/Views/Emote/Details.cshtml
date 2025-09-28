@@ -1,315 +1,488 @@
-﻿@model BeeHappy.ViewModels.EmoteViewModel
+﻿@using MongoDB.Bson
+@model BeeHappy.ViewModels.EmoteViewModel
 @{
     var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
     bool isOwner = Model.OwnerId == currentUserId;
+    ViewData["Title"] = Model.Name + " - Emote Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@Model.Name - Emote Details</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        discord: {
-                            dark: '#1e1f22',
-                            darker: '#1a1b1e',
-                            darkest: '#0d0e10',
-                            blurple: '#5865f2',
-                            green: '#57f287',
-                            yellow: '#fee75c',
-                            red: '#ed4245',
-                            gray: '#4e5058',
-                            lightgray: '#6d6f78',
-                            text: '#dbdee1',
-                            muted: '#b5bac1'
-                        }
-                    }
+<link rel="stylesheet" href="~/css/emotes-directory.css"/>
+
+<div class="emotes-directory">
+    <!-- Main Content -->
+    <div class="main-content" style="width: 100%;">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <h1 class="text-3xl font-bold text-white mb-3">@Model.Name</h1>
+                    <div class="flex items-center gap-3">
+                        <img src="@Model.OwnerAvatar" class="w-10 h-10 rounded-full border-2 border-primary/30">
+                        <span class="text-gray-300 font-medium">@Model.OwnerName</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emote Display -->
+        <div class="bg-dark-surface/40 border border-dark-border rounded-lg p-8 mb-8">
+            <div class="text-center">
+                <!-- Emote Variants (fixed 32/64/96/128) -->
+                @{
+                    var url32 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("32x32") == true)?.Url ?? Model.Files?.FirstOrDefault()?.Url;
+                    var url64 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("64x64") == true)?.Url ?? Model.Files?.Skip(1).FirstOrDefault()?.Url ?? url32;
+                    var url96 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("96x96") == true)?.Url ?? Model.Files?.Skip(2).FirstOrDefault()?.Url ?? url64;
+                    var url128 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("128x128") == true)?.Url ?? Model.Files?.LastOrDefault()?.Url ?? url96;
+                    var activeSet = Model.UserEmoteSets?.FirstOrDefault(s => s.IsActive);
+                    var activeSetId = activeSet?.Id == null ? "" : activeSet.Id.ToString();
                 }
-            }
-        }
-    </script>
-    <style>
-        /* Custom styles for dropdown and animations */
-        .dropdown-menu {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s ease;
-        }
-
-            .dropdown-menu.show {
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
-
-        .dropdown-arrow {
-            transition: transform 0.2s ease;
-        }
-
-        .dropdown.active .dropdown-arrow {
-            transform: rotate(180deg);
-        }
-
-        .notification {
-            animation: slideIn 0.3s ease;
-        }
-
-        @@keyframes slideIn {
-            from
-
-        {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        }
-
-        /* Custom scrollbar */
-        .channels-grid::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .channels-grid::-webkit-scrollbar-track {
-            background: #1a1b1e;
-        }
-
-        .channels-grid::-webkit-scrollbar-thumb {
-            background: #4e5058;
-            border-radius: 4px;
-        }
-
-            .channels-grid::-webkit-scrollbar-thumb:hover {
-                background: #6d6f78;
-            }
-
-        /* Modal styles */
-        .modal {
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-            .modal.show {
-                opacity: 1;
-                visibility: visible;
-            }
-
-        .modal-content {
-            transform: scale(0.9) translateY(-20px);
-            transition: all 0.3s ease;
-        }
-
-        .modal.show .modal-content {
-            transform: scale(1) translateY(0);
-        }
-
-        .tag-item {
-            animation: fadeIn 0.2s ease;
-        }
-
-        @@keyframes fadeIn {
-            from
-
-        {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        }
-
-        /* Toggle switch styles */
-        .toggle-switch {
-            position: relative;
-            width: 44px;
-            height: 24px;
-            background-color: #4e5058;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-            .toggle-switch.active {
-                background-color: #5865f2;
-            }
-
-        .toggle-slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background-color: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle-switch.active .toggle-slider {
-            transform: translateX(20px);
-        }
-    </style>
-</head>
-<body class="bg-discord-darkest text-white font-sans">
-    <div class="flex h-screen">
-        <!-- Main Content -->
-        <main class="flex-1 flex flex-col">
-            <!-- Header Section -->
-            <header class="bg-discord-darker p-6 border-b border-discord-dark">
-                <!-- Owner Info -->
-                <div class="flex items-center space-x-4 mb-8">
-                    <img src="@Model.OwnerAvatar" class="w-12 h-12 rounded-full">
-                    <span class="text-xl font-semibold text-white">@Model.OwnerName</span>
+                <div class="flex justify-center items-end gap-6 mb-8">
+                    <div class="flex flex-col items-center">
+                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-2 mb-2">
+                            <img src="@url32" alt="@Model.Name 32x32" class="w-8 h-8 object-contain"/>
+                        </div>
+                        <span class="text-xs text-gray-400">32x32</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-3 mb-2">
+                            <img src="@url64" alt="@Model.Name 64x64" class="w-16 h-16 object-contain"/>
+                        </div>
+                        <span class="text-xs text-gray-400">64x64</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-4 mb-2">
+                            <img src="@url96" alt="@Model.Name 96x96" class="w-24 h-24 object-contain"/>
+                        </div>
+                        <span class="text-xs text-gray-400">96x96</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-5 mb-2">
+                            <img src="@url128" alt="@Model.Name 128x128" class="w-32 h-32 object-contain"/>
+                        </div>
+                        <span class="text-xs text-gray-400">128x128</span>
+                    </div>
                 </div>
 
-                <!-- Emote Display -->
-                <section class="text-center">
-                    <h1 class="text-4xl font-bold mb-10 text-white">@Model.Name</h1>
+                <!-- Tags -->
+                @if (Model.Tags != null && Model.Tags.Any())
+                {
+                    <div class="flex flex-wrap justify-center gap-2 mb-8">
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <span class="tag-item bg-dark-surface/60 text-white text-sm px-3 py-1 rounded-full flex items-center space-x-2 border border-dark-border">
+                                @tag
+                            </span>
+                        }
+                    </div>
+                }
 
-                    <!-- Tag Variants -->
-                    @if (Model.Tags != null && Model.Tags.Any())
+                <!-- Action Buttons -->
+                <div class="btn-group items-center justify-center">
+                    @{
+                        var isThisEmoteInActiveSet = Model.UserEmoteSets?
+                            .Any(s => s.IsActive && s.Emotes?.Contains(ObjectId.Parse(Model.Id)) == true) == true;
+                    }
+                    @if (!string.IsNullOrEmpty(activeSetId))
                     {
-                        <div class="flex flex-wrap justify-center gap-2 mb-10">
-                            @foreach (var tag in Model.Tags)
+                    <button
+                        class="btn-primary text-ellipsis max-w-60 @(string.IsNullOrEmpty(activeSetId) ? "btn-disabled" : "")"
+                        data-action="add-to-active-set"
+                        id="add-to-active-btn"
+                        data-active-set-id="@activeSetId"
+                        @(string.IsNullOrEmpty(activeSetId) ? "disabled" : "")>
+                        <p>
+                            @if (isThisEmoteInActiveSet)
                             {
-                                <span class="bg-discord-gray text-white text-sm px-3 py-1 rounded-full">
-                                    @tag
-                                </span>
+                                <i class="fas fa-check"></i>
                             }
-                        </div>
+                            else
+                            {
+                                <i class="fas fa-plus"></i>
+                            }
+                            Thêm vào @activeSet?.Name
+                        </p>
+                    </button>
                     }
 
-                    <!-- Emote Variants -->
-                    <div class="flex justify-center items-end space-x-6 mb-10">
-                        @foreach (var file in Model.Files)
-                        {
-                            <div class="flex flex-col items-center">
-                                <div class="bg-discord-dark rounded-lg p-3 mb-3 hover:bg-discord-gray hover:scale-105 transition-all duration-200 cursor-pointer">
-                                    <img src="@file.Url"
-                                         class="object-contain" />
-                                </div>
-                            </div>
-                        }
-                    </div>
+                    <button class="btn-secondary"
+                            data-action="add-to-collection"
+                            id="open-emote-set-modal">
+                        <i class="fas fa-folder-plus"></i>
+                        <span>Thêm vào bộ emote...</span>
+                    </button>
 
-
-                    <!-- Action Buttons -->
-                    <div class="flex justify-center space-x-4">
-                        <button class="bg-white text-black px-6 py-2.5 rounded-md font-medium hover:bg-gray-200 transition-colors flex items-center space-x-2"
-                                data-action="add-to-anime">
-                            <span class="text-lg">+</span>
-                            <span>Add Emote to Anime</span>
-                        </button>
-
-                        <!-- Add -->
-                        <button class="bg-discord-gray text-white px-6 py-2.5 rounded-md font-medium hover:bg-discord-lightgray transition-colors flex items-center space-x-2"
-                                data-action="add-to-collection">
-                            <span>📁</span>
-                            <span>Add to...</span>
-                        </button>
-
-                        <!-- Edit -->
-                        @if (isOwner)
-                        {
-                            <!-- Updated Edit button to use data-action instead of onclick -->
-                            <button class="bg-discord-gray text-white px-4 py-2.5 rounded-md font-medium hover:bg-discord-lightgray transition-colors flex items-center space-x-2"
-                                    data-action="edit">
-                                <span>✏️</span>
-                                <span>Edit</span>
-                            </button>
-                        }
-
-                        <!-- More -->
-                        <div class="relative dropdown">
-                            <button class="bg-discord-gray text-white px-4 py-2.5 rounded-md font-medium hover:bg-discord-lightgray transition-colors flex items-center space-x-2"
-                                    data-dropdown="more-menu">
-                                <span>More</span>
-                                <span class="dropdown-arrow text-xs">▼</span>
-                            </button>
-                            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-discord-darker rounded-md shadow-lg border border-discord-dark z-10"
-                                 id="more-menu">
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-discord-dark text-white no-underline" data-action="download">Download</a>
-                                <a href="#" class="block px-4 py-2 text-sm hover:bg-discord-dark text-white no-underline" data-action="report">Report</a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </header>
-
-            <!-- Channels Section -->
-            <section class="flex-1 bg-discord-darkest p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center space-x-6">
-                        <button class="flex items-center space-x-2 px-4 py-2 rounded-md font-medium bg-discord-dark text-white tab active"
-                                data-tab="channels">
-                            <span class="text-lg">👥</span>
-                            <span>Channels (@Model.TotalChannels)</span>
-                        </button>
-                        <button class="flex items-center space-x-2 px-4 py-2 rounded-md font-medium text-gray-400 hover:text-white hover:bg-discord-dark transition-colors tab"
-                                data-tab="activity">
-                            <span class="text-lg">⚡</span>
-                            <span>Activity</span>
-                        </button>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button class="p-2 hover:bg-discord-dark rounded text-gray-400 hover:text-white transition-colors"
-                                data-direction="prev">
-                            ◀
-                        </button>
-                        <button class="p-2 hover:bg-discord-dark rounded text-gray-400 hover:text-white transition-colors"
-                                data-direction="next">
-                            ▶
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Channels Grid - Tighter spacing -->
-                <div class="grid grid-cols-8 xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-4 gap-x-4 gap-y-3 channels-grid">
-                    @foreach (var channel in Model.Channels)
+                    @if (isOwner)
                     {
-                        <div class="flex items-center space-x-2 px-2 py-1.5 rounded-md hover:bg-discord-dark transition-colors cursor-pointer channel-item group"
-                             data-channel="@channel.Name">
-                            <div class="relative flex-shrink-0">
-                                <img src="@channel.Avatar" alt="@channel.Name" class="w-8 h-8 rounded-full">
-                                @* @if (channel.IsOnline) *@
-                                @* { *@
-                                @*     <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-discord-green rounded-full border-2 border-discord-darkest"></div> *@
-                                @* } *@
-                            </div>
-                            @* <span class="text-sm font-medium truncate group-hover:text-white transition-colors" *@
-                            @*       style="color: @channel.Color">@channel.Name</span> *@
+                        <button class="btn-secondary"
+                                data-action="edit">
+                            <i class="fas fa-edit"></i>
+                            <span>Chỉnh sửa</span>
+                        </button>
+                    }
+
+                    <div class="relative dropdown">
+                        <button class="btn-secondary"
+                                data-dropdown="more-menu">
+                            <span>Thêm</span>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </button>
+                        <div
+                            class="dropdown-menu absolute right-0 mt-2 w-48 bg-dark-surface border border-dark-border rounded-lg shadow-lg z-10"
+                            id="more-menu">
+                            <div class="px-4 py-2 text-xs text-gray-400 border-b border-dark-border">Tải xuống</div>
+                            @if (!string.IsNullOrEmpty(url32))
+                            {
+                                <a href="@url32"
+                                   download="@(Model.Name)_32x32.@(url32.Split('.').LastOrDefault() ?? "png")"
+                                   class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
+                                    <i class="fas fa-download mr-2"></i>32x32
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(url64))
+                            {
+                                <a href="@url64"
+                                   download="@(Model.Name)_64x64.@(url64.Split('.').LastOrDefault() ?? "png")"
+                                   class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
+                                    <i class="fas fa-download mr-2"></i>64x64
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(url96))
+                            {
+                                <a href="@url96"
+                                   download="@(Model.Name)_96x96.@(url96.Split('.').LastOrDefault() ?? "png")"
+                                   class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
+                                    <i class="fas fa-download mr-2"></i>96x96
+                                </a>
+                            }
+                            @if (!string.IsNullOrEmpty(url128))
+                            {
+                                <a href="@url128"
+                                   download="@(Model.Name)_128x128.@(url128.Split('.').LastOrDefault() ?? "png")"
+                                   class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline">
+                                    <i class="fas fa-download mr-2"></i>128x128
+                                </a>
+                            }
+                            <div class="px-4 py-2 text-xs text-gray-400 border-t border-dark-border mt-1">Khác</div>
+                            <a href="#" class="block px-4 py-2 text-sm hover:bg-dark-surface/60 text-white no-underline"
+                               data-action="report">
+                                <i class="fas fa-flag mr-2"></i>Báo cáo
+                            </a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Channels Section -->
+        <div class="bg-dark-surface/40 border border-dark-border rounded-lg p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-6">
+                    <button
+                        class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium bg-primary/20 text-primary border border-primary/30 tab active"
+                        data-tab="channels">
+                        <i class="fas fa-users"></i>
+                        <span>Kênh (@Model.TotalChannels)</span>
+                    </button>
+                    <button
+                        class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-gray-400 hover:text-white hover:bg-dark-surface/60 transition-colors tab"
+                        data-tab="activity">
+                        <i class="fas fa-bolt"></i>
+                        <span>Hoạt động</span>
+                    </button>
+                </div>
+                <div class="flex space-x-2">
+                    <button
+                        class="p-2 hover:bg-dark-surface/60 rounded text-gray-400 hover:text-white transition-colors"
+                        data-direction="prev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button
+                        class="p-2 hover:bg-dark-surface/60 rounded text-gray-400 hover:text-white transition-colors"
+                        data-direction="next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Channels Grid -->
+            <div
+                class="grid grid-cols-8 xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-4 gap-4 channels-grid">
+                @foreach (var channel in Model.Channels)
+                {
+                    <div
+                        class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-surface/60 transition-colors cursor-pointer channel-item group"
+                        data-channel="@channel.Name">
+                        <div class="relative flex-shrink-0">
+                            <img src="@channel.Avatar" alt="@channel.Name" class="w-8 h-8 rounded-full">
+                        </div>
+                        <span
+                            class="text-sm font-medium truncate group-hover:text-white transition-colors text-gray-300">
+                            @(channel?.Name ?? "Unknown")
+                        </span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Emote Set Selection Modal -->
+<div id="emote-set-modal" class="fixed inset-0 z-50 hidden">
+    <!-- overlay -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+    <!-- panel -->
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-dark-border px-4 py-3">
+                <h3 class="text-lg font-semibold">Chọn bộ emote</h3>
+                <button type="button" id="close-emote-set-modal"
+                        class="cursor-pointer rounded-lg p-2 text-gray-400 transition-all hover:bg-dark-hover hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="p-4">
+                <!-- Quick search -->
+                <div class="relative md:block mb-3 w-full rounded-lg">
+                    <input type="text"
+                           placeholder="Tìm kiếm bộ emote..."
+                           id="emote-set-search"
+                           class="border-dark-border rounded-lg border px-4 py-2 text-sm w-full
+              transition-all focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none"/>
+                    <svg class="absolute top-2.5 right-3 h-4 w-4 text-gray-400" fill="none"
+                         stroke="currentColor"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+
+                <!-- List -->
+                <div id="emote-set-list"
+                     class="max-h-80 divide-y divide-dark-border overflow-auto rounded-lg border border-dark-border">
+                    @if (Model.UserEmoteSets != null && Model.UserEmoteSets.Any())
+                    {
+                        @foreach (var emoteSet in Model.UserEmoteSets)
+                        {
+                            var name = emoteSet.Name ?? "(no name)";
+                            var id = emoteSet.Id.ToString();
+                            var emoteCount = emoteSet.Emotes?.Count ?? 0;
+                            var capacity = emoteSet.Capacity > 0 ? emoteSet.Capacity : 1000;
+                            var percent = (int)Math.Round((double)emoteCount * 100 / capacity);
+                            var isActive = emoteSet.IsActive;
+
+                            <label class="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-dark-hover"
+                                   data-name="@name.ToLowerInvariant()">
+                                <input type="radio"
+                                       name="select-emote-set"
+                                       value="@id"
+                                       class="h-4 w-4 accent-primary"/>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="truncate font-medium">@name</span>
+                                        @if (isActive)
+                                        {
+                                            <span class="rounded bg-primary/20 px-2 py-0.5 text-xs text-primary">hiện tại</span>
+                                        }
+                                    </div>
+                                    <div class="text-xs text-zinc-400">
+                                        @emoteCount/@capacity emote (@percent%)
+                                    </div>
+                                    <!-- Progress bar -->
+                                    <div class="mt-1 h-1 w-full overflow-hidden rounded-full bg-black">
+                                        <div class="h-full bg-primary" style="width:@(percent)%"></div>
+                                    </div>
+                                </div>
+                            </label>
+                        }
+                    }
+                    else
+                    {
+                        <div class="p-4 text-zinc-400">Không có bộ emote nào khả dụng.</div>
                     }
                 </div>
-            </section>
 
-        </main>
+                <!-- Actions -->
+                <div class="mt-4 flex items-center justify-end gap-2">
+                    <button type="button" id="cancel-emote-set"
+                            class="btn-secondary-sm">
+                        Hủy
+                    </button>
+
+                    <button type="button" id="confirm-emote-set"
+                            class="btn-primary btn-sm"
+                            disabled>
+                        <i class="fas fa-plus"></i>
+                        <span>Thêm vào bộ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <!-- Include the modal ViewPartial -->
-    @Html.Partial("_EditModal", Model)
-
-    <!-- Removed inline JavaScript - now handled by external JS file -->
-</body>
-</html>
+<!-- Include the modal ViewPartial -->
+<partial name="_EditModal" model="Model"/>
 
 @section Scripts {
     <!-- Updated script references to include the modal JS file first -->
     <script src="~/js/emote-edit-modal.js"></script>
     <script src="~/js/emote-detail.js"></script>
+
+    <script>
+        // Emote Set Selection Modal functionality
+        (function () {
+            const openBtn = document.getElementById('open-emote-set-modal');
+            const modal = document.getElementById('emote-set-modal');
+            const closeBtn = document.getElementById('close-emote-set-modal');
+            const cancelBtn = document.getElementById('cancel-emote-set');
+            const search = document.getElementById('emote-set-search');
+            const list = document.getElementById('emote-set-list');
+            const confirmBtn = document.getElementById('confirm-emote-set');
+
+            function openModal() {
+                modal.classList.remove('hidden');
+                setTimeout(() => search?.focus(), 50);
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+                // reset search
+                if (search) {
+                    search.value = '';
+                    filter('');
+                }
+                // reset selection
+                const selected = list.querySelector('input[name="select-emote-set"]:checked');
+                if (selected) {
+                    selected.checked = false;
+                }
+                updateSelection();
+            }
+
+            function filter(q) {
+                const query = (q || '').toLowerCase().trim();
+                const rows = list.querySelectorAll('label[data-name]');
+                rows.forEach(row => {
+                    const name = row.getAttribute('data-name') || '';
+                    row.classList.toggle('hidden', !name.includes(query));
+                });
+            }
+
+            let selectedEmoteSetId = '';
+
+            function updateSelection() {
+                const selected = list.querySelector('input[name="select-emote-set"]:checked');
+                if (selected) {
+                    selectedEmoteSetId = selected.value;
+                    confirmBtn.disabled = false;
+                    confirmBtn.classList.remove('opacity-50');
+                } else {
+                    selectedEmoteSetId = '';
+                    confirmBtn.disabled = true;
+                    confirmBtn.classList.add('opacity-50');
+                }
+            }
+
+            // Open/close hooks
+            openBtn?.addEventListener('click', openModal);
+            closeBtn?.addEventListener('click', closeModal);
+            cancelBtn?.addEventListener('click', closeModal);
+            modal?.addEventListener('click', (e) => {
+                // click outside panel closes
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (!modal.classList.contains('hidden') && e.key === 'Escape') closeModal();
+            });
+
+            // Search
+            search?.addEventListener('input', (e) => filter(e.target.value));
+
+            // Selection change
+            list.addEventListener('change', (e) => {
+                if (e.target && e.target.name === 'select-emote-set') updateSelection();
+            });
+
+            // Handle confirm button click
+            confirmBtn?.addEventListener('click', async (e) => {
+                if (!selectedEmoteSetId) return;
+
+                try {
+                    // Make API call to add emote to selected emote set
+                    const formData = new FormData();
+                    formData.append('emoteId', '@Model.Id');
+                    formData.append('emoteSetId', selectedEmoteSetId);
+                    formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]')?.value || '');
+
+                    const response = await fetch('/EmoteSets/AddEmoteToSet', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert('Đã thêm emote vào bộ thành công!');
+                        closeModal();
+                        window.location.reload();
+                    } else {
+                        alert(result.message || 'Có lỗi xảy ra khi thêm emote vào bộ');
+                    }
+                } catch (error) {
+                    console.error('Error adding emote to set:', error);
+                    alert('Có lỗi xảy ra khi thêm emote vào bộ');
+                }
+            });
+
+            // Initialize button disabled state
+            updateSelection();
+        })();
+
+        // Add to active set functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const addToActiveBtn = document.getElementById('add-to-active-btn');
+            const activeSetId = addToActiveBtn?.getAttribute('data-active-set-id') || '';
+
+            if (!activeSetId && addToActiveBtn) {
+                addToActiveBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            addToActiveBtn?.addEventListener('click', async function (e) {
+                e.preventDefault();
+
+                if (!activeSetId) {
+                    alert('Không có bộ emote nào đang được kích hoạt');
+                    return;
+                }
+
+                try {
+                    // Make API call to add emote to active set
+                    const formData = new FormData();
+                    formData.append('emoteId', '@Model.Id');
+                    formData.append('emoteSetId', activeSetId);
+                    formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]')?.value || '');
+
+                    const response = await fetch('/EmoteSets/AddEmoteToSet', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert('Đã thêm emote vào bộ hiện tại thành công!');
+                        window.location.reload();
+                    } else {
+                        alert(result.message || 'Có lỗi xảy ra khi thêm emote vào bộ');
+                    }
+                } catch (error) {
+                    console.error('Error adding emote to active set:', error);
+                    alert('Có lỗi xảy ra khi thêm emote vào bộ');
+                }
+            });
+        });
+    </script>
 }

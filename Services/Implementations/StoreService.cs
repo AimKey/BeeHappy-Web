@@ -25,7 +25,7 @@ public class StoreService(
         var existingPaints = await paintService.GetAllPaintsAsync();
         var plansVm = mapper.Map<List<SubscriptionPlanVM>>(existingPlans);
         var paintsVm = mapper.Map<List<ThemeVM>>(existingPaints);
-        paintsVm = paintsVm.Slice(0, 7).ToList();
+        paintsVm = paintsVm.Slice(0, Math.Min(7, existingPaints.Count)).ToList();
         var userCurrentPlan = await GetUserCurrentPlanVm(currentUser);
         var userCurrentPaints = currentUser?.Paints;
         // Ngoài premium plan ra thì các giá trị còn lại tạm thời hardcode

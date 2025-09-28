@@ -50,13 +50,13 @@
 
         // Validate file
         if (!file.type.startsWith("image/")) {
-            alert("Please select an image file")
+            alert("Vui lòng chọn file hình ảnh")
             return
         }
 
         if (file.size > 7 * 1024 * 1024) {
             // 7MB
-            alert("File size must be less than 7MB")
+            alert("Kích thước file phải nhỏ hơn 7MB")
             return
         }
 
@@ -116,6 +116,15 @@
             tagElement.querySelector("button").addEventListener("click", () => removeTag(tag))
             tagsContainer.appendChild(tagElement)
         })
+    }
+
+    // Validate emote name length
+    function validateEmoteName(name) {
+        if (name.length > 20) {
+            alert("Tên emote phải có 20 ký tự hoặc ít hơn. Vui lòng nhập lại.")
+            return false
+        }
+        return true
     }
 
     // Update submit button state
@@ -182,7 +191,22 @@
     // Update submit button when name changes
     const nameInput = document.getElementById("beetv-emote-name")
     if (nameInput) {
-        nameInput.addEventListener("input", updateSubmitButton)
+        // Prevent typing beyond 20 characters
+        nameInput.addEventListener("keydown", (e) => {
+            if (e.target.value.length >= 20 && !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) {
+                e.preventDefault()
+                validateEmoteName(e.target.value + e.key)
+            }
+        })
+
+        nameInput.addEventListener("input", (e) => {
+            const name = e.target.value.trim()
+            if (name.length > 20) {
+                validateEmoteName(name)
+                e.target.value = e.target.value.substring(0, 20) // Truncate to 20 characters
+            }
+            updateSubmitButton()
+        })
     }
 
     // Drag and drop
@@ -228,12 +252,17 @@
             e.preventDefault();
 
             if (!selectedFile) {
-                alert("Please select a file to upload");
+                alert("Vui lòng chọn file để tải lên");
                 return;
             }
 
             if (!acceptRulesCheckbox.checked) {
-                alert("Please accept the rules and guidelines");
+                alert("Vui lòng chấp nhận quy tắc và hướng dẫn");
+                return;
+            }
+
+            const emoteName = document.getElementById("beetv-emote-name").value.trim();
+            if (!validateEmoteName(emoteName)) {
                 return;
             }
 
@@ -253,16 +282,17 @@
 
                 if (response.ok) {
                     const result = await response.json();
-                    alert("Upload successful!");
+                    alert("Tải lên thành công!");
                     console.log(result);
                     closeModal();
+                    window.location.reload();
                 } else {
                     const errorText = await response.text();
-                    alert("Upload failed: " + errorText);
+                    alert("Tải lên thất bại: " + errorText);
                 }
             } catch (err) {
                 console.error("Error uploading:", err);
-                alert("An error occurred while uploading.");
+                alert("Đã xảy ra lỗi khi tải lên.");
             }
         });
 

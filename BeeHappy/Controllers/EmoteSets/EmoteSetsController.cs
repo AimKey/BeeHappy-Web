@@ -99,7 +99,7 @@ namespace BeeHappy.Controllers.EmoteSets
                 var currentUser = await GetCurrentUserAsync();
                 if (currentUser == null)
                 {
-                    return RedirectToAction("LandingPage", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 // Set the owner ID from the current user
@@ -193,6 +193,8 @@ namespace BeeHappy.Controllers.EmoteSets
             }
         }
         
+        // API
+        [HttpPost]
         public async Task<IActionResult> AddEmoteToSet(ObjectId emoteSetId, ObjectId emoteId)
         {
             try
@@ -200,9 +202,9 @@ namespace BeeHappy.Controllers.EmoteSets
                 var currentUser = await GetCurrentUserAsync();
                 if (currentUser == null)
                 {
-                    return RedirectToAction("LandingPage", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
-                await emoteSetService.AddEmoteToSetAsync(emoteSetId, emoteId, currentUser.Id);
+                await emoteSetService.AddEmoteToSetAsync(emoteSetId, emoteId);
                 return Ok(new EmoteSetResponseDto
                 {
                     message = "Thêm emote vào bộ thành công",
@@ -219,6 +221,34 @@ namespace BeeHappy.Controllers.EmoteSets
             }
         }
 
+        // API
+        [HttpPost]
+        public async Task<IActionResult> RemoveEmoteFromSet(ObjectId emoteSetId, ObjectId emoteId)
+        {
+            try
+            {
+                var currentUser = await GetCurrentUserAsync();
+                if (currentUser == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                await emoteSetService.RemoveEmoteFromSetAsync(emoteSetId, emoteId);
+                return Ok(new EmoteSetResponseDto
+                {
+                    message = "Xoá emote khỏi bộ thành công",
+                    success = true,
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new EmoteSetResponseDto
+                {
+                    message = "Xoá emote khỏi bộ thất bại: " + e.Message,
+                    success = false,
+                });
+            }
+        }
+        
         private async Task<User?> GetCurrentUserAsync()
         {
             // var userId = HttpContext.Session.GetString(UserConstants.UserId);
