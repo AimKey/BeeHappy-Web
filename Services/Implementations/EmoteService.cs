@@ -92,6 +92,12 @@ namespace Services.Implementations
                 }
             }
 
+            // apply search
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(e => e.Name.Contains(search));
+            }
+
             // Apply additional filters
             if (filters != null && filters.Length > 0)
             {
