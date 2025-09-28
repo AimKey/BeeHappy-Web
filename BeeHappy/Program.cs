@@ -74,7 +74,7 @@ public class Program
         // Config notfound-forbidden
         app.UseStatusCodePagesWithReExecute("/Errors/{0}");
 
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
         app.UseStaticFiles();
 
         app.UseSession();
