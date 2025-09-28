@@ -98,6 +98,11 @@ namespace BeeHappy.Controllers
                 ModelState.AddModelError("Name", "Tên emote không được vượt quá 20 ký tự.");
             if (vm.Files == null || vm.Files.Count == 0 || vm.Files[0].File == null)
                 ModelState.AddModelError("File", "Vui lòng tải lên một hình ảnh.");
+            if (vm.Files == null)
+            {
+                vm.Files = new List<EmoteFileViewModel>();
+            }
+
 
             if (!ModelState.IsValid)
             {
@@ -298,7 +303,7 @@ namespace BeeHappy.Controllers
             if (owner == null) return NotFound();
 
             // get all sets have this emote
-            var sets = await _emoteSetService.GetEmoteSetsAsync(s => s.Id.Equals(emote.Id));
+            var sets = await _emoteSetService.GetEmoteSetsAsync(s => s.Emotes.Contains(emote.Id));
             var channels = new List<EmoteViewModel.ChannelViewModel>();
             foreach (var set in sets)
             {

@@ -31,7 +31,7 @@ public class Program
         builder.Services.AddSession(options =>
         {
             options.IdleTimeout = System.TimeSpan.FromMinutes(60);
-            options.Cookie.HttpOnly = true;
+            options.Cookie.HttpOnly = true; 
             options.Cookie.IsEssential = true;
         });
 
@@ -60,7 +60,6 @@ public class Program
             options.Cookie.SameSite = SameSiteMode.Lax; // hoặc None nếu HTTPS
             options.Cookie.SecurePolicy = CookieSecurePolicy.None; // HTTP deploy
         });
-
 
         // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");
