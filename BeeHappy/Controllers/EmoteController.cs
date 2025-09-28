@@ -19,12 +19,15 @@ namespace BeeHappy.Controllers
         private readonly IEmoteService _emoteService;
         private readonly IUserService _userService;
         private readonly IEmoteSetService _emoteSetService;
+        private readonly IPaintService _paint;
 
-        public EmoteController(IEmoteService emoteService, IUserService userService, IEmoteSetService emoteSetService)
+        public EmoteController(IEmoteService emoteService, IUserService userService, IEmoteSetService emoteSetService,
+            IPaintService paint)
         {
             _emoteService = emoteService;
             _userService = userService;
             _emoteSetService = emoteSetService;
+            _paint = paint;
         }
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 20, string search = "", string tags = "",
@@ -136,7 +139,7 @@ namespace BeeHappy.Controllers
 
                 var file = vm.Files[0].File;
                 var ext = Path.GetExtension(file.FileName).ToLower();
-                
+
                 if (!allowedExtensions.Contains(ext))
                     return BadRequest(new { error = "Chỉ cho phép file JPG, PNG, GIF." });
 
@@ -205,7 +208,8 @@ namespace BeeHappy.Controllers
                 await _emoteService.InsertEmoteAsync(emote);
 
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-                    return Json(new { success = true, message = "Tạo emote thành công!", emoteId = emote.Id.ToString() });
+                    return Json(
+                        new { success = true, message = "Tạo emote thành công!", emoteId = emote.Id.ToString() });
 
                 return RedirectToAction(nameof(Index));
             }
@@ -317,6 +321,7 @@ namespace BeeHappy.Controllers
                     });
                 }
             }
+
             // Get all set of the current user
             var currentUser = await GetCurrentUserAsync();
             var userSets = new List<EmoteSet>();
@@ -324,6 +329,9 @@ namespace BeeHappy.Controllers
             {
                 userSets = await _emoteSetService.GetEmoteSetsAsync(s => s.OwnerId.Equals(currentUser.Id));
             }
+
+            // Get owner paint
+            var ownerPaint = await _paint.GetActivePaintColorForUserAsync(owner);
             // return viewmodel
             var vm = new EmoteViewModel
             {
@@ -346,9 +354,9 @@ namespace BeeHappy.Controllers
                     Url = f.Url,
                     Size = f.Size
                 }).ToList(),
-                UserEmoteSets = userSets
+                UserEmoteSets = userSets,
+                OwnerNamePaint = ownerPaint
             };
-
             return View(vm);
         }
 

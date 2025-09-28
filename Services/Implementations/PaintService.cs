@@ -1,5 +1,6 @@
 using BusinessObjects;
 using BusinessObjects.NestedObjects;
+using CommonObjects.AppConstants;
 using MongoDB.Bson;
 using Repositories.Interfaces;
 using Services.Interfaces;
@@ -119,6 +120,28 @@ namespace Services.Implementations
                 // Update
                 await userService.ReplaceUserAsync(user);
             }
+        }
+        
+        public async Task<string> GetActivePaintColorForUserAsync(User user)
+        {
+            if (!user.IsPremium || (user.Paints != null && !user.Paints.Any()))
+            {
+                return UserConstants.DEFAUT_USER_NAME_COLOR;
+            }
+
+            var activePaint = user.Paints?.FirstOrDefault(up => up.IsActivated);
+            if (activePaint == null)
+            {
+                return UserConstants.DEFAUT_USER_NAME_COLOR;
+            }
+
+            var paint = await GetPaintByIdAsync(activePaint.PaintId);
+            if (paint == null)
+            {
+                return UserConstants.DEFAUT_USER_NAME_COLOR;
+            }
+
+            return paint.Color;
         }
     }
 }

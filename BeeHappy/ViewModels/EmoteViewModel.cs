@@ -10,6 +10,7 @@ namespace BeeHappy.ViewModels
         public string OwnerId { get; set; } = string.Empty;
         public string? OwnerName { get; set; }
         public string? OwnerAvatar { get; set; }
+        public string? OwnerNamePaint { get; set; }
         public List<ChannelViewModel>? Channels { get; set; } = new();
         public sealed class ChannelViewModel
         {
