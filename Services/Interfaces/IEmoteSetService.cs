@@ -25,6 +25,6 @@ namespace Services.Interfaces
         /// <returns></returns>
         Task UpdateEmoteSetAsync(EditEmoteSetDto dto);
         Task ToggleEmoteSetActiveStatus(ObjectId emoteSetId, ObjectId userId);
-        Task AddEmoteToSetAsync(ObjectId emoteSetId, ObjectId emoteId, ObjectId currentUserId);
+        Task<bool> AddEmoteToSetAsync(ObjectId emoteSetId, ObjectId emoteId, CancellationToken ct = default);
     }
 }

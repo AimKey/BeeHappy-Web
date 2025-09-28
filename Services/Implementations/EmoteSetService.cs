@@ -159,23 +159,6 @@ namespace Services.Implementations
             }
         }
 
-        public async Task AddEmoteToSetAsync(ObjectId emoteSetId, ObjectId emoteId, ObjectId currentUserId)
-        {
-            var emoteSet = await GetEmoteSetByIdAsync(emoteSetId) ?? throw new Exception("Không tìm thấy bộ emote");
-            if (emoteSet.OwnerId != currentUserId)
-            {
-                throw new Exception("Bạn không sở hữu bộ emote này");
-            }
-
-            if (emoteSet.Emotes.Contains(emoteId))
-            {
-                throw new Exception("Emote đã có trong bộ emote");
-            }
-
-            emoteSet.Emotes.Add(emoteId);
-            await ReplaceEmoteSetAsync(emoteSet);
-        }
-
         private async Task ToggleMultipleEmoteSetActiveStatus(ObjectId userId, EmoteSet emoteSet)
         {
             var userEmoteSets = await GetEmoteSetsAsync(es => es.OwnerId == userId && es.IsActive);
@@ -217,6 +200,27 @@ namespace Services.Implementations
             }
 
             return tagStrings;
+        }
+
+        public async Task<bool> AddEmoteToSetAsync(ObjectId emoteSetId, ObjectId emoteId,
+            CancellationToken ct = default)
+        {
+            var set = await emoteSetRepository.GetByIdAsync(emoteSetId, ct);
+            if (set == null) 
+                throw new Exception("Bộ emote không tồn tại.");
+
+            if (set.Emotes == null)
+                set.Emotes = new List<ObjectId>();
+
+            // check duplicate
+            if (set.Emotes.Contains(emoteId)) throw new Exception("Emote đã tồn tại trong bộ emote.");
+            
+            // check capacity
+            if (set.Capacity > 0 && set.Emotes.Count >= set.Capacity)
+                throw new InvalidOperationException("Bộ emote đã đạt đến sức chứa tối đa.");
+
+            set.Emotes.Add(emoteId);
+            return await emoteSetRepository.ReplaceAsync(set, false, ct);
         }
     }
 }

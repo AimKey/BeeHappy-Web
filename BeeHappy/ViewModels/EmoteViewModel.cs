@@ -1,4 +1,7 @@
-﻿namespace BeeHappy.ViewModels
+﻿using BusinessObjects;
+using CommonObjects.ViewModels.EmoteSetVMs;
+
+namespace BeeHappy.ViewModels
 {
     public class EmoteViewModel
     {
@@ -21,6 +24,6 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int TotalChannels { get; set; }
-
+        public List<EmoteSet>? UserEmoteSets { get; set; }
     }
 }

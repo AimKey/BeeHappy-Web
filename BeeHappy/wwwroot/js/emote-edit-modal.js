@@ -34,6 +34,15 @@ class EditEmoteModal {
 
         // Tag input handling
         if (this.tagInput) {
+            // Prevent spaces from being typed
+            this.tagInput.addEventListener("keydown", (e) => {
+                if (e.key === " ") {
+                    e.preventDefault()
+                    return false
+                }
+            })
+            
+            // Only allow Enter key to add tags
             this.tagInput.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") {
                     e.preventDefault()
@@ -99,13 +108,11 @@ class EditEmoteModal {
     addTagToList(tagText) {
         const tagElement = document.createElement("span")
         tagElement.className =
-            "tag-item bg-discord-gray text-white text-sm px-3 py-1 rounded-full flex items-center space-x-2"
+            "tag-item bg-dark-surface/60 text-white text-sm px-3 py-1 rounded-full flex items-center space-x-2 border border-dark-border"
         tagElement.innerHTML = `
             <span>${tagText}</span>
             <button type="button" class="remove-tag text-gray-400 hover:text-white">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
+                <i class="fas fa-times text-xs"></i>
             </button>
         `
 

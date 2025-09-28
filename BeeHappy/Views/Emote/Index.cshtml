@@ -106,34 +106,12 @@
                             <div class="emote-thumbnail">
                                 @{
                                     var thumbnailUrl = emote.Files?.LastOrDefault()?.Url ?? "/images/placeholder-emote.png";
-                                    var isAnimated = emote.Files?.Any(f => f.Format?.ToLower() == "gif") ?? false;
                                 }
                                 <img src="@thumbnailUrl" alt="@emote.Name" loading="lazy" onerror="this.src='/images/placeholder-emote.png'">
-                                @if (isAnimated)
-                                {
-                                    <div class="animated-badge">GIF</div>
-                                }
-                                @if (emote.IsOverlaying)
-                                {
-                                    <div class="overlay-badge">OVERLAY</div>
-                                }
                             </div>
 
                             <div class="emote-info">
-                                @* Add username of emote *@
                                 <div class="emote-name">@emote.Name</div>
-                                @* <div class="emote-meta"> *@
-                                @*     @if (emote.Tags?.Any() == true) *@
-                                @*     { *@
-                                @*         <div class="emote-tags"> *@
-                                @*             @foreach (var tag in emote.Tags.Take(3)) *@
-                                @*             { *@
-                                @*                 <span class="tag">@tag</span> *@
-                                @*             } *@
-                                @*         </div> *@
-                                @*     } *@
-                                @*     <div class="emote-date">@emote.CreatedAt.ToString("MMM dd, yyyy")</div> *@
-                                @* </div> *@
                             </div>
                         </a>
                     }

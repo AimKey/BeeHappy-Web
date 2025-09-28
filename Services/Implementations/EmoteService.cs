@@ -61,7 +61,7 @@ namespace Services.Implementations
         {
             // Get all emotes from repository
             var allEmotes = await emoteRepository.GetAllAsync();
-
+            
             // Convert to queryable for filtering
             var query = allEmotes.AsQueryable();
 
@@ -70,7 +70,7 @@ namespace Services.Implementations
             {
                 query = query.Where(e => e.OwnerId.ToString().Equals(userId));
             }
-
+            
             // Apply tags filter
             if (!string.IsNullOrEmpty(tags))
             {

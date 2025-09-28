@@ -18,7 +18,7 @@ namespace CommonObjects.Mappers
                 Emotes = emotes.Select(e => new EmoteSetEmotePreviewVM
                 {
                     Id = e.Id,
-                    Url = e.Files.FirstOrDefault().Url,
+                    Url = e.Files.LastOrDefault().Url,
 
                 }).ToList(),
                 EmoteSetId = emoteSet.Id,

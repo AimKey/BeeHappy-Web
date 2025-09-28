@@ -1,4 +1,5 @@
 ﻿@using BusinessObjects
+@using CommonObjects.AppConstants
 @using CommonObjects.DTOs.EmoteSetDTOs
 @using CommonObjects.ViewModels.EmoteSetVMs
 @model EmoteSetDetailVM
@@ -13,14 +14,14 @@
 }
 
 <partial name="_Notification"/>
-<div class="flex h-full w-full px-6 py-4">
+<div class="flex h-full w-full px-6 py-4 emotes-directory">
     @* Main content *@
     <div class="w-full flex-1">
         @* Go Back Button *@
         <div class="mb-4">
             <a asp-action="Index" asp-controller="EmoteSets">
                 <button
-                    class="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dark-border bg-dark-surface px-4 py-2 text-sm font-semibold text-gray-200 transition-colors hover:bg-dark-hover hover:text-white shadow-sm">
+                    class="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dark-border bg-dark-surface/40 px-4 py-2 text-sm font-semibold text-gray-200 transition-colors hover:text-white shadow-sm">
                     <i class="fas fa-arrow-left"></i>
                     Quay lại danh sách
                 </button>
@@ -29,10 +30,10 @@
         </div>
 
         <div
-            class="mb-4 grid w-full grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg border border-dark-border bg-dark-surface px-4 py-4 shadow-sm">
+            class="mb-4 grid w-full grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg border border-dark-border bg-dark-surface/40 px-4 py-4 shadow-sm">
             @* Upper half section *@
-            <a asp-action="Details" asp-controller="User" asp-route-id="@owner.Id" class="flex items-center gap-3">
-                <img src="https://cdn.dlcompare.com/game_tetiere/upload/gameimage/file/54998.jpg.webp"
+            <a href="#" class="flex items-center gap-3">
+                <img src="@(owner?.Profile.AvatarUrl ?? UserConstants.DEFAULT_USER_AVATAR_LINK)"
                      alt="User Avatar"
                      class="h-10 w-10 rounded-full">
                 <span class="text-lg font-medium text-white">@(owner?.Username ?? "Người dùng không xác định")</span>
@@ -245,13 +246,12 @@
             {
                 @foreach (var emote in emotes)
                 {
-                    var emoteUrl = emote.Files?.FirstOrDefault()?.Url ?? "";
-                    <div class="emote-card" data-emote-id="@emote.Id">
+                    var emoteUrl = emote.Files?.LastOrDefault()?.Url ?? "";
+                    <a class="emote-card" data-emote-id="@emote.Id" asp-action="Details" asp-controller="Emote" asp-route-id="@emote.Id">
                         <div class="emote-thumbnail">
                             @if (!string.IsNullOrEmpty(emoteUrl))
                             {
-                                <img src="@emoteUrl" alt="@emote.Name" loading="lazy"
-                                     onerror="this.src='/images/placeholder-emote.png'">
+                                <img src="@emoteUrl" alt="@emote.Name" loading="lazy">
                             }
                             else
                             {
@@ -260,9 +260,8 @@
                         </div>
                         <div class="emote-info">
                             <div class="emote-name">@Html.Raw(emote.Name)</div>
-                            <div class="emote-owner">@(owner?.Username ?? "Không xác định")</div>
                         </div>
-                    </div>
+                    </a>
                 }
             }
             else
