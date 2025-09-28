@@ -16,5 +16,6 @@ namespace Services.Interfaces
         Task ActivePaintForUserAsync(User currentUser, ObjectId paintId);
         Task AddPaintToUserAsync(User currentUser, ObjectId paintId);
         Task DeactivateAllPaintsForUserAsync(User user);
+        Task<string> GetActivePaintColorForUserAsync(User user);
     }
 }

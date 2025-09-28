@@ -1,5 +1,7 @@
 using BusinessObjects;
+using BusinessObjects.NestedObjects;
 using CommonObjects.AppConstants;
+using CommonObjects.DTOs.UserDTOs;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 using Repositories.Interfaces;
@@ -7,7 +9,10 @@ using Services.Interfaces;
 
 namespace Services.Implementations
 {
-    public class UserService(IUserRepository userRepository) : IUserService
+    public class UserService(
+        IUserRepository userRepository,
+        IBadgeRepository badgeRepository,
+        IPaintRepository paintRepository) : IUserService
     {
         public async Task<List<User>> GetAllUsersAsync(CancellationToken ct = default)
         {
@@ -86,6 +91,81 @@ namespace Services.Implementations
             }
             user.Profile.AvatarUrl = $"/uploads/userAvatars/{uniqueFileName}";
             await ReplaceUserAsync(user, false, ct);
+        }
+
+        public async Task<UserInfoDTO> GetAllUserInfo(ObjectId userId)
+        {
+            // Get user badge
+            var user = await GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("Không tìm thấy người dùng");
+            }
+
+            var userBadgesDTO = await GetUserBadgeInfoDtos(user);
+
+            // Get user paints
+            var userPaintsDTO = await GetUserPaintInfoDtos(user);
+
+            // Return all info
+            UserInfoDTO userInfo = new UserInfoDTO()
+            {
+                UserId = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt,
+                Roles = user.Roles ?? new List<string>(),
+                IsPremium = user.IsPremium,
+                Profile = user.Profile ?? new Profile(),
+                Badges = userBadgesDTO,
+                Paints = userPaintsDTO
+            };
+            return userInfo;
+        }
+
+        private async Task<List<UserBadgeInfoDTO>> GetUserBadgeInfoDtos(User user)
+        {
+            var userBadgesDTO = new List<UserBadgeInfoDTO>();
+            // Get badge details
+            // TODO: Revamp the badge system later
+            if (user.Badges != null && user.Badges.Any())
+            {
+                var userBadgesId = user.Badges;
+                var userBadges = await badgeRepository.GetAsync(b => userBadgesId.Contains(b.Id));
+                userBadgesDTO = userBadges.Select(b => new UserBadgeInfoDTO
+                {
+                    Id = b.Id,
+                    Name = b.Name,
+                    Image = b.Image,
+                    StyleString = b.StyleString,
+                    IsActive = user.Badges.Any(ub => ub == b.Id)
+                }).ToList();
+            }
+
+            return userBadgesDTO;
+        }
+
+        private async Task<List<UserPaintInfoDTO>> GetUserPaintInfoDtos(User user)
+        {
+            var userPaintsDTO = new List<UserPaintInfoDTO>();
+            if (user.Paints != null && user.Paints.Any())
+            {
+                var userPaintsId = user.Paints.Select(up => up.PaintId).ToList();
+                var userPaints = await paintRepository.GetAsync(p => userPaintsId.Contains(p.Id));
+                userPaintsDTO = user.Paints.Join(userPaints,
+                    up => up.PaintId,
+                    p => p.Id,
+                    (up, p) => new UserPaintInfoDTO
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Color = p.Color,
+                        IsActive = up.IsActivated && user.IsPremium
+                    }).ToList();
+            }
+
+            return userPaintsDTO;
         }
     }
 }
