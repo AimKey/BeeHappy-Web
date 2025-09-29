@@ -22,7 +22,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Controllers\API\" />
 		<Folder Include="Controllers\Payment\" />
 		<Folder Include="Extensions\" />
 		<Folder Include="wwwroot\uploads\emotes\" />

@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DTOs\API\EmoteSetResponse\" />
+    <Folder Include="DTOs\API\UserResponse\" />
     <Folder Include="Filters\" />
     <Folder Include="Mappers\Emote\" />
     <Folder Include="Models\" />
