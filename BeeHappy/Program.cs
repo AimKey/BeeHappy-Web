@@ -1,7 +1,11 @@
-﻿using DataAccessObjects;
+﻿using CommonObjects.Configs;
+using DataAccessObjects;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Net.payOS;
+using PostHog;
 using Repositories.Implementations;
 using Repositories.Interfaces;
 using Services.HelperServices;
@@ -60,6 +64,9 @@ public class Program
             options.Cookie.SameSite = SameSiteMode.Lax; // hoặc None nếu HTTPS
             options.Cookie.SecurePolicy = CookieSecurePolicy.None; // HTTP deploy
         });
+
+        builder.AddPostHog();
+
 
         // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");

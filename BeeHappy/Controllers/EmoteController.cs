@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using PostHog;
 using Services.Implementations;
 using Services.Interfaces;
 using SixLabors.ImageSharp;
@@ -20,14 +21,16 @@ namespace BeeHappy.Controllers
         private readonly IUserService _userService;
         private readonly IEmoteSetService _emoteSetService;
         private readonly IPaintService _paint;
+        private readonly IPostHogClient _postHog;
 
         public EmoteController(IEmoteService emoteService, IUserService userService, IEmoteSetService emoteSetService,
-            IPaintService paint)
+            IPaintService paint, IPostHogClient postHog)
         {
             _emoteService = emoteService;
             _userService = userService;
             _emoteSetService = emoteSetService;
             _paint = paint;
+            _postHog = postHog;
         }
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 20, string search = "", string tags = "",
@@ -103,7 +106,7 @@ namespace BeeHappy.Controllers
                 ModelState.AddModelError("File", "Vui lòng tải lên một hình ảnh.");
             if (vm.Tags == null)
             {
-                vm.Tags = new ();
+                vm.Tags = new();
             }
 
 
@@ -187,10 +190,10 @@ namespace BeeHappy.Controllers
 
                         // resize copy để không ảnh hưởng ảnh gốc
                         using (var clone = image.Clone(x => x.Resize(new SixLabors.ImageSharp.Processing.ResizeOptions
-                               {
-                                   Size = new SixLabors.ImageSharp.Size(size, size),
-                                   Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop
-                               })))
+                        {
+                            Size = new SixLabors.ImageSharp.Size(size, size),
+                            Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop
+                        })))
                         {
                             await clone.SaveAsync(filePath);
                         }
@@ -357,6 +360,15 @@ namespace BeeHappy.Controllers
                 UserEmoteSets = userSets,
                 OwnerNamePaint = ownerPaint
             };
+            _postHog.Capture(
+    User.Identity?.Name ?? "guest",
+    eventName: "Emote Clicked",
+    properties: new Dictionary<string, object>
+    {
+        { "emoteId", emote.Id.ToString() },
+        { "emoteName", emote.Name }
+    }
+);
             return View(vm);
         }
 
