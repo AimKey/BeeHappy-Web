@@ -134,6 +134,10 @@ public class Program
             builder.Configuration["PayOS:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
             builder.Configuration["PayOS:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
         builder.Services.AddSingleton(payOs);
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+
+
     }
 
     private static void SetupRepos(WebApplicationBuilder builder)
