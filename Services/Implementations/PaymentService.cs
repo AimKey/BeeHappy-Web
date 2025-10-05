@@ -12,7 +12,7 @@ namespace Services.Implementations;
 public class PaymentService(
     IPurchaseHistoryRepository purchaseHistoryRepository,
     IPremiumPlanRepository premiumPlanRepository,
-    IUserService userService,
+    IUserRepository userRepository,
     PayOS payOs) : IPaymentService
 {
     public async Task<List<PurchaseHistory>> GetUserPurchaseHistories(ObjectId userId)
@@ -25,7 +25,7 @@ public class PaymentService(
         string cancelUrl)
     {
         var plan = await premiumPlanRepository.GetByIdAsync(planId);
-        var user = await userService.GetUserByIdAsync(userId);
+        var user = await userRepository.GetByIdAsync(userId);
         if (plan == null)
         {
             throw new Exception("Gói dịch vụ không tồn tại.");
@@ -100,10 +100,10 @@ public class PaymentService(
         var status = await purchaseHistoryRepository.ReplaceAsync(userHistory);
 
         // Update user premium status
-        var user = await userService.GetUserByIdAsync(userHistory.OwnerId);
+        var user = await userRepository.GetByIdAsync(userHistory.OwnerId);
         if (user == null) throw new Exception("Người dùng không tồn tại.");
         user.IsPremium = true;
-        await userService.ReplaceUserAsync(user);
+        await userRepository.ReplaceAsync(user);
         return status;
     }
 
@@ -130,10 +130,15 @@ public class PaymentService(
         {
             // Update user premium status
             currentUser.IsPremium = false;
-            await userService.ReplaceUserAsync(currentUser);
+            await userRepository.ReplaceAsync(currentUser);
             return false;
         }
 
         return true;
+    }
+
+    public async Task<PurchaseHistory?> GetPaymentByOrderCodeAsync(long orderCode)
+    {
+        return (await purchaseHistoryRepository.GetAsync(p => p.OrderCode == orderCode)).ToList().FirstOrDefault();
     }
 }

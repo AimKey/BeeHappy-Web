@@ -2,12 +2,14 @@ using BusinessObjects;
 using CommonObjects.AppConstants;
 using CommonObjects.ViewModels.PaymentVMs;
 using CommonObjects.ViewModels.StoreVMs;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Net.payOS;
 using Net.payOS.Types;
 using PostHog;
 using Repositories.Interfaces;
+using Services.CronjobServices;
 using Services.HelperServices;
 using Services.Implementations;
 using Services.Interfaces;
@@ -49,6 +51,12 @@ public class PaymentController(
             var cancelUrl = $"{baseUrl}/{configuration["PayOS:CANCEL_URL_PATH"]}";
             var createPaymentObj =
                 await paymentService.CreatePayOSPaymentObject(currentUser.Id, planId, returnUrl, cancelUrl);
+
+            // Add cronjob here
+            BackgroundJob.Schedule<PaymentJob>(
+                job => job.CancelIfUnpaidAsync(createPaymentObj.orderCode),
+                TimeSpan.FromMinutes(PaymentConstants.PAYMENT_CANCEL_AFTER));
+
             return Redirect(createPaymentObj.checkoutUrl);
         }
         catch (Exception e)
