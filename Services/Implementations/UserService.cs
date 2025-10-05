@@ -2,8 +2,10 @@ using BusinessObjects;
 using BusinessObjects.NestedObjects;
 using CommonObjects.AppConstants;
 using CommonObjects.DTOs.UserDTOs;
+using CommonObjects.ViewModels.StoreVMs;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
+using Repositories.Implementations;
 using Repositories.Interfaces;
 using Services.Interfaces;
 
@@ -12,7 +14,9 @@ namespace Services.Implementations
     public class UserService(
         IUserRepository userRepository,
         IBadgeRepository badgeRepository,
-        IPaintRepository paintRepository) : IUserService
+        IPaintRepository paintRepository,
+        IPaymentService paymentService,
+        IPremiumPlanRepository premiumPlanRepository) : IUserService
     {
         public async Task<List<User>> GetAllUsersAsync(CancellationToken ct = default)
         {
@@ -166,6 +170,26 @@ namespace Services.Implementations
             }
 
             return userPaintsDTO;
+        }
+
+        public async Task<CurrentUserPlanVm?> GetCurrentPlanAsync(ObjectId userId)
+        {
+            var userPurchases = await paymentService.GetUserPurchaseHistories(userId);
+            var newestPurchase = userPurchases
+                .OrderByDescending(p => p.PurchasedDate)
+                .FirstOrDefault(p => p.Status == PaymentConstants.PAYMENT_SUCCESS && p.ExpireDate > DateTime.Now);
+
+            if (newestPurchase == null) return null;
+
+            var plan = await premiumPlanRepository.GetByIdAsync(newestPurchase.PlanId);
+            if (plan == null) return null;
+
+            return new CurrentUserPlanVm
+            {
+                PlanId = plan.Id,
+                PlanName = plan.Name,
+                ExpiryDate = newestPurchase.ExpireDate
+            };
         }
     }
 }

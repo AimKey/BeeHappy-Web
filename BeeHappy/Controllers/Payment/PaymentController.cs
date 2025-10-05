@@ -19,7 +19,8 @@ public class PaymentController(
     IUserService userService,
     IPaymentService paymentService,
     IConfiguration configuration,
-    IPostHogClient posthog) : Controller
+    IPostHogClient posthog,
+      IEmailService emailService) : Controller
 {
     [HttpPost]
     public async Task<IActionResult> SelectPlanAsync(ObjectId planId)
@@ -60,7 +61,7 @@ public class PaymentController(
     }
 
     [HttpGet]
-    public IActionResult Success()
+    public async Task<IActionResult> Success()
     {
         var responseObj = PaymentUtils.ParseResponse(Request.Query);
         var viewModel = new PaymentResultVM
@@ -72,6 +73,25 @@ public class PaymentController(
         };
         // Update user's purchase history
         paymentService.CompletePurchaseHistoryForUser(responseObj.OrderCode.GetValueOrDefault());
+
+        var currentUser = await GetCurrentUserAsync();
+
+        DateTime? expireAt = null;
+        if (currentUser != null)
+        {
+            var planInfo = await userService.GetCurrentPlanAsync(currentUser.Id);
+            expireAt = planInfo?.ExpiryDate ?? DateTime.UtcNow.AddDays(30); // fallback
+        }
+
+        // ✅ Gửi email xác nhận premium
+        if (currentUser != null && expireAt != null)
+        {
+            await emailService.SendPremiumConfirmationAsync(
+                currentUser.Email,
+                currentUser.Username ?? "Người dùng",
+                expireAt.Value
+            );
+        }
 
         // Track vào PostHog
         posthog.Capture(

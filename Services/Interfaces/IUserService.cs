@@ -1,5 +1,6 @@
 using BusinessObjects;
 using CommonObjects.DTOs.UserDTOs;
+using CommonObjects.ViewModels.StoreVMs;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Bson;
 
@@ -17,5 +18,6 @@ namespace Services.Interfaces
         Task<long> CountUsersAsync(System.Linq.Expressions.Expression<Func<User, bool>>? filter = null, CancellationToken ct = default);
         Task UpdateUserAvatar(IFormFile file, User user, CancellationToken ct = default);
         Task<UserInfoDTO> GetAllUserInfo(ObjectId userId);
+        Task<CurrentUserPlanVm?> GetCurrentPlanAsync(ObjectId userId);
     }
 }

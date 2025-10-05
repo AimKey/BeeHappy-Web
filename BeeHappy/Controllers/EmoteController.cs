@@ -396,10 +396,7 @@ namespace BeeHappy.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-        private async Task<User?> GetCurrentUser()
-        {
-            var userId = HttpContext.Session.GetString("userId");
-            if (string.IsNullOrEmpty(userId)) return null;
+        
 
         private async Task<User?> GetCurrentUserAsync()
         {
