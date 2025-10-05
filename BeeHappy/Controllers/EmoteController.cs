@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using PostHog;
 using Services.Implementations;
 using Services.Interfaces;
 using SixLabors.ImageSharp;
@@ -19,12 +20,18 @@ namespace BeeHappy.Controllers
         private readonly IEmoteService _emoteService;
         private readonly IUserService _userService;
         private readonly IEmoteSetService _emoteSetService;
+        private readonly IPaintService _paint;
+        private readonly IPostHogClient _postHog;
 
-        public EmoteController(IEmoteService emoteService, IUserService userService, IEmoteSetService emoteSetService)
+        public EmoteController(IEmoteService emoteService, IUserService userService, IEmoteSetService emoteSetService,
+            IPaintService paint, IPostHogClient postHog)
         {
             _emoteService = emoteService;
             _userService = userService;
             _emoteSetService = emoteSetService;
+            _paint = paint;
+            _postHog = postHog;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 20, string search = "", string tags = "",
@@ -100,7 +107,7 @@ namespace BeeHappy.Controllers
                 ModelState.AddModelError("File", "Vui lòng tải lên một hình ảnh.");
             if (vm.Tags == null)
             {
-                vm.Tags = new ();
+                vm.Tags = new();
             }
 
 
@@ -136,7 +143,7 @@ namespace BeeHappy.Controllers
 
                 var file = vm.Files[0].File;
                 var ext = Path.GetExtension(file.FileName).ToLower();
-                
+
                 if (!allowedExtensions.Contains(ext))
                     return BadRequest(new { error = "Chỉ cho phép file JPG, PNG, GIF." });
 
@@ -184,10 +191,10 @@ namespace BeeHappy.Controllers
 
                         // resize copy để không ảnh hưởng ảnh gốc
                         using (var clone = image.Clone(x => x.Resize(new SixLabors.ImageSharp.Processing.ResizeOptions
-                               {
-                                   Size = new SixLabors.ImageSharp.Size(size, size),
-                                   Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop
-                               })))
+                        {
+                            Size = new SixLabors.ImageSharp.Size(size, size),
+                            Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop
+                        })))
                         {
                             await clone.SaveAsync(filePath);
                         }
@@ -205,7 +212,8 @@ namespace BeeHappy.Controllers
                 await _emoteService.InsertEmoteAsync(emote);
 
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-                    return Json(new { success = true, message = "Tạo emote thành công!", emoteId = emote.Id.ToString() });
+                    return Json(
+                        new { success = true, message = "Tạo emote thành công!", emoteId = emote.Id.ToString() });
 
                 return RedirectToAction(nameof(Index));
             }
@@ -317,6 +325,7 @@ namespace BeeHappy.Controllers
                     });
                 }
             }
+
             // Get all set of the current user
             var currentUser = await GetCurrentUserAsync();
             var userSets = new List<EmoteSet>();
@@ -324,6 +333,9 @@ namespace BeeHappy.Controllers
             {
                 userSets = await _emoteSetService.GetEmoteSetsAsync(s => s.OwnerId.Equals(currentUser.Id));
             }
+
+            // Get owner paint
+            var ownerPaint = await _paint.GetActivePaintColorForUserAsync(owner);
             // return viewmodel
             var vm = new EmoteViewModel
             {
@@ -346,9 +358,18 @@ namespace BeeHappy.Controllers
                     Url = f.Url,
                     Size = f.Size
                 }).ToList(),
-                UserEmoteSets = userSets
+                UserEmoteSets = userSets,
+                OwnerNamePaint = ownerPaint
             };
-
+            _postHog.Capture(
+    User.Identity?.Name ?? "guest",
+    eventName: "Emote Clicked",
+    properties: new Dictionary<string, object>
+    {
+        { "emoteId", emote.Id.ToString() },
+        { "emoteName", emote.Name }
+    }
+);
             return View(vm);
         }
 
@@ -375,6 +396,7 @@ namespace BeeHappy.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+        
 
         private async Task<User?> GetCurrentUserAsync()
         {

@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using BusinessObjects;
 using CommonObjects.AppConstants;
 using CommonObjects.ViewModels.PaymentVMs;
@@ -7,17 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using Net.payOS;
 using Net.payOS.Types;
+using PostHog;
 using Repositories.Interfaces;
 using Services.HelperServices;
 using Services.Implementations;
 using Services.Interfaces;
+using System.Security.Claims;
 
 namespace BeeHappy.Controllers.Payment;
 
 public class PaymentController(
     IUserService userService,
     IPaymentService paymentService,
-    IConfiguration configuration) : Controller
+    IConfiguration configuration,
+    IPostHogClient posthog,
+      IEmailService emailService) : Controller
 {
     [HttpPost]
     public async Task<IActionResult> SelectPlanAsync(ObjectId planId)
@@ -29,6 +32,15 @@ public class PaymentController(
             {
                 throw new Exception("Vui lòng đăng nhập để thực hiện hành động này.");
             }
+            // Track event vào PostHog
+            posthog.Capture(
+                User.Identity?.Name ?? "guest",
+                eventName: "Select Plan Clicked",
+                properties: new Dictionary<string, object>
+                {
+                { "planId", planId }
+                }
+            );
 
             // Get the current request's base URL
             var request = HttpContext.Request;
@@ -49,7 +61,7 @@ public class PaymentController(
     }
 
     [HttpGet]
-    public IActionResult Success()
+    public async Task<IActionResult> Success()
     {
         var responseObj = PaymentUtils.ParseResponse(Request.Query);
         var viewModel = new PaymentResultVM
@@ -61,6 +73,38 @@ public class PaymentController(
         };
         // Update user's purchase history
         paymentService.CompletePurchaseHistoryForUser(responseObj.OrderCode.GetValueOrDefault());
+
+        var currentUser = await GetCurrentUserAsync();
+
+        DateTime? expireAt = null;
+        if (currentUser != null)
+        {
+            var planInfo = await userService.GetCurrentPlanAsync(currentUser.Id);
+            expireAt = planInfo?.ExpiryDate ?? DateTime.UtcNow.AddDays(30); // fallback
+        }
+
+        // ✅ Gửi email xác nhận premium
+        if (currentUser != null && expireAt != null)
+        {
+            await emailService.SendPremiumConfirmationAsync(
+                currentUser.Email,
+                currentUser.Username ?? "Người dùng",
+                expireAt.Value
+            );
+        }
+
+        // Track vào PostHog
+        posthog.Capture(
+            User.Identity?.Name ?? "guest",
+            eventName: "Payment Success",
+            properties: new Dictionary<string, object>
+            {
+            { "orderCode", responseObj.OrderCode },
+            { "transactionId", responseObj.Id },
+            { "status", "success" },
+            { "userId", User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value }
+            }
+        );
         return View(viewModel);
     }
 
@@ -76,6 +120,18 @@ public class PaymentController(
             OrderCode = responseObj.OrderCode.ToString(),
         };
         paymentService.CancelPurchaseHistoryForUser(responseObj.OrderCode.GetValueOrDefault());
+        // Track vào PostHog
+        posthog.Capture(
+            User.Identity?.Name ?? "guest",
+            eventName: "Payment Cancelled",
+            properties: new Dictionary<string, object>
+            {
+            { "orderCode", responseObj.OrderCode },
+            { "transactionId", responseObj.Id },
+            { "status", "cancelled" },
+            { "userId", User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value }
+            }
+        );
         return View("Failed", viewModel);
     }
 
@@ -91,6 +147,18 @@ public class PaymentController(
             OrderCode = responseObj.OrderCode.ToString(),
         };
         paymentService.CancelPurchaseHistoryForUser(responseObj.OrderCode.GetValueOrDefault());
+        // Track vào PostHog        
+        posthog.Capture(
+            User.Identity?.Name ?? "guest",
+            eventName: "Payment Failed",
+            properties: new Dictionary<string, object>
+            {
+            { "orderCode", responseObj.OrderCode },
+            { "transactionId", responseObj.Id },
+            { "status", "failed" },
+            { "userId", User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value }
+            }
+        );
         return View(viewModel);
     }
 

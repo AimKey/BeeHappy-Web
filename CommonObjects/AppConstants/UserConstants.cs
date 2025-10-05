@@ -11,5 +11,6 @@ namespace CommonObjects.AppConstants
         public const string UserId = "userId";
         public const string USER_AVATAR = "userAvatar";
         public const string DEFAULT_USER_AVATAR_LINK = "images/avatar.jpg";
+        public const string DEFAUT_USER_NAME_COLOR = "#FFFFFF";
     }
 }

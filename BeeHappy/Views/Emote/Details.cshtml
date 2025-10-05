@@ -5,6 +5,8 @@
     bool isOwner = Model.OwnerId == currentUserId;
     ViewData["Title"] = Model.Name + " - Emote Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    // d1d5dc is the same as text-gray-300
+    var ownerPaintColor = string.IsNullOrEmpty(Model.OwnerNamePaint) ? "#d1d5dc" : Model.OwnerNamePaint;
 }
 
 <link rel="stylesheet" href="~/css/emotes-directory.css"/>
@@ -18,8 +20,8 @@
                 <div class="flex-1">
                     <h1 class="text-3xl font-bold text-white mb-3">@Model.Name</h1>
                     <div class="flex items-center gap-3">
-                        <img src="@Model.OwnerAvatar" class="w-10 h-10 rounded-full border-2 border-primary/30">
-                        <span class="text-gray-300 font-medium">@Model.OwnerName</span>
+                        <img src="@Model.OwnerAvatar" class="w-10 h-10 rounded-full border-2 border-primary/30" alt="@Model.OwnerName">
+                        <span class="font-medium" style="color: @ownerPaintColor">@Model.OwnerName</span>
                     </div>
                 </div>
             </div>

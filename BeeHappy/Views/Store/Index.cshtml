@@ -87,17 +87,7 @@
                     <!-- Current Plan Status -->
                     <div class="bg-dark-surface border border-dark-border rounded-xl p-5">
                         <h3 class="text-lg font-semibold text-white mb-4">Gói hiện tại của bạn</h3>
-                        @* <div class="bg-dark-bg border border-dark-border rounded-xl p-4"> *@
-                            @* <div class="flex items-center justify-between mb-4"> *@
-                            @*     <span class="text-green-400 text-sm font-medium">Đang hoạt động</span> *@
-                            @*     <div class="flex items-center gap-2"> *@
-                            @*         <div *@
-                            @*             class="w-8 h-8 bg-black/80 rounded-lg flex items-center justify-center border border-white/10"> *@
-                            @*             <i class="fas fa-crown text-yellow-300 text-sm"></i> *@
-                            @*         </div> *@
-                            @*         <span class="text-zinc-300 text-sm font-medium">Premium</span> *@
-                            @*     </div> *@
-                            @* </div> *@
+                        
 
                             <!-- Current Plan Display -->
                             <div
@@ -162,9 +152,7 @@
                                                 <h4 class="text-white font-semibold text-sm">@plan.Name</h4>
                                             </div>
                                             <div class="text-center">
-                                                @* <p class="text-white font-bold text-lg">@plan.Price.ToString("N0") <span
-                                                        class="text-xs text-zinc-400">VND - </span><span class="text-zinc-400 text-xs">@plan.DurationInDays ngày</span></p> *@
-                                                        @* No duration in days version *@
+                                                
                                                         <p class="text-white font-bold text-lg">@plan.Price.ToString("N0")<span class="text-xs text-zinc-400">VND / @plan.DurationInDays ngày</span></p>
                                             </div>
                                         </button>
@@ -464,6 +452,21 @@
                     }
                 });
             }
+
+                document.querySelectorAll("form[action*='SelectPlan']").forEach(form => {
+            form.addEventListener('submit', function (e) {
+                const planId = this.querySelector('input[name="planId"]').value;
+                const planName = this.querySelector('h4')?.innerText || "";
+
+                if (window.posthog) {
+                    posthog.capture('Select Plan Clicked', {
+                        planId: planId,
+                        planName: planName
+                    });
+                }
+            });
+        });
+
         });
     </script>
 }
