@@ -1,0 +1,472 @@
+﻿@* filepath: e:\FPT\2025_Fall\EXE202\projects\BeeHappy\BeeHappy\Views\Store\Index.cshtml *@
+@model CommonObjects.ViewModels.StoreVMs.StoreIndexVM
+@{
+    ViewData["Title"] = "Mở khóa đặc quyền đặc biệt";
+}
+
+<partial name="_Notification"/>
+
+<div class="min-h-screen bg-dark-bg">
+    <!-- Header Section with Purple Gradient -->
+    <div class="relative overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-600 via-purple-700 to-blue-800 px-6 py-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-5xl font-bold text-white mb-4">Mở khóa đặc quyền đặc biệt</h1>
+                        <p class="text-xl text-purple-200">Đăng ký để nâng cao trải nghiệm chat của bạn.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <!-- Header Icons - Synced with Benefits -->
+                        <div
+                            class="w-12 h-12 bg-black/80 rounded-xl flex items-center justify-center shadow-lg border border-white/10 floating">
+                            <i class="fas fa-user text-cyan-300 text-xl"></i>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-black/80 rounded-xl flex items-center justify-center shadow-lg border border-white/10 floating">
+                            <i class="fas fa-smile text-yellow-300 text-xl"></i>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-black/80 rounded-xl flex items-center justify-center shadow-lg border border-white/10 floating">
+                            <i class="fas fa-palette text-pink-300 text-xl"></i>
+                        </div>
+                        <div
+                            class="w-12 h-12 bg-black/80 rounded-xl flex items-center justify-center shadow-lg border border-white/10 floating">
+                            <i class="fas fa-award text-orange-300 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content - 3 Rows Layout -->
+    <div class="px-6 py-5 max-w-7xl mx-auto space-y-4">
+
+        <!-- Row 1: Standalone Benefits Icons -->
+        <div class="w-full">
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-5">
+                <h2 class="text-xl font-bold text-white mb-4">Lợi ích đăng ký</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    @foreach (var benefit in Model.SubscriptionBenefits)
+                    {
+                        <div
+                            class="bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl p-2 text-center hover:scale-105 transition-transform duration-200">
+                            <div
+                                class="w-16 h-16 bg-black/80 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg border border-white/10">
+                                @switch (benefit.Icon)
+                                {
+                                    case "user":
+                                        <i class="fas fa-user text-cyan-300 text-2xl"></i>
+                                        break;
+                                    case "smile":
+                                        <i class="fas fa-smile text-yellow-300 text-2xl"></i>
+                                        break;
+                                    case "paint":
+                                        <i class="fas fa-palette text-pink-300 text-2xl"></i>
+                                        break;
+                                    case "badge":
+                                        <i class="fas fa-award text-orange-300 text-2xl"></i>
+                                        break;
+                                }
+                            </div>
+                            <h3 class="text-white font-semibold text-sm">@benefit.Name</h3>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2 & 3: Two Column Layout (Premium + Badge | Paint Names) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            <!-- Left Column: Premium Section + Badge Progress -->
+            <div class="space-y-6">
+                <!-- Premium Status Section -->
+                @if (Model.CurrentUserPlan != null)
+                {
+                    <!-- Current Plan Status -->
+                    <div class="bg-dark-surface border border-dark-border rounded-xl p-5">
+                        <h3 class="text-lg font-semibold text-white mb-4">Gói hiện tại của bạn</h3>
+                        
+
+                            <!-- Current Plan Display -->
+                            <div
+                                class="bg-gradient-to-r from-green-600/20 to-blue-600/20 border border-green-500/30 rounded-xl p-4 bg-dark-bg">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-10 h-10 bg-black/80 rounded-xl flex items-center justify-center border border-white/10 shadow-lg">
+                                            <i class="fas fa-crown text-yellow-300 text-lg"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-bold text-base">@Model.CurrentUserPlan.PlanName</h4>
+                                            <p class="text-green-200 text-sm">Gói đang hoạt động</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <i class="fas fa-calendar-check text-green-400 text-sm"></i>
+                                            <span
+                                                class="text-white font-semibold text-sm">Hết hạn: @Model.CurrentUserPlan.ExpiryDate.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                        @{
+                                            var daysRemaining = (Model.CurrentUserPlan.ExpiryDate - DateTime.Now).Days;
+                                        }
+                                        @if (daysRemaining > 0)
+                                        {
+                                            <p class="text-green-400 text-sm font-medium">
+                                                Còn @daysRemaining ngày
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-red-400 text-sm font-medium">
+                                                Đã hết hạn
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    // </div>
+                }
+                else
+                {
+                    <!-- Subscription Plans -->
+                    <div class="bg-dark-surface border border-dark-border rounded-xl p-5">
+                        <h3 class="text-lg font-semibold text-white mb-4">Trở thành thành viên</h3>
+                            <!-- Subscription Options -->
+                            <div class="grid grid-cols-2 gap-3">
+                                @foreach (var plan in Model.SubscriptionPlans)
+                                {
+                                    <form method="post" asp-action="SelectPlan" asp-controller="Payment"
+                                          class="relative">
+                                        <input type="hidden" name="planId" value="@plan.Id"/>
+                                        <button type="submit"
+                                                class="w-full text-left p-3 rounded-xl border-2 border-dark-border bg-dark-bg hover:border-primary/60 hover:bg-dark-surface/50 transition-all duration-200 group min-h-[80px] flex flex-col justify-center">
+                                            <div class="flex items-center gap-2 mb-2">
+                                                <div
+                                                    class="w-6 h-6 bg-black/80 rounded-lg flex items-center justify-center border border-white/10">
+                                                    <i class="fas fa-crown text-primary text-xs"></i>
+                                                </div>
+                                                <h4 class="text-white font-semibold text-sm">@plan.Name</h4>
+                                            </div>
+                                            <div class="text-center">
+                                                
+                                                        <p class="text-white font-bold text-lg">@plan.Price.ToString("N0")<span class="text-xs text-zinc-400">VND / @plan.DurationInDays ngày</span></p>
+                                            </div>
+                                        </button>
+                                        @if (plan.IsPopular)
+                                        {
+                                            <div
+                                                class="absolute -top-2 -right-2 bg-black/80 border border-green-400/60 text-green-300 text-[10px] px-2 py-1 rounded-full font-bold shadow-lg">
+                                                <i class="fas fa-fire text-green-300 text-[9px] mr-1"></i>Phổ biến
+                                            </div>
+                                        }
+                                    </form>
+                                }
+                            </div>
+                        @* </div> *@
+                    </div>
+                }
+
+                <!-- Badge Progress -->
+                <div class="bg-dark-surface border border-dark-border rounded-xl p-5">
+                    <div class="flex items-center mb-4" style="height: 38px">
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-xl font-bold text-white">Tiến độ huy hiệu</h2>
+                            @if (Model.CurrentUserPlan == null)
+                            {
+                                <i class="fas fa-crown text-yellow-400 text-sm"></i>
+                            }
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <!-- Progress Circle -->
+                        <div class="flex justify-center">
+                            <div class="relative w-32 h-32">
+                                <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
+                                    <path class="text-dark-border" stroke="currentColor" stroke-width="3" fill="none"
+                                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                    <path class="text-primary" stroke="currentColor" stroke-width="3" fill="none"
+                                          stroke-linecap="round"
+                                          stroke-dasharray="@Model.BadgeProgress.ProgressPercentage, 100"
+                                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <span
+                                            class="text-2xl font-bold text-white">@Model.BadgeProgress.ProgressPercentage%</span>
+                                        <p class="text-xs text-zinc-400 mt-1">Hoàn thành</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Badge Levels -->
+                        <div class="flex-1 space-y-3">
+                            <div
+                                class="flex items-center gap-3 p-3 bg-purple-600/20 rounded-xl border border-purple-600/40 hover:bg-purple-600/30 transition-colors">
+                                <div
+                                    class="w-10 h-10 bg-black/80 rounded-xl flex items-center justify-center border border-white/10 shadow-lg">
+                                    <i class="fas fa-star text-yellow-300 text-lg"></i>
+                                </div>
+                                <div>
+                                    <span class="text-white font-semibold">@Model.BadgeProgress.CurrentLevel</span>
+                                    <p class="text-purple-200 text-xs">Cấp hiện tại</p>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center gap-3 p-3 bg-dark-bg rounded-xl border border-dark-border hover:border-orange-500/50 transition-colors">
+                                <div
+                                    class="w-10 h-10 bg-black/80 rounded-xl flex items-center justify-center border border-white/10 shadow-lg">
+                                    <i class="fas fa-medal text-orange-300 text-lg"></i>
+                                </div>
+                                <div>
+                                    <span class="text-zinc-300 font-semibold">@Model.BadgeProgress.NextLevel</span>
+                                    <p class="text-zinc-500 text-xs">Cấp tiếp theo</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Paint Names (Vertical Layout) -->
+            <div class="w-full h-full">
+                <div class="bg-dark-surface border border-dark-border rounded-xl p-5 h-full">
+                    <div class="flex items-center justify-between mb-4" style="height: 38px">
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-xl font-bold text-white">Màu tên của tháng này</h2>
+                            @if (Model.CurrentUserPlan == null)
+                            {
+                                <i class="fas fa-crown text-yellow-400 text-sm"></i>
+                            }
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="text-zinc-400 text-sm flex items-center gap-2 bg-dark-bg px-3 py-1.5 rounded-lg border border-dark-border">
+                                <div
+                                    class="w-6 h-6 bg-black/80 rounded-lg flex items-center justify-center border border-white/10">
+                                    <i class="fas fa-clock text-blue-400 text-xs"></i>
+                                </div>
+                                6 ngày
+                            </span>
+                            <div class="relative">
+                                <button id="themeMenuButton" type="button"
+                                        class="text-zinc-400 text-sm flex items-center gap-2 bg-dark-bg px-3 py-2 rounded-lg border border-dark-border"
+                                        aria-haspopup="true" aria-expanded="false" aria-controls="themeMenuDropdown">
+                                    <i class="fas fa-ellipsis-vertical text-zinc-300 text-sm"></i>
+                                </button>
+                                <div id="themeMenuDropdown"
+                                     class="absolute right-0 mt-1 w-48 bg-dark-bg border border-dark-border rounded-lg shadow-lg py-1 hidden z-20">
+                                    <a asp-action="Index" asp-controller="Cosmetics"
+                                       class="block px-3 py-2 text-sm text-zinc-400 hover:text-zinc-200 hover:bg-dark-bg rounded">Quản lý vật phẩm</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Vertical Layout for Paint Names -->
+                    <div class="space-y-3">
+                        @foreach (var theme in Model.MonthlyThemes)
+                        {
+                            var isOwned = Model.CurrentUserPaints?.Any(up => up.PaintId == theme.Id) ?? false;
+                            var borderClass = isOwned ? "border-green-500" : "border-dark-border";
+                            var hoverClass = isOwned ? "hover:border-green-400" : "hover:border-primary/50";
+                            var bgClass = isOwned ? "bg-green-600/10" : "bg-dark-bg";
+                            
+                            <div class="paint-item flex items-center gap-2 p-2 @bgClass rounded-lg border @borderClass @hoverClass hover:bg-dark-surface/50 transition-all duration-200 cursor-pointer"
+                                 data-paint-id="@theme.Id"
+                                 data-paint-name="@theme.Name"
+                                 data-is-owned="@isOwned.ToString().ToLower()">
+                                <div class="paint-color-circle w-4 h-4 rounded-full shadow-lg border border-white/20 flex-shrink-0"
+                                     style="background-color: @theme.Color"></div>
+                                <span class="paint-name text-white font-medium text-sm flex-1" style="color: @theme.Color">@theme.Name</span>
+                                @if (isOwned)
+                                {
+                                    <i class="paint-check-icon fas fa-check-circle text-green-400 text-xs flex-shrink-0"></i>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/store-style.css"/>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add smooth hover effects for subscription cards
+            const subscriptionButtons = document.querySelectorAll('form button[type="submit"]');
+
+            subscriptionButtons.forEach(button => {
+                button.addEventListener('mouseenter', function () {
+                    this.style.boxShadow = '0 10px 25px rgba(59, 130, 246, 0.3)';
+                });
+
+                button.addEventListener('mouseleave', function () {
+                    this.style.boxShadow = 'none';
+                });
+            });
+
+            // Handle form submission with loading state
+            const forms = document.querySelectorAll('form[method="post"]');
+            forms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    const button = this.querySelector('button[type="submit"]');
+                    const originalHTML = button.innerHTML;
+
+                    button.disabled = true;
+                    button.innerHTML = '<div class="flex items-center justify-center gap-2"><i class="fas fa-spinner fa-spin text-primary"></i><span>Đang xử lý...</span></div>';
+
+                    setTimeout(() => {
+                        button.disabled = false;
+                        button.innerHTML = originalHTML;
+                    }, 3000);
+                });
+            });
+
+            // Animate progress circle
+            const progressPath = document.querySelector('path[stroke-dasharray]');
+            if (progressPath) {
+                progressPath.style.strokeDasharray = '0, 100';
+                setTimeout(() => {
+                    progressPath.style.transition = 'stroke-dasharray 2s ease-in-out';
+                    progressPath.style.strokeDasharray = '@Model.BadgeProgress.ProgressPercentage, 100';
+                }, 500);
+            }
+
+            // Add floating animation to header icons
+            const headerIcons = document.querySelectorAll('.floating');
+            headerIcons.forEach((icon, index) => {
+                setTimeout(() => {
+                    icon.style.animation = `float 3s ease-in-out infinite ${index * 0.5}s`;
+                }, 1000);
+            });
+
+            // Handle paint selection
+            const paintItems = document.querySelectorAll('.paint-item');
+            paintItems.forEach(item => {
+                item.addEventListener('click', async function() {
+                    const paintId = this.getAttribute('data-paint-id');
+                    const paintName = this.getAttribute('data-paint-name');
+                    const isOwned = this.getAttribute('data-is-owned') === 'true';
+                    
+                    // Check if user has premium access
+                    const hasPremium = @(Model.CurrentUserPlan != null ? "true" : "false");
+                    
+                    if (!hasPremium) {
+                        return;
+                    }
+                    
+                    if (isOwned) {
+                        return;
+                    }
+                    
+                    // Store original content and colors
+                    const originalContent = this.innerHTML;
+                    const colorCircle = this.querySelector('.paint-color-circle');
+                    const colorText = this.querySelector('.paint-name');
+                    const backgroundColor = colorCircle.style.backgroundColor;
+                    const textColor = colorText.style.color;
+                    
+                    // Show loading state - preserve original layout structure
+                    this.innerHTML = `
+                        <div class="paint-color-circle w-4 h-4 rounded-full shadow-lg border border-white/20 flex-shrink-0" style="background-color: ${backgroundColor}"></div>
+                        <span class="paint-name text-white font-medium text-sm flex-1 flex items-center gap-2">
+                            <i class="fas fa-spinner fa-spin text-primary text-xs"></i>
+                            Đang thêm...
+                        </span>
+                    `;
+                    this.style.pointerEvents = 'none';
+                    
+                    try {
+                        const response = await fetch('@Url.Action("AddPaintToUser", "Store")', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `paintId=${paintId}`
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            // Update UI to show as owned
+                            this.setAttribute('data-is-owned', 'true');
+                            this.classList.remove('border-dark-border', 'hover:border-primary/50', 'bg-dark-bg');
+                            this.classList.add('border-green-500', 'hover:border-green-400', 'bg-green-600/10');
+                            
+                            // Add check icon with proper layout
+                            this.innerHTML = `
+                                <div class="paint-color-circle w-4 h-4 rounded-full shadow-lg border border-white/20 flex-shrink-0" style="background-color: ${backgroundColor}"></div>
+                                <span class="paint-name text-white font-medium text-sm flex-1" style="color: ${textColor}">${paintName}</span>
+                                <i class="paint-check-icon fas fa-check-circle text-green-400 text-xs flex-shrink-0"></i>
+                            `;
+                        } else {
+                            console.error('Error adding paint:', result.message);
+                            this.innerHTML = originalContent;
+                        }
+                    } catch (error) {
+                        console.error('Error adding paint:', error);
+                        this.innerHTML = originalContent;
+                    } finally {
+                        this.style.pointerEvents = 'auto';
+                    }
+                });
+            });
+
+            // Theme menu dropdown toggle
+            const themeMenuButton = document.getElementById('themeMenuButton');
+            const themeMenuDropdown = document.getElementById('themeMenuDropdown');
+            if (themeMenuButton && themeMenuDropdown) {
+                const closeThemeMenu = () => {
+                    themeMenuDropdown.classList.add('hidden');
+                    themeMenuButton.setAttribute('aria-expanded', 'false');
+                };
+                const openThemeMenu = () => {
+                    themeMenuDropdown.classList.remove('hidden');
+                    themeMenuButton.setAttribute('aria-expanded', 'true');
+                };
+                themeMenuButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = themeMenuDropdown.classList.contains('hidden');
+                    if (isHidden) openThemeMenu(); else closeThemeMenu();
+                });
+                document.addEventListener('click', (e) => {
+                    if (!themeMenuDropdown.classList.contains('hidden')) {
+                        const target = e.target;
+                        if (!themeMenuDropdown.contains(target) && target !== themeMenuButton) {
+                            closeThemeMenu();
+                        }
+                    }
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        closeThemeMenu();
+                    }
+                });
+            }
+
+                document.querySelectorAll("form[action*='SelectPlan']").forEach(form => {
+            form.addEventListener('submit', function (e) {
+                const planId = this.querySelector('input[name="planId"]').value;
+                const planName = this.querySelector('h4')?.innerText || "";
+
+                if (window.posthog) {
+                    posthog.capture('Select Plan Clicked', {
+                        planId: planId,
+                        planName: planName
+                    });
+                }
+            });
+        });
+
+        });
+    </script>
+}

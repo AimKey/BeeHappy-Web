@@ -13,5 +13,9 @@ namespace Services.Interfaces
         Task<bool> DeletePaintByIdAsync(ObjectId id, CancellationToken ct = default);
         Task<bool> DeletePaintAsync(Paint paint, CancellationToken ct = default);
         Task<long> CountPaintsAsync(System.Linq.Expressions.Expression<Func<Paint, bool>>? filter = null, CancellationToken ct = default);
+        Task ActivePaintForUserAsync(User currentUser, ObjectId paintId);
+        Task AddPaintToUserAsync(User currentUser, ObjectId paintId);
+        Task DeactivateAllPaintsForUserAsync(User user);
+        Task<string> GetActivePaintColorForUserAsync(User user);
     }
 }

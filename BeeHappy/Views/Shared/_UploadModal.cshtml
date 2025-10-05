@@ -1,0 +1,139 @@
+﻿@* Upload Modal *@
+<div id="beetv-upload-modal" class="fixed inset-0 z-50 hidden">
+    <!-- overlay -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+    <!-- panel -->
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-2xl rounded-2xl border border-dark-border bg-dark-surface text-zinc-100 shadow-2xl max-h-[90vh] overflow-y-auto">
+            @* Modal Header *@
+            <div class="flex items-center justify-between border-b border-dark-border px-4 py-3">
+                <h3 class="text-lg font-semibold">Tải lên Emote</h3>
+                <button type="button" id="beetv-upload-close"
+                        class="cursor-pointer rounded-lg p-2 text-gray-400 transition-all hover:bg-dark-hover hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            @* Upload Form *@
+            <form id="beetv-upload-form" class="p-4 space-y-6">
+                @* Emote Name *@
+                <div>
+                    <label for="beetv-emote-name" class="block text-sm font-medium text-zinc-300 mb-2">Tên emote</label>
+                    <input type="text"
+                           id="beetv-emote-name"
+                           name="emoteName"
+                           maxlength="20"
+                           placeholder="Tên emote"
+                           class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors">
+                </div>
+
+                @* Tags *@
+                <div>
+                    <label for="beetv-emote-tags" class="block text-sm font-medium text-zinc-300 mb-2">Thẻ</label>
+                    <div class="relative">
+                        <input type="text"
+                               id="beetv-emote-tags"
+                               name="tags"
+                               placeholder="Nhập thẻ và nhấn phím cách để thêm"
+                               class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors">
+                    </div>
+                    <div id="beetv-tags-container" class="flex flex-wrap gap-2 mt-2"></div>
+                </div>
+
+                @* Checkboxes *@
+                <div class="space-y-3">
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox"
+                               id="beetv-overlaying"
+                               name="overlaying"
+                               class="w-4 h-4 text-primary bg-dark-surface border-dark-border rounded focus:ring-primary focus:ring-2">
+                        <span class="text-white">Overlaying</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox"
+                               id="beetv-private"
+                               name="private"
+                               class="w-4 h-4 text-primary bg-dark-surface border-dark-border rounded focus:ring-primary focus:ring-2">
+                        <span class="text-white">Riêng tư</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox"
+                               id="beetv-accept-rules"
+                               name="acceptRules"
+                               class="w-4 h-4 text-primary bg-dark-surface border-dark-border rounded focus:ring-primary focus:ring-2">
+                        <span class="text-white">Tôi chấp nhận các quy tắc và hướng dẫn</span>
+                    </label>
+                </div>
+
+                @* File Upload Area *@
+                <div class="border-2 border-dashed border-dark-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors">
+                    <div id="beetv-upload-area" class="space-y-4">
+                        <div class="flex justify-center">
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-lg font-medium text-white mb-2">Kéo thả để tải lên, hoặc</p>
+                            <button type="button"
+                                    id="beetv-browse-files"
+                                    class="btn-secondary mx-auto">
+                                <i class="fas fa-folder-open"></i>
+                                <span>Chọn file</span>
+                            </button>
+                        </div>
+                        <div class="text-sm text-gray-400 space-y-1">
+                            <p>Kích thước tối đa 7MB</p>
+                            <p>Độ phân giải tối đa 1000×1000</p>
+                            <p>Tối đa 1000 khung hình</p>
+                        </div>
+                    </div>
+
+                    @* File Preview Area (hidden by default) *@
+                    <div id="beetv-file-preview" class="hidden space-y-4">
+                        <div id="beetv-preview-container" class="flex justify-center">
+                            File preview will be inserted here
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            <p id="beetv-file-info"></p>
+                        </div>
+                        <button type="button"
+                                id="beetv-remove-file"
+                                class="text-red-400 hover:text-red-300 text-sm font-medium">
+                            Xóa file
+                        </button>
+                    </div>
+
+                    @* Hidden file input *@
+                    <input type="file"
+                           id="beetv-file-input"
+                           name="file"
+                           accept="image/*,.gif"
+                           class="hidden">
+                </div>
+
+                @* Action Buttons *@
+                <div class="flex items-center justify-between p-4 border-t border-dark-border">
+                    <div></div>
+                    <div class="flex space-x-3">
+                        <button type="button"
+                                id="beetv-upload-discard"
+                                class="btn-secondary-sm">
+                            Hủy
+                        </button>
+                        <button type="submit"
+                                id="beetv-upload-submit"
+                                disabled
+                                class="btn-primary btn-sm">
+                            <i class="fas fa-upload"></i>
+                            <span>Tải lên</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
