@@ -76,6 +76,7 @@ public class LoginGoogleController : Controller
             };
 
             await _userService.InsertUserAsync(user);
+            user = (await _userService.GetUsersAsync(u => u.Email.Equals(email))).FirstOrDefault();
         }
 
         if (from == "extension")

@@ -32,7 +32,7 @@ public class Program
         builder.Services.AddSession(options =>
         {
             options.IdleTimeout = System.TimeSpan.FromMinutes(60);
-            options.Cookie.HttpOnly = true;
+            options.Cookie.HttpOnly = true; 
             options.Cookie.IsEssential = true;
         });
 
@@ -72,6 +72,8 @@ public class Program
             options.LowercaseQueryStrings = true;
         });
 
+
+        // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");
         Console.WriteLine($"SQL string: {builder.Configuration.GetConnectionString("MongoDB")}");
 

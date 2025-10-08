@@ -70,10 +70,18 @@ namespace Services.Implementations
             // Convert to queryable for filtering
             var query = allEmotes.AsQueryable();
 
-            // Apply userId
+            // Apply userId => get emote of current user
             if (!string.IsNullOrEmpty(userId))
             {
-                query = query.Where(e => e.OwnerId.ToString().Equals(userId));
+                // if login => show public emote and public/private emote of login user
+                query = query.Where(e => 
+                                            e.Visibility.Contains(EmoteVisibilityConstant.PUBLIC) || 
+                                            e.OwnerId.ToString().Equals(userId)
+                );
+            }
+            else {
+                // if not login => only show public emote
+                query = query.Where(e => e.Visibility.Contains(EmoteVisibilityConstant.PUBLIC));
             }
 
             // Apply tags filter
@@ -87,6 +95,12 @@ namespace Services.Implementations
                 {
                     query = query.Where(e => e.Tags != null && e.Tags.Any(t => t.ToLower().Contains(tag)));
                 }
+            }
+
+            // apply search
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(e => e.Name.Contains(search));
             }
 
             // Apply additional filters
@@ -107,10 +121,10 @@ namespace Services.Implementations
                         case "overlaying":
                             query = query.Where(e => e.IsOverlaying);
                             break;
-                        case "mine":
-                            query = query.Where(e => e.OwnerId.Equals(ObjectId.Parse(userId)));
-                            break;
-                        // "exact" is handled in search section above
+                        //case "mine":
+                        //    query = query.Where(e => e.OwnerId.Equals(ObjectId.Parse(userId)));
+                        //    break;
+                            // "exact" is handled in search section above
                     }
                 }
             }

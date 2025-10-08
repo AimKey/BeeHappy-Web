@@ -53,13 +53,13 @@
                             <input type="checkbox" name="filters" value="overlaying" @(ViewBag.Filters != null && ((string[])ViewBag.Filters).Contains("overlaying") ? "checked" : "")>
                             <span>Overlaying</span>
                         </label>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <label class="filter-option">
-                                <input type="checkbox" name="filters" value="mine" @(ViewBag.Filters != null && ((string[])ViewBag.Filters).Contains("mine") ? "checked" : "")>
-                                <span>Mine</span>
-                            </label>
-                        }
+                        @* @if (User.Identity.IsAuthenticated) *@
+                        @* { *@
+                        @*     <label class="filter-option"> *@
+                        @*         <input type="checkbox" name="filters" value="mine" @(ViewBag.Filters != null && ((string[])ViewBag.Filters).Contains("mine") ? "checked" : "")> *@
+                        @*         <span>Mine</span> *@
+                        @*     </label> *@
+                        @* } *@
                     </div>
                 </div>
             </form>
