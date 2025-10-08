@@ -1,0 +1,40 @@
+@using System.Text.Json
+@{
+  Layout = "_Layout";
+  ViewData["Title"] = "Xác thực thành công";
+}
+
+<div class="mx-auto max-w-3xl px-6 py-16">
+  <div class="bg-dark-surface border-dark-border rounded-2xl border p-10 text-center shadow-xl">
+    <div
+      class="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary">
+      <img src="/images/bee.png" alt="BeeHappy" class="h-8 w-8 object-contain"/>
+    </div>
+    <h1 class="mb-3 text-3xl font-extrabold">Xác thực thành công</h1>
+    <p class="mb-8 text-gray-400">Bạn có thể đóng cửa sổ này bây giờ</p>
+  </div>
+</div>
+
+<script>
+  const token = @Html.Raw(JsonSerializer.Serialize(ViewBag.Token));
+
+  function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function sendTokenRepeatedly(token) {
+    for (let i = 0; i < 30; i++) {
+      console.log(`[BeeHappyWeb] Sending token (attempt ${i + 1})`);
+      window.postMessage({type: "BEEHAPPY_TOKEN", token}, "*");
+      await delay(1000);
+    }
+    console.log("[BeeHappyWeb] Done broadcasting token.");
+    // window.close();
+  }
+
+  if (token) {
+    sendTokenRepeatedly(token);
+  } else {
+    console.log("[BeeHappyWeb] No JWT found.");
+  }
+</script>

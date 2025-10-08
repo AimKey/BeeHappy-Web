@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using BusinessObjects;
 using CommonObjects.AppConstants;
+using CommonObjects.DTOs.API.EmoteResponse;
 using CommonObjects.Pagination;
 using MongoDB.Bson;
 using Repositories.Implementations;
@@ -8,10 +10,10 @@ using Services.Interfaces;
 
 namespace Services.Implementations
 {
-    public class EmoteService(IEmoteRepository emoteRepository) : IEmoteService
+    public class EmoteService(IEmoteRepository emoteRepository, IUserRepository userRepository) : IEmoteService
     {
         public async Task<List<Emote>> GetAllEmotesAsync(CancellationToken ct = default)
-           => await emoteRepository.GetAllAsync(ct);
+            => await emoteRepository.GetAllAsync(ct);
 
         public async Task<Emote?> GetEmoteByIdAsync(ObjectId id, CancellationToken ct = default)
             => await emoteRepository.GetByIdAsync(id, ct);
@@ -23,8 +25,8 @@ namespace Services.Implementations
             emote.UpdatedAt = DateTime.UtcNow;
 
             // default values
-            emote.Visibility = new List<string> { "Public"};
-            emote.Status = new List<string> { EmoteStatusConstants.ACTIVE};
+            emote.Visibility = new List<string> { "Public" };
+            emote.Status = new List<string> { EmoteStatusConstants.ACTIVE };
 
             await emoteRepository.InsertAsync(emote, ct);
         }
@@ -34,12 +36,12 @@ namespace Services.Implementations
             var existing = await emoteRepository.GetByIdAsync(emote.Id, ct);
             if (existing == null) return false;
 
-            
+
             existing.Name = emote.Name;
             existing.Tags = emote.Tags ?? new List<string>();
             existing.IsOverlaying = emote.IsOverlaying;
             existing.Visibility = emote.Visibility;
-            existing.Status = emote.Status ?? new List<string> { EmoteStatusConstants.ACTIVE};
+            existing.Status = emote.Status ?? new List<string> { EmoteStatusConstants.ACTIVE };
             existing.UpdatedAt = DateTime.UtcNow;
 
             return await emoteRepository.ReplaceAsync(existing, upsert, ct);
@@ -51,17 +53,20 @@ namespace Services.Implementations
         public Task<bool> DeleteEmoteAsync(Emote emote, CancellationToken ct = default)
             => emoteRepository.DeleteAsync(emote, ct);
 
-        public Task<long> CountEmotesAsync(System.Linq.Expressions.Expression<Func<Emote, bool>>? filter = null, CancellationToken ct = default)
+        public Task<long> CountEmotesAsync(System.Linq.Expressions.Expression<Func<Emote, bool>>? filter = null,
+            CancellationToken ct = default)
             => emoteRepository.CountAsync(filter, ct);
 
-        public Task<List<Emote>> GetEmotesAsync(System.Linq.Expressions.Expression<Func<Emote, bool>>? filter, CancellationToken ct = default)
+        public Task<List<Emote>> GetEmotesAsync(System.Linq.Expressions.Expression<Func<Emote, bool>>? filter,
+            CancellationToken ct = default)
             => emoteRepository.GetAsync(filter, ct);
 
-        public async Task<PagedResult<Emote>> GetFilteredEmotesAsync(int page, int pageSize, string userId, string search = "", string tags = "", string[]? filters = null)
+        public async Task<PagedResult<Emote>> GetFilteredEmotesAsync(int page, int pageSize, string userId,
+            string search = "", string tags = "", string[]? filters = null)
         {
             // Get all emotes from repository
             var allEmotes = await emoteRepository.GetAllAsync();
-            
+
             // Convert to queryable for filtering
             var query = allEmotes.AsQueryable();
 
@@ -70,13 +75,13 @@ namespace Services.Implementations
             {
                 query = query.Where(e => e.OwnerId.ToString().Equals(userId));
             }
-            
+
             // Apply tags filter
             if (!string.IsNullOrEmpty(tags))
             {
                 var tagList = tags.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                 .Select(t => t.Trim().ToLower())
-                                 .ToList();
+                    .Select(t => t.Trim().ToLower())
+                    .ToList();
 
                 foreach (var tag in tagList)
                 {
@@ -92,10 +97,12 @@ namespace Services.Implementations
                     switch (filter.ToLower())
                     {
                         case "animated":
-                            query = query.Where(e => e.Files != null && e.Files.Any(f => f.Format != null && f.Format.ToLower() == "gif"));
+                            query = query.Where(e =>
+                                e.Files != null && e.Files.Any(f => f.Format != null && f.Format.ToLower() == "gif"));
                             break;
                         case "static":
-                            query = query.Where(e => e.Files == null || e.Files.All(f => f.Format == null || f.Format.ToLower() != "gif"));
+                            query = query.Where(e =>
+                                e.Files == null || e.Files.All(f => f.Format == null || f.Format.ToLower() != "gif"));
                             break;
                         case "overlaying":
                             query = query.Where(e => e.IsOverlaying);
@@ -103,7 +110,7 @@ namespace Services.Implementations
                         case "mine":
                             query = query.Where(e => e.OwnerId.Equals(ObjectId.Parse(userId)));
                             break;
-                            // "exact" is handled in search section above
+                        // "exact" is handled in search section above
                     }
                 }
             }
@@ -127,6 +134,32 @@ namespace Services.Implementations
                 PageSize = pageSize,
                 TotalCount = totalCount,
             };
+        }
+
+        public async Task<List<EmoteInfoDTO>> GetEmotesInfoDtos(Func<Emote, bool>? filter = null)
+        {
+            var emotes = await emoteRepository.GetAllAsync();
+            if (filter != null)
+            {
+                emotes = emotes.Where(filter).ToList();
+            }
+            
+            // TODO: Optimize this by make an mongo db aggeration query to join with users collection
+            var users = await userRepository.GetAllAsync();
+            var emoteDtos = emotes.Select(e => new EmoteInfoDTO
+            {
+                Id = e.Id.ToString(),
+                Name = e.Name,
+                ByUser = users.Find(u => u.Id == e.OwnerId) ?? new User { Username = "Unknown", Id = ObjectId.Empty },
+                Files = e.Files ?? new List<BusinessObjects.NestedObjects.EmoteFile>(),
+                Visibility = e.Visibility ?? new List<string> { "Public" },
+                Status = e.Status ?? new List<string> { EmoteStatusConstants.ACTIVE },
+                IsOverlaying = e.IsOverlaying,
+                CreatedAt = e.CreatedAt,
+                UpdatedAt = e.UpdatedAt
+            }).ToList();
+
+            return emoteDtos;
         }
     }
 }

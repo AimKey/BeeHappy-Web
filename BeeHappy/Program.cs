@@ -1,4 +1,5 @@
-﻿using DataAccessObjects;
+﻿using BeeHappy.Extensions;
+using DataAccessObjects;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Net.payOS;
@@ -53,6 +54,9 @@ public class Program
                 options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
                 options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             });
+        
+        // JWT Authentication setup
+        builder.Services.AddJwtConfiguration(builder.Configuration);
 
         // Cookie policy tweak
         builder.Services.ConfigureApplicationCookie(options =>
@@ -60,9 +64,14 @@ public class Program
             options.Cookie.SameSite = SameSiteMode.Lax; // hoặc None nếu HTTPS
             options.Cookie.SecurePolicy = CookieSecurePolicy.None; // HTTP deploy
         });
+        
+        builder.Services.AddRouting(options =>
+        {
+            options.LowercaseUrls = true;
+            // optional: make query strings lowercase too
+            options.LowercaseQueryStrings = true;
+        });
 
-
-        // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");
         Console.WriteLine($"SQL string: {builder.Configuration.GetConnectionString("MongoDB")}");
 
@@ -113,7 +122,9 @@ public class Program
         // Payment & Store
         builder.Services.AddScoped<IStoreService, StoreService>();
         builder.Services.AddScoped<IPaymentService, PaymentService>();
-
+        // JWT service
+        builder.Services.AddScoped<IJwtService, JwtService>();
+        
         // Auto Mapper Configurations
         builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MappingProfile>(); });
 

@@ -1,4 +1,5 @@
 using BusinessObjects;
+using CommonObjects.DTOs.API.EmoteSetResponse;
 using CommonObjects.DTOs.EmoteSetDTOs;
 using CommonObjects.ViewModels.EmoteSetVMs;
 using MongoDB.Bson;
@@ -27,5 +28,6 @@ namespace Services.Interfaces
         Task ToggleEmoteSetActiveStatus(ObjectId emoteSetId, ObjectId userId);
         Task<bool> AddEmoteToSetAsync(ObjectId emoteSetId, ObjectId emoteId, CancellationToken ct = default);
         Task RemoveEmoteFromSetAsync(ObjectId emoteSetId, ObjectId emoteId);
+        Task<EmoteSetInfoDTO?> GetActiveEmoteSetInfoFromUser(User user);
     }
 }

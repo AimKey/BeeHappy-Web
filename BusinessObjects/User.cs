@@ -12,6 +12,7 @@ namespace BusinessObjects
     public class User : MongoEntity
     {
         public string Username { get; set; }
+        public string NormalizedName { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string GoogleId { get; set; }
