@@ -1,0 +1,20 @@
+@{
+  Layout = "_Layout";
+  ViewData["Title"] = "Xác thực với BeeHappy";
+}
+
+<div class="mx-auto max-w-3xl px-6 py-16">
+  <div class="bg-dark-surface border-dark-border rounded-2xl border p-10 text-center shadow-xl">
+    <div class="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-secondary">
+      <img src="/images/bee.png" alt="BeeHappy" class="h-8 w-8 object-contain" />
+    </div>
+    <h1 class="mb-3 text-3xl font-extrabold">Xác thực với BeeHappy</h1>
+    <p class="mb-8 text-gray-400">Đăng nhập để kết nối tiện ích mở rộng của bạn.</p>
+
+    <a asp-controller="LoginGoogle" asp-action="Login" asp-route-source="extension"
+       class="inline-flex items-center justify-center gap-3 rounded-lg border bg-white px-6 py-3 font-semibold text-gray-700 shadow-md transition-all hover:bg-gray-100 hover:shadow-lg">
+      <i class="fa-brands fa-google text-xl" aria-hidden="true"></i>
+      <span>Đăng nhập với Google</span>
+    </a>
+  </div>
+</div>

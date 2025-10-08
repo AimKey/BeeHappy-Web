@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text;
 using BusinessObjects;
 using BusinessObjects.NestedObjects;
 using CommonObjects.AppConstants;
@@ -19,7 +21,8 @@ namespace Services.Implementations
             return await userRepository.GetAllAsync(ct);
         }
 
-        public async Task<List<User>> GetUsersAsync(System.Linq.Expressions.Expression<Func<User, bool>>? filter, CancellationToken ct = default)
+        public async Task<List<User>> GetUsersAsync(System.Linq.Expressions.Expression<Func<User, bool>>? filter,
+            CancellationToken ct = default)
         {
             return await userRepository.GetAsync(filter, ct);
         }
@@ -31,11 +34,15 @@ namespace Services.Implementations
 
         public async Task InsertUserAsync(User user, CancellationToken ct = default)
         {
+            // Normalize username
+            user.NormalizedName = NormalizeUserName(user.Username);
             await userRepository.InsertAsync(user, ct);
         }
 
         public async Task<bool> ReplaceUserAsync(User user, bool upsert = false, CancellationToken ct = default)
         {
+            // Normalize username
+            user.NormalizedName = NormalizeUserName(user.Username);
             return await userRepository.ReplaceAsync(user, upsert, ct);
         }
 
@@ -49,7 +56,8 @@ namespace Services.Implementations
             return await userRepository.DeleteAsync(user, ct);
         }
 
-        public async Task<long> CountUsersAsync(System.Linq.Expressions.Expression<Func<User, bool>>? filter = null, CancellationToken ct = default)
+        public async Task<long> CountUsersAsync(System.Linq.Expressions.Expression<Func<User, bool>>? filter = null,
+            CancellationToken ct = default)
         {
             return await userRepository.CountAsync(filter, ct);
         }
@@ -63,6 +71,7 @@ namespace Services.Implementations
             {
                 throw new Exception("Loại tệp không được phép. Vui lòng tải lên tệp hình ảnh hợp lệ.");
             }
+
             if (ext == ".gif" || ext == ".webp")
             {
                 if (user.IsPremium == false)
@@ -70,6 +79,7 @@ namespace Services.Implementations
                     throw new Exception("Chỉ người dùng Premium mới có thể tải lên hình đại diện động.");
                 }
             }
+
             // Save file to wwwroot/images/avatars with a user objectId as the file name
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "userAvatars");
             if (!Directory.Exists(uploadsFolder))
@@ -84,16 +94,18 @@ namespace Services.Implementations
             {
                 file.CopyTo(fileStream);
             }
+
             // In case user does not have a profile, create one
             if (user.Profile == null)
             {
-                user.Profile = new ();
+                user.Profile = new();
             }
+
             user.Profile.AvatarUrl = $"/uploads/userAvatars/{uniqueFileName}";
             await ReplaceUserAsync(user, false, ct);
         }
 
-        public async Task<UserInfoDTO> GetAllUserInfo(ObjectId userId)
+        public async Task<UserInfoDTO> GetUserInfo(ObjectId userId)
         {
             // Get user badge
             var user = await GetUserByIdAsync(userId);
@@ -110,7 +122,7 @@ namespace Services.Implementations
             // Return all info
             UserInfoDTO userInfo = new UserInfoDTO()
             {
-                UserId = user.Id,
+                UserId = user.Id.ToString(),
                 Username = user.Username,
                 Email = user.Email,
                 CreatedAt = user.CreatedAt,
@@ -124,7 +136,7 @@ namespace Services.Implementations
             return userInfo;
         }
 
-        private async Task<List<UserBadgeInfoDTO>> GetUserBadgeInfoDtos(User user)
+        public async Task<List<UserBadgeInfoDTO>> GetUserBadgeInfoDtos(User user)
         {
             var userBadgesDTO = new List<UserBadgeInfoDTO>();
             // Get badge details
@@ -146,7 +158,7 @@ namespace Services.Implementations
             return userBadgesDTO;
         }
 
-        private async Task<List<UserPaintInfoDTO>> GetUserPaintInfoDtos(User user)
+        public async Task<List<UserPaintInfoDTO>> GetUserPaintInfoDtos(User user)
         {
             var userPaintsDTO = new List<UserPaintInfoDTO>();
             if (user.Paints != null && user.Paints.Any())
@@ -158,7 +170,7 @@ namespace Services.Implementations
                     p => p.Id,
                     (up, p) => new UserPaintInfoDTO
                     {
-                        Id = p.Id,
+                        Id = p.Id.ToString(),
                         Name = p.Name,
                         Color = p.Color,
                         IsActive = up.IsActivated && user.IsPremium
@@ -166,6 +178,20 @@ namespace Services.Implementations
             }
 
             return userPaintsDTO;
+        }
+
+        public async Task<User?> GetUserByNameAsync(string userName)
+        {
+            var users = await userRepository.GetAsync(u => u.Username.ToLowerInvariant()
+                .Equals(userName.ToLowerInvariant()));
+            var user = users.FirstOrDefault();
+            return user;
+        }
+
+        public string NormalizeUserName(string userName)
+        {
+            return userName.Normalize(NormalizationForm.FormC)
+                .ToLower(new CultureInfo("vi-VN"));
         }
     }
 }

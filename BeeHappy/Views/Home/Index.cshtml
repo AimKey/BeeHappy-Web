@@ -5,31 +5,22 @@
     font-size: 2.4rem;
     line-height: 1.15;
     margin: 1rem 0;
-    display: inline-block;
+    display: block;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-size: 300% 100%; /* stretch so the blend is obvious */
-    letter-spacing: 0.02em;
   }
 </style>
-<div class="flex flex-column gap-4 flex-wrap px-8">
-  <div style="
-  display: inline-block; 
-  padding: 0.5rem 1rem; 
-  margin: 0.5rem;
-  border-radius: 0.5rem;
-">
-    <span style="
-    display: inline-block;
-    background: linear-gradient(90deg, #ff7e5f, #feb47b, #43cea2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: bold;
-    font-size: 1.5rem;
-  ">
-      Sunset Theme
-    </span>
+<div class="flex gap-4 flex-wrap px-8">
+  <div>
+    <p style="background-image: linear-gradient(90deg, #ffffff, #ffffff);">
+      This is normal text
+    </p>
   </div>
+
+  <p style="background-image: linear-gradient(90deg, #ff7e5f 0%, #feb47b 50%, #43cea2 100%);">
+    Sunset Theme
+  </p>
   <!-- Blue ↔ Orange (complementary) -->
   <p style="background-image: linear-gradient(90deg,
       #0072ff 0%,

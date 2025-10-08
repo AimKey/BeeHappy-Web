@@ -1,5 +1,6 @@
 using AutoMapper;
 using BusinessObjects;
+using CommonObjects.DTOs.API.EmoteSetResponse;
 using CommonObjects.DTOs.EmoteSetDTOs;
 using CommonObjects.Mappers;
 using CommonObjects.ViewModels.EmoteSetVMs;
@@ -234,6 +235,23 @@ namespace Services.Implementations
             }
             emoteSet.Emotes.Remove(emoteId);
             return emoteSetRepository.ReplaceAsync(emoteSet, false);
+        }
+
+        public async Task<EmoteSetInfoDTO?> GetActiveEmoteSetInfoFromUser(User user)
+        {
+            // Get all emote sets of the user
+            var emoteSets = await emoteSetRepository.GetAsync(es => es.OwnerId == user.Id);
+            // This should only return one active set
+            var activeSets = emoteSets.FirstOrDefault(es => es.IsActive);
+            if (activeSets == null) return null;
+            // Map to EmoteSetInfoDTO
+            // Get all emotes in the active set
+            var emotes = await emoteService.GetEmotesAsync(e => activeSets.Emotes.Contains(e.Id)); 
+            var users = await userService.GetAllUsersAsync();
+            var emoteSetInfo = EmoteSetMapper.ToInfoDTO(activeSets, emotes, users);
+            // Assign the owner name
+            emoteSetInfo.OwnerName = user.Username;
+            return emoteSetInfo;
         }
     }
 }

@@ -16,6 +16,10 @@ namespace Services.Interfaces
         Task<bool> DeleteUserAsync(User user, CancellationToken ct = default);
         Task<long> CountUsersAsync(System.Linq.Expressions.Expression<Func<User, bool>>? filter = null, CancellationToken ct = default);
         Task UpdateUserAvatar(IFormFile file, User user, CancellationToken ct = default);
-        Task<UserInfoDTO> GetAllUserInfo(ObjectId userId);
+        Task<UserInfoDTO> GetUserInfo(ObjectId userId);
+        Task<List<UserBadgeInfoDTO>> GetUserBadgeInfoDtos(User user);
+        Task<List<UserPaintInfoDTO>> GetUserPaintInfoDtos(User user);
+        Task<User?> GetUserByNameAsync(string userName);
+        string NormalizeUserName(string userName);
     }
 }

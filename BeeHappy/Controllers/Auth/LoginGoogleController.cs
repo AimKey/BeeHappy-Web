@@ -7,22 +7,27 @@ using System.Security.Claims;
 using BusinessObjects;
 using BusinessObjects.NestedObjects;
 using CommonObjects.AppConstants;
+using Services.Implementations;
 
 namespace BeeHappy.Controllers.Auth;
 
 public class LoginGoogleController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IJwtService _jwtService;
+    private readonly IConfiguration _configuration;
 
-    public LoginGoogleController(IUserService userService)
+    public LoginGoogleController(IUserService userService, IJwtService jwtService, IConfiguration configuration)
     {
         _userService = userService;
+        _jwtService = jwtService;
+        _configuration = configuration;
     }
 
     [HttpGet]
-    public IActionResult Login()
+    public IActionResult Login(string? source = "/")
     {
-        var redirectUrl = Url.Action("GoogleResponse", "LoginGoogle");
+        var redirectUrl = Url.Action("GoogleResponse", "LoginGoogle", new { from = source });
         var properties = new AuthenticationProperties
         {
             RedirectUri = redirectUrl
@@ -32,7 +37,7 @@ public class LoginGoogleController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> GoogleResponse()
+    public async Task<IActionResult> GoogleResponse(string from = "/")
     {
         var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
 
@@ -74,6 +79,11 @@ public class LoginGoogleController : Controller
             user = (await _userService.GetUsersAsync(u => u.Email.Equals(email))).FirstOrDefault();
         }
 
+        if (from == "extension")
+        {
+            return HandleLoginFromExtension(user);
+        }
+
         // Claims để tạo cookie đăng nhập
         var claims = new List<Claim>
         {
@@ -108,5 +118,13 @@ public class LoginGoogleController : Controller
         HttpContext.Session.SetString("Roles", string.Join(",", user.Roles ?? [RoleConstants.User]));
 
         return RedirectToAction("Index", "Home");
+    }
+
+    private IActionResult HandleLoginFromExtension(User user)
+    {
+        var jwt = _jwtService.GenerateToken(user.Id.ToString(), user.Email, user.Roles.FirstOrDefault() ?? RoleConstants.User);
+        // Have to build full URL, because if the token is lowercase, it will not work
+        var url = Url.Action("AuthComplete", "Extension", null, Request.Scheme);
+        return Redirect($"{url}?token={jwt}");
     }
 }
