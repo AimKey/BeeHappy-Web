@@ -1,10 +1,20 @@
-﻿using BeeHappy.Extensions;
+using BeeHappy.Extensions;
+using CommonObjects.Configs;
 using DataAccessObjects;
+using Hangfire;
+using Hangfire.Mongo;
+using Hangfire.Mongo.Migration.Strategies.Backup;
+using Hangfire.Mongo.Migration.Strategies;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Net.payOS;
+using PostHog;
 using Repositories.Implementations;
 using Repositories.Interfaces;
+using Services.CronjobServices;
 using Services.HelperServices;
 using Services.Implementations;
 using Services.Interfaces;
@@ -21,6 +31,9 @@ public class Program
         SetupRepos(builder);
         // Add our services
         SetupServices(builder);
+        // Background services
+        SetupBackgroundServices(builder);
+
         // Configure database
         builder.Services.AddScoped<MongoDBContext>();
 
@@ -72,6 +85,28 @@ public class Program
             options.LowercaseQueryStrings = true;
         });
 
+        builder.AddPostHog();
+
+        // hangfire
+        var mongoConnectionString = builder.Configuration.GetConnectionString("MongoHangfire");
+        var mongoUrlBuilder = new MongoUrlBuilder(mongoConnectionString);
+        var mongoClient = new MongoClient(mongoUrlBuilder.ToMongoUrl());
+
+        builder.Services.AddHangfire(config =>
+        {
+            config.UseMongoStorage(mongoClient, mongoUrlBuilder.DatabaseName, new MongoStorageOptions
+            {
+                Prefix = "hangfire",
+                CheckConnection = true,
+                MigrationOptions = new MongoMigrationOptions
+                {
+                    MigrationStrategy = new MigrateMongoMigrationStrategy(),
+                    BackupStrategy = new CollectionMongoBackupStrategy()
+                }
+            });
+
+        });
+        builder.Services.AddHangfireServer();
 
         // Debug
         Console.WriteLine($"WORKING ENVIRONMENT: {builder.Environment.EnvironmentName}");
@@ -89,6 +124,9 @@ public class Program
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             app.UseHsts();
         }
+
+        // Expose the Hangfire Dashboard at /hangfire (be sure to secure this in production).
+        app.UseHangfireDashboard("/hangfire");
 
         // Config notfound-forbidden
         app.UseStatusCodePagesWithReExecute("/Errors/{0}");
@@ -141,6 +179,10 @@ public class Program
             builder.Configuration["PayOS:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
             builder.Configuration["PayOS:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
         builder.Services.AddSingleton(payOs);
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+
+
     }
 
     private static void SetupRepos(WebApplicationBuilder builder)
@@ -155,4 +197,10 @@ public class Program
         builder.Services.AddScoped<IPurchaseHistoryRepository, PurchaseHistoryRepository>();
         builder.Services.AddScoped<IPremiumPlanRepository, PremiumPlanRepository>();
     }
+
+    private static void SetupBackgroundServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped<PaymentJob>();
+    }
+
 }

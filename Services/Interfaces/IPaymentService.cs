@@ -14,4 +14,5 @@ public interface IPaymentService
     Task<bool> CompletePurchaseHistoryForUser(long orderCode);
     Task<bool> CancelPurchaseHistoryForUser(long orderCode);
     Task<bool> CheckUserHasActivePremium(User currentUser);
+    Task<PurchaseHistory?> GetPaymentByOrderCodeAsync(long orderCode);
 }

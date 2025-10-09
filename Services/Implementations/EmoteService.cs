@@ -100,7 +100,7 @@ namespace Services.Implementations
             // apply search
             if (!string.IsNullOrEmpty(search))
             {
-                query = query.Where(e => e.Name.Contains(search));
+                query = query.Where(e => e.Name.ToLower().Contains(search.ToLower()));
             }
 
             // Apply additional filters
