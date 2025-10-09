@@ -1,0 +1,677 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hướng Dẫn Cài Đặt Thủ Công";
+}
+
+<section class="relative min-h-[5vh] flex items-center justify-center overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-purple-700 to-blue-800"></div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-6 py-10 text-center text-white">
+        <h1 class="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+            HƯỚNG DẪN<br>
+            CÀI ĐẶT THỦ CÔNG
+        </h1>
+
+        <p class="text-lg text-purple-200 mb-4 max-w-2xl mx-auto">
+            Làm theo các bước dưới đây để cài đặt tiện ích BeeTV một cách thủ công vào trình duyệt của bạn.
+        </p>
+    </div>
+</section>
+
+<section id="cai-dat-thu-cong" class="py-20 px-6 bg-dark-surface/20">
+    <div class="max-w-5xl mx-auto lg:ml-72">
+
+        <div
+            class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">1</span>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-6">
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Tải xuống file tiện ích</h3>
+                        <p class="text-gray-400 mb-4">
+                            Truy cập trang tải xuống chính thức của BeeTV và tải file tiện ích về máy tính của bạn. File
+                            sẽ có định dạng <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">.zip</code>
+                            hoặc <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">.crx</code>. Sau khi bấm
+                            nút ở dưới, vui lòng làm theo hướng dẫn sau đó
+                        </p>
+                        <a href="https://github.com/AimKey/BeeHappy-Extension" target="_blank"
+                           class="bg-primary hover:bg-primary-dark px-6 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
+                            Bấm vào đây để truy cập
+                        </a>
+                    </div>
+
+                    <div class="flex-1">
+                        <img src="/images/InstallationGuide/Installation_1.png" alt="Tải xuống file tiện ích 1"
+                             class="w-full object-cover"/>
+                        <p class="text-sm text-gray-300 mt-2 text-center">Truy cập vào trang web của extension</p>
+                    </div>
+
+                    <div class="flex-1">
+                        <img src="/images/InstallationGuide/Installation_2.png" alt="Tải xuống file tiện ích 2"
+                             class="w-full object-cover"/>
+                        <p class="text-sm text-gray-300 mt-2 text-center">Tải xuống file</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">2</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Giải nén file</h3>
+                    <p class="text-gray-400 mb-4">
+                        Nếu file tải về có định dạng <code
+                            class="bg-dark-bg px-2 py-1 rounded text-primary-light">.zip</code>, hãy giải nén nó vào một
+                        thư mục trên máy tính. Ghi nhớ vị trí thư mục này vì bạn sẽ cần nó ở bước tiếp theo.
+                    </p>
+                    <div class="bg-dark-bg border border-dark-border rounded-lg p-4 mt-4">
+                        <p class="text-sm text-gray-400">
+                            <span class="text-primary-light font-semibold">Lưu ý:</span> Đảm bảo bạn giải nén vào một
+                            thư mục cố định, không xóa hoặc di chuyển thư mục này sau khi cài đặt.
+                        </p>
+                    </div>
+                    <img src="/images/InstallationGuide/Extract.png" alt="Giải nén file tiện ích"
+                         class="w-full object-cover"/>
+                    <p class="text-sm text-gray-300 mt-2 text-center">Giải nén tiện ích tại nơi bạn muốn</p>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">3</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Mở trang quản lý tiện ích</h3>
+                    <p class="text-gray-400 mb-4">
+                        Mở trình duyệt của bạn và truy cập trang quản lý tiện ích:
+                    </p>
+                    <ul class="space-y-2 mb-4">
+                        <li class="flex items-start gap-2">
+                            <span class="text-primary-light">•</span>
+                            <span class="text-gray-300">
+                                <strong>Chrome:</strong>
+                                <code
+                                    class="bg-dark-bg px-2 py-1 rounded text-primary-light cursor-pointer copy-link"
+                                    data-copy="chrome://extensions"
+                                >
+                                    chrome://extensions
+                                </code>
+                            </span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-primary-light">•</span>
+                            <span class="text-gray-300">
+                                <strong>Edge:</strong>
+                                <code
+                                    class="bg-dark-bg px-2 py-1 rounded text-primary-light cursor-pointer copy-link"
+                                    data-copy="edge://extensions"
+                                >
+                                    edge://extensions
+                                </code>
+                            </span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">4</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Bật chế độ Developer Mode và cài tiện ích</h3>
+                    <p class="text-gray-400 mb-4">
+                        Ở góc trên bên phải của trang quản lý tiện ích, tìm và bật công tắc
+                        <strong class="text-white">"Developer mode"</strong> hoặc
+                        <strong class="text-white">"Chế độ nhà phát triển"</strong>.
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        Sau khi bật Developer Mode, bạn sẽ thấy xuất hiện thêm các nút mới. Nhấn vào nút <strong
+                            class="text-white">"Load unpacked"</strong> hoặc <strong class="text-white">"Tải tiện ích đã
+                            giải nén"</strong>.
+                    </p>
+
+                    <div class="bg-dark-bg border border-dark-border rounded-lg p-4 mt-4 mb-6">
+                        <p class="text-sm text-gray-400">
+                            <span class="text-primary-light font-semibold">Mẹo:</span> Công tắc này thường nằm ở góc
+                            trên bên phải của trang, có thể là một nút toggle màu xanh hoặc xám.
+                        </p>
+                    </div>
+
+                    <!-- Ảnh minh họa -->
+                    <div
+                        class="">
+                        <img src="/images/InstallationGuide/LoadExtension_1.png"
+                             alt="Hướng dẫn bật Developer Mode"
+                             class="w-full object-cover">
+                        <p class="text-sm text-gray-300 mt-2 text-center">Vị trí nút bật Developer Mode trong
+                            trình duyệt Chrome và nút cài tiện ích</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div
+            class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">5</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Tải tiện ích đã giải nén</h3>
+                    <p class="text-gray-400 mb-4">
+                        Một cửa sổ chọn thư mục sẽ hiện ra. Chọn thư mục mà bạn đã giải nén file tiện ích ở Bước 2, sau
+                        đó nhấn <strong class="text-white">"Chọn thư mục"</strong> hoặc <strong class="text-white">"Select
+                            Folder"</strong>.
+                    </p>
+
+                    <div
+                        class="w-full object-cover">
+                        <img src="/images/InstallationGuide/LoadExtension_2.png"
+                             alt="Hướng dẫn bật Developer Mode"
+                             class="w-full object-cover">
+                        <p class="text-gray-300 mt-2 text-center">Chọn thư mục tiện ích vừa mới giải nén</p>
+                    </div>
+
+                    <div
+                        class="w-full object-cover">
+                        <img src="/images/InstallationGuide/LoadExtension_3.png"
+                             alt="Hướng dẫn bật Developer Mode"
+                             class="w-full object-cover">
+                        <p class="text-sm text-gray-300 mt-2 text-center">Hiển thị tiện ích sau khi cài đặt thành
+                            công</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">6</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Hoàn tất và sử dụng</h3>
+                    <p class="text-gray-400 mb-4">
+                        Tiện ích BeeTV đã được cài đặt thành công! Bạn sẽ thấy biểu tượng BeeTV xuất hiện trong danh
+                        sách tiện ích và trên thanh công cụ của trình duyệt.
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        Truy cập YouTube và bắt đầu sử dụng hàng trăm emote tùy chỉnh cho kênh của bạn. Thay đổi sẽ có
+                        hiệu lực ngay lập tức!
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                        <a
+                            href="https://www.youtube.com/"
+                            class="bg-primary hover:bg-primary-dark px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
+                            Mở YouTube
+                        </a>
+                        <a href="#huong-dan-su-dung"
+                            class="border border-gray-600 hover:border-gray-400 px-6 py-3 rounded-lg font-semibold transition-all hover:bg-dark-hover inline-block">
+                            Xem hướng dẫn sử dụng
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Hướng dẫn sử dụng section -->
+<section id="huong-dan-su-dung" class="py-20 px-6 bg-dark-surface/30">
+    <div class="max-w-5xl mx-auto lg:ml-72">
+        <div class="text-center mb-12">
+            <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span class="text-3xl">🎯</span>
+            </div>
+            <h2 class="text-4xl font-bold mb-4">HƯỚNG DẪN SỬ DỤNG</h2>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                Tìm hiểu cách sử dụng tiện ích BeeTV để tối ưu hóa trải nghiệm emote trên YouTube của bạn.
+            </p>
+        </div>
+
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">1</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Truy cập YouTube và mở tiện ích</h3>
+                    <p class="text-gray-400 mb-4">
+                        Sau khi cài đặt thành công, truy cập YouTube và tìm biểu tượng BeeHappy trên thanh công cụ trình duyệt. 
+                        Nhấp vào biểu tượng để mở giao diện tiện ích.
+                    </p>
+                    <img src="/images/InstallationGuide/Use_1.png" alt="Truy cập YouTube và mở tiện ích"
+                         class="w-full object-cover rounded-lg"/>
+                    <p class="text-sm text-gray-300 mt-2 text-center">Nơi bật tiện ích của BeeHappy</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">2</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Bật hoặc tắt BeeHappy Overlay chat</h3>
+                    <p class="text-gray-400 mb-4">
+                        Bấm vào nút Toggle overlay để bật hoặc tắt BeeHappy Overlay chat.
+                    </p>
+                    <img src="/images/InstallationGuide/Use_2.png" alt="Bật/tắt BeeHappy Overlay chat"
+                         class="w-full object-cover rounded-lg"/>
+                    <p class="text-sm text-gray-300 mt-2 text-center">Bấm vào nút Toggle overlay để bật hoặc tắt</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">3</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Các thành phần cơ bản của BeeHappy</h3>
+                    <p class="text-gray-400 mb-4">
+                        Giao diện tiện ích bao gồm các thành phần chính như: nút mở bảng emote, nút làm mới dữ liệu emote. 
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        Bạn sẽ chat tại vùng chat của Youtube, BeeHappy sẽ tự động thay thế các chữ cái thành emote.
+                    </p>
+                    <img src="/images/InstallationGuide/Use_3.png" alt="Các thành phần cơ bản của BeeHappy"
+                         class="w-full object-cover rounded-lg"/>
+                    <p class="text-sm text-gray-300 mt-2 text-center">Giao diện BeeHappy Chat</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">4</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Sử dụng emote</h3>
+                    <p class="text-gray-400 mb-4">
+                        Bạn có thể chọn bất kì emote nào và BeeHappy sẽ tự động sao chép chúng vào bộ nhớ tạm thời (clipboard). Sau đó bạn chỉ cần dán (Ctrl+V) vào ô chat của YouTube để sử dụng emote.
+                    </p>
+                    <img src="/images/InstallationGuide/Use_4.png" alt="Quá trình sử dụng emote"
+                         class="w-full object-cover rounded-lg"/>
+                    <p class="text-sm text-gray-300 mt-2 text-center">Flow dùng emote đơn giản</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-shrink-0">
+                    <div class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="text-3xl font-bold">5</span>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-bold mb-4">Kiểm tra kết quả</h3>
+                    <p class="text-gray-400 mb-4">
+                        Sau khi kích hoạt, hãy kiểm tra xem emote đã được áp dụng thành công chưa. 
+                        Bạn sẽ thấy các emote mới xuất hiện trong phần chat và comment của YouTube.
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        Ngoài ra, bạn có có thể di chuyển BeeHappy Chat đến vị trí mình mong muốn bằng cách kéo phần header của nó.
+                    </p>
+                    <img src="/images/InstallationGuide/Use_5.png" alt="Kiểm tra kết quả emote"
+                         class="w-full object-cover rounded-lg"/>
+                    <p class="text-sm text-gray-300 mt-2 text-center">Emote đã được áp dụng thành công trên YouTube</p>
+                </div>
+            </div>
+        </div>
+
+        @* <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl"> *@
+        @*     <div class="flex flex-col md:flex-row gap-6"> *@
+        @*         <div class="flex-shrink-0"> *@
+        @*             <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-xl flex items-center justify-center shadow-lg"> *@
+        @*                 <span class="text-3xl font-bold">6</span> *@
+        @*             </div> *@
+        @*         </div> *@
+        @*         <div class="flex-1"> *@
+        @*             <h3 class="text-2xl font-bold mb-4">Tận hưởng trải nghiệm</h3> *@
+        @*             <p class="text-gray-400 mb-4"> *@
+        @*                 Bây giờ bạn có thể tận hưởng trải nghiệm YouTube với những emote độc đáo và cá nhân hóa.  *@
+        @*                 Thay đổi emote set bất cứ lúc nào bằng cách mở lại tiện ích và chọn bộ emote mới. *@
+        @*             </p> *@
+        @*             <img src="/images/InstallationGuide/Use_6.png" alt="Tận hưởng trải nghiệm emote" *@
+        @*                  class="w-full object-cover rounded-lg"/> *@
+        @*             <p class="text-sm text-gray-300 mt-2 text-center">Trải nghiệm YouTube với emote tùy chỉnh</p> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+
+        <div class="bg-dark-surface border border-primary/40 rounded-xl p-6 mt-8">
+            <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                <span class="text-2xl">💡</span>
+                Mẹo sử dụng hiệu quả
+            </h3>
+            <ul class="space-y-2 text-gray-400">
+                <li class="flex items-start gap-2">
+                    <span class="text-primary-light text-lg leading-none">•</span>
+                    <span>Bạn có thể thay đổi emote set bất cứ lúc nào mà không cần tải lại trang YouTube.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-primary-light text-lg leading-none">•</span>
+                    <span>Sau khi streamer cập nhập bộ emote set của họ, hãy bấm vào nút refresh để load lại!</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-primary-light text-lg leading-none">•</span>
+                    <span>Đôi khi tiện ích có thể hoạt động không như mong muốn hãy thử reload lại trang (F5)</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="gap-van-de" class="py-20 px-6 bg-dark-surface/50">
+    <div class="max-w-4xl mx-auto lg:ml-72">
+        <div class="text-center mb-12">
+            <div
+                class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                <span class="text-3xl">❓</span>
+            </div>
+            <h2 class="text-4xl font-bold mb-4">Gặp vấn đề?</h2>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                Nếu bạn gặp khó khăn trong quá trình cài đặt, đừng lo lắng! Chúng tôi luôn sẵn sàng hỗ trợ bạn.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div
+                class="bg-dark-surface border border-dark-border rounded-xl p-6 hover:border-primary/60 hover:bg-dark-hover transition-all">
+                <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                    <span class="text-2xl">📚</span>
+                    Tài liệu hướng dẫn
+                </h3>
+                <p class="text-gray-400 mb-4">
+                    Xem thêm các hướng dẫn chi tiết và câu hỏi thường gặp trong tài liệu của chúng tôi.
+                </p>
+                <button
+                    class="text-primary hover:text-primary-light font-semibold flex items-center gap-2 transition-colors">
+                    <span>Xem tài liệu</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div
+                class="bg-dark-surface border border-dark-border rounded-xl p-6 hover:border-primary/60 hover:bg-dark-hover transition-all">
+                <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                    <span class="text-2xl">💬</span>
+                    Cộng đồng Discord
+                </h3>
+                <p class="text-gray-400 mb-4" href="https://discord.gg/y9bYhFd4">
+                    Tham gia cộng đồng Discord của chúng tôi để được hỗ trợ trực tiếp từ team và người dùng khác.
+                </p>
+                <a href="https://discord.gg/y9bYhFd4"
+                    class="text-primary hover:text-primary-light font-semibold flex items-center gap-2 transition-colors">
+                    <span>Tham gia Discord</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-dark-surface border border-primary/40 rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                <span class="text-2xl">⚠️</span>
+                Lưu ý quan trọng
+            </h3>
+            <ul class="space-y-2 text-gray-400">
+                <li class="flex items-center gap-2">
+                    <span class="text-primary-light text-lg leading-none">•</span>
+                    <span>Không xóa hoặc di chuyển thư mục tiện ích sau khi cài đặt, nếu không tiện ích sẽ ngừng hoạt động.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-primary-light text-lg leading-none">•</span>
+                    <span>Tiện ích cài thủ công sẽ không tự động cập nhật. Bạn cần tải và cài đặt lại khi có phiên bản mới.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-primary-light text-lg leading-none">•</span>
+                    <span>Đảm bảo tải tiện ích từ nguồn chính thức để tránh các phiên bản giả mạo hoặc có mã độc.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<!-- Navigation Sidebar -->
+<div id="nav-sidebar" class="fixed left-4 top-1/2 transform -translate-y-1/2 z-50 lg:block">
+    <div class="bg-dark-surface border border-dark-border rounded-xl shadow-xl p-4 w-64">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-bold text-white">Mục lục</h3>
+            <button id="sidebar-toggle" class="text-gray-400 hover:text-white transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="space-y-2">
+            <a href="#cai-dat-thu-cong" 
+               class="nav-link block px-3 py-2 rounded-lg text-sm transition-all duration-200 hover:bg-dark-hover text-gray-400 hover:text-white">
+                📥 Cài đặt thủ công
+            </a>
+            <a href="#huong-dan-su-dung" 
+               class="nav-link block px-3 py-2 rounded-lg text-sm transition-all duration-200 hover:bg-dark-hover text-gray-400 hover:text-white">
+                🎯 Hướng dẫn sử dụng
+            </a>
+            <a href="#gap-van-de" 
+               class="nav-link block px-3 py-2 rounded-lg text-sm transition-all duration-200 hover:bg-dark-hover text-gray-400 hover:text-white">
+                ❓ Gặp vấn đề?
+            </a>
+        </nav>
+    </div>
+</div>
+
+<!-- Desktop Sidebar Toggle Button -->
+<div class="fixed top-4 left-4 z-50 hidden lg:block">
+    <button id="desktop-sidebar-toggle" 
+            class="bg-dark-surface border border-dark-border rounded-lg p-3 shadow-lg hover:bg-dark-hover transition-all">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+</div>
+
+<!-- Mobile Navigation Button -->
+<div class="fixed top-4 left-4 z-50 lg:hidden">
+    <button id="mobile-nav-toggle" 
+            class="bg-dark-surface border border-dark-border rounded-lg p-3 shadow-lg hover:bg-dark-hover transition-all">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+</div>
+
+<!-- Mobile Navigation Menu -->
+<div id="mobile-nav-menu" class="fixed inset-0 z-40 bg-black bg-opacity-50 hidden lg:hidden">
+    <div class="bg-dark-surface w-80 h-full p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-white">Mục lục</h3>
+            <button id="mobile-nav-close" class="text-gray-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="space-y-2">
+            <a href="#cai-dat-thu-cong" 
+               class="mobile-nav-link block px-3 py-3 rounded-lg text-base transition-all duration-200 hover:bg-dark-hover text-gray-400 hover:text-white">
+                📥 Cài đặt thủ công
+            </a>
+            <a href="#huong-dan-su-dung" 
+               class="mobile-nav-link block px-3 py-3 rounded-lg text-base transition-all duration-200 hover:bg-dark-hover text-gray-400 hover:text-white">
+                🎯 Hướng dẫn sử dụng
+            </a>
+            <a href="#gap-van-de" 
+               class="mobile-nav-link block px-3 py-3 rounded-lg text-base transition-all duration-200 hover:bg-dark-hover text-gray-400 hover:text-white">
+                ❓ Gặp vấn đề?
+            </a>
+        </nav>
+    </div>
+</div>
+
+<!-- Toast message -->
+<div id="copy-toast"
+     class="fixed bottom-5 right-5 bg-green-600 text-white px-4 py-2 rounded-md opacity-0 transition-opacity duration-500">
+    Đã lưu vào bộ nhớ tạm
+</div>
+
+@section Scripts {
+    <script>
+        // Copy to clipboard functionality
+        document.querySelectorAll('.copy-link').forEach(link => {
+            link.addEventListener('click', async () => {
+                const text = link.dataset.copy;
+                try {
+                    await navigator.clipboard.writeText(text);
+                    showToast();
+                } catch (err) {
+                    console.error('Copy failed:', err);
+                }
+            });
+        });
+
+        function showToast() {
+            const toast = document.getElementById('copy-toast');
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 1500);
+        }
+
+        // Desktop sidebar functionality
+        const desktopSidebarToggle = document.getElementById('desktop-sidebar-toggle');
+        const navSidebar = document.getElementById('nav-sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+
+        desktopSidebarToggle.addEventListener('click', () => {
+            navSidebar.classList.toggle('hidden');
+        });
+
+        sidebarToggle.addEventListener('click', () => {
+            navSidebar.classList.add('hidden');
+        });
+
+        // Mobile navigation functionality
+        const mobileNavToggle = document.getElementById('mobile-nav-toggle');
+        const mobileNavMenu = document.getElementById('mobile-nav-menu');
+        const mobileNavClose = document.getElementById('mobile-nav-close');
+
+        mobileNavToggle.addEventListener('click', () => {
+            mobileNavMenu.classList.remove('hidden');
+        });
+
+        mobileNavClose.addEventListener('click', () => {
+            mobileNavMenu.classList.add('hidden');
+        });
+
+        // Close mobile menu when clicking outside
+        mobileNavMenu.addEventListener('click', (e) => {
+            if (e.target === mobileNavMenu) {
+                mobileNavMenu.classList.add('hidden');
+            }
+        });
+
+        // Scroll spy functionality
+        function updateActiveNavLink() {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                const scrollPosition = window.scrollY;
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('bg-primary', 'text-white');
+                link.classList.add('text-gray-400');
+                
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.remove('text-gray-400');
+                    link.classList.add('bg-primary', 'text-white');
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80; // Account for fixed header
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu after navigation
+                    mobileNavMenu.classList.add('hidden');
+                }
+            });
+        });
+
+        // Update active nav link on scroll
+        window.addEventListener('scroll', updateActiveNavLink);
+        
+        // Update active nav link on page load
+        document.addEventListener('DOMContentLoaded', updateActiveNavLink);
+    </script>}
+
