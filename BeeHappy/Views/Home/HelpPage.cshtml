@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Cài Đặt Thủ Công - BeeTV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+</head>
+<body class="antialiased bg-dark-bg text-white">
+
+    <section class="relative min-h-[5vh] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-purple-700 to-blue-800"></div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-6 py-10 text-center text-white">
+            <h1 class="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
+                HƯỚNG DẪN<br>
+                CÀI ĐẶT THỦ CÔNG
+            </h1>
+
+            <p class="text-lg text-purple-200 mb-4 max-w-2xl mx-auto">
+                Làm theo các bước dưới đây để cài đặt tiện ích BeeTV một cách thủ công vào trình duyệt của bạn.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 bg-dark-surface/20">
+        <div class="max-w-5xl mx-auto">
+        
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-3xl font-bold">1</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Tải xuống file tiện ích</h3>
+                        <p class="text-gray-400 mb-4">
+                            Truy cập trang tải xuống chính thức của BeeTV và tải file tiện ích về máy tính của bạn. File sẽ có định dạng <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">.zip</code> hoặc <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">.crx</code>.
+                        </p>
+                        <button class="bg-primary hover:bg-primary-dark px-6 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
+                            Tải xuống ngay
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-3xl font-bold">2</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Giải nén file (nếu cần)</h3>
+                        <p class="text-gray-400 mb-4">
+                            Nếu file tải về có định dạng <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">.zip</code>, hãy giải nén nó vào một thư mục trên máy tính. Ghi nhớ vị trí thư mục này vì bạn sẽ cần nó ở bước tiếp theo.
+                        </p>
+                        <div class="bg-dark-bg border border-dark-border rounded-lg p-4 mt-4">
+                            <p class="text-sm text-gray-400">
+                                <span class="text-primary-light font-semibold">Lưu ý:</span> Đảm bảo bạn giải nén vào một thư mục cố định, không xóa hoặc di chuyển thư mục này sau khi cài đặt.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-3xl font-bold">3</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Mở trang quản lý tiện ích</h3>
+                        <p class="text-gray-400 mb-4">
+                            Mở trình duyệt của bạn và truy cập trang quản lý tiện ích:
+                        </p>
+                        <ul class="space-y-2 mb-4">
+                            <li class="flex items-start gap-2">
+                                <span class="text-primary-light">•</span>
+                                <span class="text-gray-300"><strong>Chrome:</strong> Nhập <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">chrome://extensions</code> vào thanh địa chỉ</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-primary-light">•</span>
+                                <span class="text-gray-300"><strong>Edge:</strong> Nhập <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">edge://extensions</code> vào thanh địa chỉ</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-primary-light">•</span>
+                                <span class="text-gray-300"><strong>Brave:</strong> Nhập <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">brave://extensions</code> vào thanh địa chỉ</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-3xl font-bold">4</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Bật chế độ Developer Mode</h3>
+                        <p class="text-gray-400 mb-4">
+                            Ở góc trên bên phải của trang quản lý tiện ích, tìm và bật công tắc
+                            <strong class="text-white">"Developer mode"</strong> hoặc
+                            <strong class="text-white">"Chế độ nhà phát triển"</strong>.
+                        </p>
+
+                        <div class="bg-dark-bg border border-dark-border rounded-lg p-4 mt-4 mb-6">
+                            <p class="text-sm text-gray-400">
+                                <span class="text-primary-light font-semibold">Mẹo:</span> Công tắc này thường nằm ở góc trên bên phải của trang, có thể là một nút toggle màu xanh hoặc xám.
+                            </p>
+                        </div>
+
+                        <!-- Ảnh minh họa -->
+                        <div class="rounded-lg overflow-hidden border border-dark-border shadow-md hover:shadow-lg transition-all">
+                            <img src="/images/bee.png"
+                                 alt="Hướng dẫn bật Developer Mode"
+                                 class="w-full object-cover">
+                            <p class="text-sm text-gray-500 mt-2 text-center">Minh họa: Vị trí nút bật Developer Mode trong trình duyệt Chrome</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-3xl font-bold">5</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Tải tiện ích đã giải nén</h3>
+                        <p class="text-gray-400 mb-4">
+                            Sau khi bật Developer Mode, bạn sẽ thấy xuất hiện thêm các nút mới. Nhấn vào nút <strong class="text-white">"Load unpacked"</strong> hoặc <strong class="text-white">"Tải tiện ích đã giải nén"</strong>.
+                        </p>
+                        <p class="text-gray-400 mb-4">
+                            Một cửa sổ chọn thư mục sẽ hiện ra. Chọn thư mục mà bạn đã giải nén file tiện ích ở Bước 2, sau đó nhấn <strong class="text-white">"Chọn thư mục"</strong> hoặc <strong class="text-white">"Select Folder"</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-xl flex items-center justify-center shadow-lg">
+                            <span class="text-3xl font-bold">6</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Hoàn tất và sử dụng</h3>
+                        <p class="text-gray-400 mb-4">
+                            Tiện ích BeeTV đã được cài đặt thành công! Bạn sẽ thấy biểu tượng BeeTV xuất hiện trong danh sách tiện ích và trên thanh công cụ của trình duyệt.
+                        </p>
+                        <p class="text-gray-400 mb-4">
+                            Truy cập YouTube và bắt đầu sử dụng hàng trăm emote tùy chỉnh cho kênh của bạn. Thay đổi sẽ có hiệu lực ngay lập tức!
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                            <button class="bg-primary hover:bg-primary-dark px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
+                                Mở YouTube
+                            </button>
+                            <button class="border border-gray-600 hover:border-gray-400 px-6 py-3 rounded-lg font-semibold transition-all hover:bg-dark-hover">
+                                Xem hướng dẫn sử dụng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 bg-dark-surface/50">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <span class="text-3xl">❓</span>
+                </div>
+                <h2 class="text-4xl font-bold mb-4">Gặp vấn đề?</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Nếu bạn gặp khó khăn trong quá trình cài đặt, đừng lo lắng! Chúng tôi luôn sẵn sàng hỗ trợ bạn.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-dark-surface border border-dark-border rounded-xl p-6 hover:border-primary/60 hover:bg-dark-hover transition-all">
+                    <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                        <span class="text-2xl">📚</span>
+                        Tài liệu hướng dẫn
+                    </h3>
+                    <p class="text-gray-400 mb-4">
+                        Xem thêm các hướng dẫn chi tiết và câu hỏi thường gặp trong tài liệu của chúng tôi.
+                    </p>
+                    <button class="text-primary hover:text-primary-light font-semibold flex items-center gap-2 transition-colors">
+                        <span>Xem tài liệu</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="bg-dark-surface border border-dark-border rounded-xl p-6 hover:border-primary/60 hover:bg-dark-hover transition-all">
+                    <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                        <span class="text-2xl">💬</span>
+                        Cộng đồng Discord
+                    </h3>
+                    <p class="text-gray-400 mb-4">
+                        Tham gia cộng đồng Discord của chúng tôi để được hỗ trợ trực tiếp từ team và người dùng khác.
+                    </p>
+                    <button class="text-primary hover:text-primary-light font-semibold flex items-center gap-2 transition-colors">
+                        <span>Tham gia Discord</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-dark-surface border border-primary/40 rounded-xl p-6">
+                <h3 class="text-xl font-bold mb-3 flex items-center gap-2">
+                    <span class="text-2xl">⚠️</span>
+                    Lưu ý quan trọng
+                </h3>
+                <ul class="space-y-2 text-gray-400">
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary-light mt-1">•</span>
+                        <span>Không xóa hoặc di chuyển thư mục tiện ích sau khi cài đặt, nếu không tiện ích sẽ ngừng hoạt động.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary-light mt-1">•</span>
+                        <span>Tiện ích cài thủ công sẽ không tự động cập nhật. Bạn cần tải và cài đặt lại khi có phiên bản mới.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-primary-light mt-1">•</span>
+                        <span>Đảm bảo tải tiện ích từ nguồn chính thức để tránh các phiên bản giả mạo hoặc có mã độc.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
