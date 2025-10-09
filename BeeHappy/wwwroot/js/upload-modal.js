@@ -271,7 +271,15 @@
             formData.append("Files[0].File", selectedFile);
             formData.append("Tags", tags.join(","));
             formData.append("IsOverlaying", document.getElementById("beetv-overlaying").checked);
-            formData.append("IsPrivate", document.getElementById("beetv-private").checked);
+            if (document.getElementById("beetv-private").checked) {
+                formData.append("Visibility", "Private");
+            } else {
+                formData.append("Visibility", "Public");
+            }
+
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}:`, value);
+            }
 
             try {
                 const response = await fetch("/Emote/Create", {

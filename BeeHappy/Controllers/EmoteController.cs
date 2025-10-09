@@ -161,10 +161,12 @@ namespace BeeHappy.Controllers
                 if (vm.Tags != null && vm.Tags.Any())
                 {
                     tags = vm.Tags
+                        .Where(t => !string.IsNullOrWhiteSpace(t))
                         .SelectMany(t => t.Split(',', StringSplitOptions.RemoveEmptyEntries)) // tách từng phần tử
                         .Select(t => t.Trim())
                         .ToList();
                 }
+
 
                 var emote = new Emote
                 {
@@ -256,6 +258,7 @@ namespace BeeHappy.Controllers
             if (vm.Tags != null && vm.Tags.Any())
             {
                 tags = vm.Tags
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
                     .SelectMany(t => t.Split(',', StringSplitOptions.RemoveEmptyEntries)) // tách từng phần tử
                     .Select(t => t.Trim())
                     .ToList();
