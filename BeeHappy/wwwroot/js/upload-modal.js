@@ -1,285 +1,240 @@
 ﻿// Upload Modal JavaScript
 ; (() => {
-    let selectedFile = null
-    let tags = []
+    let selectedFile = null;
+    let tags = [];
+    let isSubmitting = false; // Biến khóa để chống gửi 2 lần
 
     // DOM Elements
-    const modal = document.getElementById("beetv-upload-modal")
-    const closeBtn = document.getElementById("beetv-upload-close")
-    const form = document.getElementById("beetv-upload-form")
-    const fileInput = document.getElementById("beetv-file-input")
-    const browseBtn = document.getElementById("beetv-browse-files")
-    const uploadArea = document.getElementById("beetv-upload-area")
-    const filePreview = document.getElementById("beetv-file-preview")
-    const previewContainer = document.getElementById("beetv-preview-container")
-    const fileInfo = document.getElementById("beetv-file-info")
-    const removeFileBtn = document.getElementById("beetv-remove-file")
-    const tagsInput = document.getElementById("beetv-emote-tags")
-    const tagsContainer = document.getElementById("beetv-tags-container")
-    const submitBtn = document.getElementById("beetv-upload-submit")
-    const discardBtn = document.getElementById("beetv-upload-discard")
-    const acceptRulesCheckbox = document.getElementById("beetv-accept-rules")
+    const modal = document.getElementById("beetv-upload-modal");
+    const closeBtn = document.getElementById("beetv-upload-close");
+    const form = document.getElementById("beetv-upload-form");
+    const fileInput = document.getElementById("beetv-file-input");
+    const browseBtn = document.getElementById("beetv-browse-files");
+    const uploadArea = document.getElementById("beetv-upload-area");
+    const filePreview = document.getElementById("beetv-file-preview");
+    const previewContainer = document.getElementById("beetv-preview-container");
+    const fileInfo = document.getElementById("beetv-file-info");
+    const removeFileBtn = document.getElementById("beetv-remove-file");
+    const tagsInput = document.getElementById("beetv-emote-tags");
+    const tagsContainer = document.getElementById("beetv-tags-container");
+    const submitBtn = document.getElementById("beetv-upload-submit");
+    const discardBtn = document.getElementById("beetv-upload-discard");
+    const acceptRulesCheckbox = document.getElementById("beetv-accept-rules");
+    const nameInput = document.getElementById("beetv-emote-name");
 
-    // Open modal function (called from header)
+    // Lấy tham chiếu đến icon và text của nút submit
+    const buttonIcon = submitBtn.querySelector("i");
+    const buttonText = submitBtn.querySelector("span");
+
+    // --- CÁC HÀM CHỨC NĂNG ---
+
+    // Mở modal
     window.beetvOpenUploadModal = () => {
-        modal.classList.remove("hidden")
-        document.body.style.overflow = "hidden"
-    }
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    };
 
-    // Close modal function
+    // Đóng modal
     function closeModal() {
-        modal.classList.add("hidden")
-        document.body.style.overflow = ""
-        resetForm()
+        modal.classList.add("hidden");
+        document.body.style.overflow = "";
+        resetForm();
     }
 
-    // Reset form
+    // Reset form về trạng thái ban đầu
     function resetForm() {
-        form.reset()
-        selectedFile = null
-        tags = []
-        tagsContainer.innerHTML = ""
-        uploadArea.classList.remove("hidden")
-        filePreview.classList.add("hidden")
-        updateSubmitButton()
+        form.reset();
+        selectedFile = null;
+        tags = [];
+        tagsContainer.innerHTML = "";
+        uploadArea.classList.remove("hidden");
+        filePreview.classList.add("hidden");
+
+        // Đảm bảo nút và khóa được reset
+        isSubmitting = false;
+        buttonIcon.classList.remove("fa-spinner", "fa-spin");
+        buttonIcon.classList.add("fa-upload");
+        buttonText.textContent = "Tải lên";
+
+        updateSubmitButton();
     }
 
-    // File handling
+    // Xử lý file được chọn
     function handleFile(file) {
-        if (!file) return
+        if (!file) return;
 
-        // Validate file
         if (!file.type.startsWith("image/")) {
-            alert("Vui lòng chọn file hình ảnh")
-            return
+            alert("Vui lòng chọn file hình ảnh");
+            return;
         }
 
-        if (file.size > 7 * 1024 * 1024) {
-            // 7MB
-            alert("Kích thước file phải nhỏ hơn 7MB")
-            return
+        if (file.size > 7 * 1024 * 1024) { // 7MB
+            alert("Kích thước file phải nhỏ hơn 7MB");
+            return;
         }
 
-        selectedFile = file
-        showFilePreview(file)
-        updateSubmitButton()
+        selectedFile = file;
+        showFilePreview(file);
+        updateSubmitButton();
     }
 
-    // Show file preview
+    // Hiển thị xem trước file ảnh
     function showFilePreview(file) {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.onload = (e) => {
-            const img = document.createElement("img")
-            img.src = e.target.result
-            img.className = "max-w-32 max-h-32 rounded-lg border border-dark-border"
-
-            previewContainer.innerHTML = ""
-            previewContainer.appendChild(img)
-
-            fileInfo.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`
-
-            uploadArea.classList.add("hidden")
-            filePreview.classList.remove("hidden")
-        }
-        reader.readAsDataURL(file)
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.className = "max-w-32 max-h-32 rounded-lg border border-dark-border";
+            previewContainer.innerHTML = "";
+            previewContainer.appendChild(img);
+            fileInfo.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            uploadArea.classList.add("hidden");
+            filePreview.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
     }
 
-    // Tags handling
+    // Xử lý Thẻ (Tags)
     function addTag(tagText) {
-        const trimmedTag = tagText.trim()
+        const trimmedTag = tagText.trim();
         if (trimmedTag && !tags.includes(trimmedTag)) {
-            tags.push(trimmedTag)
-            renderTags()
+            tags.push(trimmedTag);
+            renderTags();
         }
     }
 
     function removeTag(tagToRemove) {
-        tags = tags.filter((tag) => tag !== tagToRemove)
-        renderTags()
+        tags = tags.filter((tag) => tag !== tagToRemove);
+        renderTags();
     }
 
     function renderTags() {
-        tagsContainer.innerHTML = ""
+        tagsContainer.innerHTML = "";
         tags.forEach((tag) => {
-            const tagElement = document.createElement("span")
-            tagElement.className =
-                "inline-flex items-center px-3 py-1 rounded-full text-sm bg-primary/20 text-primary border border-primary/30"
+            const tagElement = document.createElement("span");
+            tagElement.className = "inline-flex items-center px-3 py-1 rounded-full text-sm bg-primary/20 text-primary border border-primary/30";
             tagElement.innerHTML = `
                 ${tag}
                 <button type="button" class="ml-2 hover:text-primary-light" onclick="event.stopPropagation()">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
-            `
-
-            tagElement.querySelector("button").addEventListener("click", () => removeTag(tag))
-            tagsContainer.appendChild(tagElement)
-        })
+            `;
+            tagElement.querySelector("button").addEventListener("click", () => removeTag(tag));
+            tagsContainer.appendChild(tagElement);
+        });
     }
 
-    // Validate emote name length
+    // Kiểm tra tên emote
     function validateEmoteName(name) {
-        if (name.length > 20) {
-            alert("Tên emote phải có 20 ký tự hoặc ít hơn. Vui lòng nhập lại.")
-            return false
+        if (name.length < 1) {
+            alert("Tên emote không được để trống.");
+            return false;
         }
-        return true
+        if (name.length > 20) {
+            alert("Tên emote phải có 20 ký tự hoặc ít hơn.");
+            return false;
+        }
+        return true;
     }
 
-    // Update submit button state
+    // Cập nhật trạng thái nút Submit (chỉ dựa vào tính hợp lệ của form)
     function updateSubmitButton() {
-        const hasFile = selectedFile !== null
-        const hasAcceptedRules = acceptRulesCheckbox.checked
-        const hasName = document.getElementById("beetv-emote-name").value.trim() !== ""
-
-        submitBtn.disabled = !(hasFile && hasAcceptedRules && hasName)
+        const hasFile = selectedFile !== null;
+        const hasAcceptedRules = acceptRulesCheckbox.checked;
+        const hasName = nameInput.value.trim() !== "";
+        submitBtn.disabled = !(hasFile && hasAcceptedRules && hasName);
     }
 
-    // Event Listeners
-    if (closeBtn) {
-        closeBtn.addEventListener("click", closeModal)
-    }
+    // --- CÁC EVENT LISTENERS ---
 
-    if (browseBtn) {
-        browseBtn.addEventListener("click", () => fileInput.click())
-    }
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (browseBtn) browseBtn.addEventListener("click", () => fileInput.click());
+    if (discardBtn) discardBtn.addEventListener("click", closeModal);
+    if (acceptRulesCheckbox) acceptRulesCheckbox.addEventListener("change", updateSubmitButton);
+    if (nameInput) nameInput.addEventListener("input", updateSubmitButton);
 
     if (fileInput) {
         fileInput.addEventListener("change", (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0])
-            }
-        })
+            if (e.target.files.length > 0) handleFile(e.target.files[0]);
+        });
     }
 
     if (removeFileBtn) {
         removeFileBtn.addEventListener("click", () => {
-            selectedFile = null
-            uploadArea.classList.remove("hidden")
-            filePreview.classList.add("hidden")
-            fileInput.value = ""
-            updateSubmitButton()
-        })
+            selectedFile = null;
+            uploadArea.classList.remove("hidden");
+            filePreview.classList.add("hidden");
+            fileInput.value = "";
+            updateSubmitButton();
+        });
     }
 
     if (tagsInput) {
         tagsInput.addEventListener("keypress", (e) => {
             if (e.key === "Enter" || e.key === ",") {
-                e.preventDefault()
-                addTag(e.target.value)
-                e.target.value = ""
+                e.preventDefault();
+                if (e.target.value.trim()) addTag(e.target.value);
+                e.target.value = "";
             }
-        })
-
+        });
         tagsInput.addEventListener("blur", (e) => {
             if (e.target.value.trim()) {
-                addTag(e.target.value)
-                e.target.value = ""
+                addTag(e.target.value);
+                e.target.value = "";
             }
-        })
+        });
     }
 
-    if (discardBtn) {
-        discardBtn.addEventListener("click", closeModal)
-    }
-
-    if (acceptRulesCheckbox) {
-        acceptRulesCheckbox.addEventListener("change", updateSubmitButton)
-    }
-
-    // Update submit button when name changes
-    const nameInput = document.getElementById("beetv-emote-name")
-    if (nameInput) {
-        // Prevent typing beyond 20 characters
-        nameInput.addEventListener("keydown", (e) => {
-            if (e.target.value.length >= 20 && !["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) {
-                e.preventDefault()
-                validateEmoteName(e.target.value + e.key)
-            }
-        })
-
-        nameInput.addEventListener("input", (e) => {
-            const name = e.target.value.trim()
-            if (name.length > 20) {
-                validateEmoteName(name)
-                e.target.value = e.target.value.substring(0, 20) // Truncate to 20 characters
-            }
-            updateSubmitButton()
-        })
-    }
-
-    // Drag and drop
+    // Drag and Drop
     if (modal) {
-        const dropZone = modal.querySelector("#beetv-upload-area").parentElement
-            ;["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-                dropZone.addEventListener(eventName, preventDefaults, false)
-            })
+        const dropZone = modal.querySelector("#beetv-upload-area").parentElement;
+        ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => dropZone.addEventListener(eventName, preventDefaults, false));
+        ["dragenter", "dragover"].forEach(eventName => dropZone.addEventListener(eventName, highlight, false));
+        ["dragleave", "drop"].forEach(eventName => dropZone.addEventListener(eventName, unhighlight, false));
+        dropZone.addEventListener("drop", handleDrop, false);
 
-        function preventDefaults(e) {
-            e.preventDefault()
-            e.stopPropagation()
-        }
-        ;["dragenter", "dragover"].forEach((eventName) => {
-            dropZone.addEventListener(eventName, highlight, false)
-        })
-            ;["dragleave", "drop"].forEach((eventName) => {
-                dropZone.addEventListener(eventName, unhighlight, false)
-            })
-
-        function highlight(e) {
-            dropZone.classList.add("border-primary")
-        }
-
-        function unhighlight(e) {
-            dropZone.classList.remove("border-primary")
-        }
-
-        dropZone.addEventListener("drop", handleDrop, false)
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+        function highlight() { dropZone.classList.add("border-primary"); }
+        function unhighlight() { dropZone.classList.remove("border-primary"); }
 
         function handleDrop(e) {
-            const dt = e.dataTransfer
-            const files = dt.files
-            if (files.length > 0) {
-                handleFile(files[0])
-            }
+            const files = e.dataTransfer.files;
+            if (files.length > 0) handleFile(files[0]);
         }
     }
 
-    // Form submission
+    // Xử lý Submit Form (ĐÃ SỬA LỖI)
     if (form) {
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            if (!selectedFile) {
-                alert("Vui lòng chọn file để tải lên");
+            // 1. KIỂM TRA KHÓA: Chặn click 2 lần
+            if (isSubmitting) {
                 return;
             }
 
-            if (!acceptRulesCheckbox.checked) {
-                alert("Vui lòng chấp nhận quy tắc và hướng dẫn");
+            // 2. KHÓA SUBMIT
+            isSubmitting = true;
+
+            // 3. VALIDATION
+            const emoteName = nameInput.value.trim();
+            if (submitBtn.disabled || !selectedFile || !acceptRulesCheckbox.checked || !validateEmoteName(emoteName)) {
+                isSubmitting = false; // Mở khóa nếu form không hợp lệ
                 return;
             }
 
-            const emoteName = document.getElementById("beetv-emote-name").value.trim();
-            if (!validateEmoteName(emoteName)) {
-                return;
-            }
+            // 4. HIỂN THỊ LOADING
+            submitBtn.disabled = true;
+            buttonIcon.classList.remove("fa-upload");
+            buttonIcon.classList.add("fa-spinner", "fa-spin");
+            buttonText.textContent = "Đang tải lên...";
 
             const formData = new FormData();
-            formData.append("Name", document.getElementById("beetv-emote-name").value);
+            formData.append("Name", emoteName);
             formData.append("Files[0].File", selectedFile);
             formData.append("Tags", tags.join(","));
             formData.append("IsOverlaying", document.getElementById("beetv-overlaying").checked);
-            if (document.getElementById("beetv-private").checked) {
-                formData.append("Visibility", "Private");
-            } else {
-                formData.append("Visibility", "Public");
-            }
-
-            for (const [key, value] of formData.entries()) {
-                console.log(`${key}:`, value);
-            }
+            formData.append("Visibility", document.getElementById("beetv-private").checked ? "Private" : "Public");
 
             try {
                 const response = await fetch("/Emote/Create", {
@@ -289,9 +244,7 @@
                 });
 
                 if (response.ok) {
-                    const result = await response.json();
                     alert("Tải lên thành công!");
-                    console.log(result);
                     closeModal();
                     window.location.reload();
                 } else {
@@ -301,24 +254,26 @@
             } catch (err) {
                 console.error("Error uploading:", err);
                 alert("Đã xảy ra lỗi khi tải lên.");
+            } finally {
+                // 5. MỞ KHÓA VÀ KHÔI PHỤC TRẠNG THÁI
+                isSubmitting = false;
+                buttonIcon.classList.remove("fa-spinner", "fa-spin");
+                buttonIcon.classList.add("fa-upload");
+                buttonText.textContent = "Tải lên";
+                updateSubmitButton();
             }
         });
-
     }
 
-    // Close modal when clicking outside
+    // Đóng modal khi click ra ngoài hoặc nhấn Escape
     if (modal) {
         modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                closeModal()
-            }
-        })
+            if (e.target === modal) closeModal();
+        });
     }
-
-    // Close modal with Escape key
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-            closeModal()
+            closeModal();
         }
-    })
-})()
+    });
+})();

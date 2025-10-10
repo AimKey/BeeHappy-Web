@@ -20,12 +20,13 @@
                 @* Emote Name *@
                 <div>
                     <label for="beetv-emote-name" class="block text-sm font-medium text-zinc-300 mb-2">Tên emote</label>
-                    <input type="text"
+                    <input type="text" required
                            id="beetv-emote-name"
                            name="emoteName"
                            maxlength="20"
                            placeholder="Tên emote"
                            class="w-full bg-dark-surface text-white px-3 py-2 rounded-md border border-dark-border focus:border-primary focus:outline-none transition-colors">
+                    <p id="beetv-name-error" class="text-red-400 text-sm mt-1 hidden"></p>
                 </div>
 
                 @* Tags *@
