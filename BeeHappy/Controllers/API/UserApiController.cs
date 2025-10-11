@@ -11,11 +11,6 @@ namespace BeeHappy.Controllers.API;
 [ApiController]
 public class UserApiController(IJwtService jwt, IUserService userService) : ControllerBase
 {
-    [HttpGet("id/{userId}")]
-    public async Task GetUserById([FromQuery] string userId)
-    {
-    }
-
     // Get current user based on JWT token
     [HttpGet("me")]
     public async Task<IActionResult> GetCurrentUser()
@@ -33,7 +28,7 @@ public class UserApiController(IJwtService jwt, IUserService userService) : Cont
             var userId = jwt.GetUserIdFromToken(token);
             if (string.IsNullOrEmpty(userId))
             {
-                return BadRequest("Invalid token: User ID not found");
+                return NotFound("Invalid token: User ID not found");
             }
             var user = await userService.GetUserInfo(ObjectId.Parse(userId));
             return Ok(user);
@@ -52,7 +47,7 @@ public class UserApiController(IJwtService jwt, IUserService userService) : Cont
             var user = await userService.GetUserByNameAsync(userName);
             if (user == null)
             {
-                return BadRequest("User not found");
+                return NotFound("User not found");
             }
             var userDto = await userService.GetUserInfo(user.Id);
             userDto.Paints = userDto.Paints.Where(p => p.IsActive).ToList(); // Only return active paints

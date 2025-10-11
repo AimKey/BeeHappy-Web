@@ -25,7 +25,7 @@ namespace Services.Implementations
             emote.UpdatedAt = DateTime.UtcNow;
 
             // default values
-            emote.Visibility = new List<string> { "Public" };
+            emote.Visibility = emote.Visibility;
             emote.Status = new List<string> { EmoteStatusConstants.ACTIVE };
 
             await emoteRepository.InsertAsync(emote, ct);

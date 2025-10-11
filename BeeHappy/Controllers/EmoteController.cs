@@ -139,7 +139,7 @@ namespace BeeHappy.Controllers
                 var emoteId = ObjectId.GenerateNewId();
 
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
-                var maxFileSize = 2 * 1024 * 1024; // 2MB
+                var maxFileSize = 7 * 1024 * 1024; // 2MB
 
                 var file = vm.Files[0].File;
                 var ext = Path.GetExtension(file.FileName).ToLower();
@@ -161,10 +161,12 @@ namespace BeeHappy.Controllers
                 if (vm.Tags != null && vm.Tags.Any())
                 {
                     tags = vm.Tags
+                        .Where(t => !string.IsNullOrWhiteSpace(t))
                         .SelectMany(t => t.Split(',', StringSplitOptions.RemoveEmptyEntries)) // tách từng phần tử
                         .Select(t => t.Trim())
                         .ToList();
                 }
+
 
                 var emote = new Emote
                 {
@@ -180,20 +182,32 @@ namespace BeeHappy.Controllers
                     Files = new List<BusinessObjects.NestedObjects.EmoteFile>()
                 };
 
-                // ✅ Resize thành 4 size
-                int[] sizes = { 32, 64, 96, 128 };
+                // ✅ Resize thành 4 size với chiều rộng động
+                int[] targetHeights = { 32, 64, 96, 128 }; // Đổi tên biến cho rõ nghĩa
                 using (var image = await SixLabors.ImageSharp.Image.LoadAsync(file.OpenReadStream()))
                 {
-                    foreach (var size in sizes)
+                    // Lấy tỷ lệ khung hình gốc
+                    float aspectRatio = (float)image.Width / image.Height;
+
+                    foreach (var height in targetHeights)
                     {
-                        string fileName = $"{size}x{size}{ext}";
+                        // Tính toán chiều rộng mới dựa trên tỷ lệ
+                        int newWidth = (int)Math.Round(height * aspectRatio);
+
+                        // Đảm bảo chiều rộng ít nhất là 1 pixel
+                        if (newWidth < 1) newWidth = 1;
+
+                        // Tên file bây giờ có thể không phải là hình vuông
+                        string fileName = $"{newWidth}x{height}{ext}";
                         string filePath = Path.Combine(uploadPath, fileName);
 
-                        // resize copy để không ảnh hưởng ảnh gốc
+                        // Clone và resize ảnh, bỏ chế độ Crop
                         using (var clone = image.Clone(x => x.Resize(new SixLabors.ImageSharp.Processing.ResizeOptions
                         {
-                            Size = new SixLabors.ImageSharp.Size(size, size),
-                            Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop
+                            // Size mới với chiều rộng động
+                            Size = new SixLabors.ImageSharp.Size(newWidth, height),
+                            // Chế độ ResizeMode.Stretch hoặc mặc định sẽ hoạt động tốt khi ta đã tính đúng tỷ lệ
+                            Mode = SixLabors.ImageSharp.Processing.ResizeMode.Stretch
                         })))
                         {
                             await clone.SaveAsync(filePath);
@@ -204,7 +218,7 @@ namespace BeeHappy.Controllers
                         {
                             Format = ext.TrimStart('.'),
                             Url = $"/uploads/emotes/{emoteId}/{fileName}",
-                            Size = (int)fileInfo.Length
+                            Size = (int)fileInfo.Length,
                         });
                     }
                 }
@@ -256,6 +270,7 @@ namespace BeeHappy.Controllers
             if (vm.Tags != null && vm.Tags.Any())
             {
                 tags = vm.Tags
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
                     .SelectMany(t => t.Split(',', StringSplitOptions.RemoveEmptyEntries)) // tách từng phần tử
                     .Select(t => t.Trim())
                     .ToList();

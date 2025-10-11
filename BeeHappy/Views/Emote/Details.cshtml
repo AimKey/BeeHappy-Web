@@ -30,39 +30,71 @@
         <!-- Emote Display -->
         <div class="bg-dark-surface/40 border border-dark-border rounded-lg p-8 mb-8">
             <div class="text-center">
-                <!-- Emote Variants (fixed 32/64/96/128) -->
                 @{
-                    var url32 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("32x32") == true)?.Url ?? Model.Files?.FirstOrDefault()?.Url;
-                    var url64 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("64x64") == true)?.Url ?? Model.Files?.Skip(1).FirstOrDefault()?.Url ?? url32;
-                    var url96 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("96x96") == true)?.Url ?? Model.Files?.Skip(2).FirstOrDefault()?.Url ?? url64;
-                    var url128 = Model.Files?.FirstOrDefault(f => f.Url?.Contains("128x128") == true)?.Url ?? Model.Files?.LastOrDefault()?.Url ?? url96;
+                    // --- BƯỚC 1: SỬA LOGIC TÌM URL ---
+                    // Tìm URL bằng cách kiểm tra đuôi tên file (ví dụ: "x32.png", "x32.gif")
+                    var file32 = Model.Files?.FirstOrDefault(f => f.Url.EndsWith("x32.png") || f.Url.EndsWith("x32.gif") || f.Url.EndsWith("x32.jpeg") || f.Url.EndsWith("x32.jpg"));
+                    var file64 = Model.Files?.FirstOrDefault(f => f.Url.EndsWith("x64.png") || f.Url.EndsWith("x64.gif") || f.Url.EndsWith("x64.jpeg") || f.Url.EndsWith("x64.jpg"));
+                    var file96 = Model.Files?.FirstOrDefault(f => f.Url.EndsWith("x96.png") || f.Url.EndsWith("x96.gif") || f.Url.EndsWith("x96.jpeg") || f.Url.EndsWith("x96.jpg"));
+                    var file128 = Model.Files?.FirstOrDefault(f => f.Url.EndsWith("x128.png") || f.Url.EndsWith("x128.gif") || f.Url.EndsWith("x128.jpeg") || f.Url.EndsWith("x128.jpg"));
+
+                    // Lấy URL và fallback nếu không có
+                    var url32 = file32?.Url ?? Model.Files?.FirstOrDefault()?.Url;
+                    var url64 = file64?.Url ?? url32;
+                    var url96 = file96?.Url ?? url64;
+                    var url128 = file128?.Url ?? url96;
+
+                    // Lấy kích thước thật từ tên file để hiển thị text cho chính xác
+                    string GetDimensions(string url)
+                    {
+                        if (string.IsNullOrEmpty(url)) return "";
+                        try
+                        {
+                            return System.IO.Path.GetFileNameWithoutExtension(url);
+                        }
+                        catch
+                        {
+                            return "";
+                        }
+                    }
+
+                    var dims32 = GetDimensions(file32?.Url) ?? "Cao 32px";
+                    var dims64 = GetDimensions(file64?.Url) ?? "Cao 64px";
+                    var dims96 = GetDimensions(file96?.Url) ?? "Cao 96px";
+                    var dims128 = GetDimensions(file128?.Url) ?? "Cao 128px";
+
                     var activeSet = Model.UserEmoteSets?.FirstOrDefault(s => s.IsActive);
                     var activeSetId = activeSet?.Id == null ? "" : activeSet.Id.ToString();
                 }
+
                 <div class="flex justify-center items-end gap-6 mb-8">
+
                     <div class="flex flex-col items-center">
-                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-2 mb-2">
-                            <img src="@url32" alt="@Model.Name 32x32" class="w-8 h-8 object-contain"/>
+                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-2 mb-2 flex items-center justify-center" style="min-height: 48px;">
+                            <img src="@url32" alt="@Model.Name" class="h-8" />
                         </div>
-                        <span class="text-xs text-gray-400">32x32</span>
+                        <span class="text-xs text-gray-400">@dims32</span>
                     </div>
+
                     <div class="flex flex-col items-center">
-                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-3 mb-2">
-                            <img src="@url64" alt="@Model.Name 64x64" class="w-16 h-16 object-contain"/>
+                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-3 mb-2 flex items-center justify-center" style="min-height: 88px;">
+                            <img src="@url64" alt="@Model.Name" class="h-16" />
                         </div>
-                        <span class="text-xs text-gray-400">64x64</span>
+                        <span class="text-xs text-gray-400">@dims64</span>
                     </div>
+
                     <div class="flex flex-col items-center">
-                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-4 mb-2">
-                            <img src="@url96" alt="@Model.Name 96x96" class="w-24 h-24 object-contain"/>
+                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-4 mb-2 flex items-center justify-center" style="min-height: 128px;">
+                            <img src="@url96" alt="@Model.Name" class="h-24" />
                         </div>
-                        <span class="text-xs text-gray-400">96x96</span>
+                        <span class="text-xs text-gray-400">@dims96</span>
                     </div>
+
                     <div class="flex flex-col items-center">
-                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-5 mb-2">
-                            <img src="@url128" alt="@Model.Name 128x128" class="w-32 h-32 object-contain"/>
+                        <div class="bg-dark-surface/60 border border-dark-border rounded-lg p-5 mb-2 flex items-center justify-center" style="min-height: 168px;">
+                            <img src="@url128" alt="@Model.Name" class="h-32" />
                         </div>
-                        <span class="text-xs text-gray-400">128x128</span>
+                        <span class="text-xs text-gray-400">@dims128</span>
                     </div>
                 </div>
 
