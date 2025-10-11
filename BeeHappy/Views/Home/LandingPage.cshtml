@@ -1,6 +1,9 @@
-﻿@{
+﻿@using Services.Implementations
+@inject WebMetaService WebMetaService
+@{
     Layout = "_Layout";
     ViewData["Title"] = "BeeTV - Nền tảng Emote cho mọi người";
+    var extensionLink = WebMetaService.GetWebExtensionDownloadUrl();
 }
 <partial name="_Notification"/>
 
@@ -31,7 +34,11 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <a href="https://github.com/AimKey/BeeHappy-Extension" target="_blank"
+                @* <a href="https://github.com/AimKey/BeeHappy-Extension" target="_blank" *@
+                @*     class="bg-primary hover:bg-primary-dark px-8 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105"> *@
+                @*     Tải xuống *@
+                @* </a> *@
+                <a href="@extensionLink"
                     class="bg-primary hover:bg-primary-dark px-8 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105">
                     Tải xuống
                 </a>
