@@ -167,7 +167,10 @@ public class Program
         
         // Auto Mapper Configurations
         builder.Services.AddAutoMapper(cfg => { cfg.AddProfile<MappingProfile>(); });
-
+        
+        // Helper services
+        builder.Services.AddScoped<WebMetaService>();
+        
         // PayOS
         SetupPayOs(builder);
     }

@@ -1,6 +1,9 @@
-﻿@{
+﻿@using Services.Implementations
+@inject WebMetaService WebMetaService
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Hướng Dẫn Cài Đặt Thủ Công";
+    var extensionLink = WebMetaService.GetWebExtensionDownloadUrl();
 }
 
 <section class="relative min-h-[5vh] flex items-center justify-center overflow-hidden">
@@ -72,31 +75,17 @@
                             <div class="flex-1">
                                 <h3 class="text-2xl font-bold mb-4">Tải xuống file tiện ích</h3>
                                 <p class="text-gray-400 mb-4">
-                                    Truy cập trang tải xuống chính thức của BeeTV và tải file tiện ích về máy tính của
-                                    bạn. File
+                                    Tải xuống extension chính thức ở đây. File
                                     sẽ có định dạng <code
                                         class="bg-dark-bg px-2 py-1 rounded text-primary-light">.zip</code>
                                     hoặc <code class="bg-dark-bg px-2 py-1 rounded text-primary-light">.crx</code>. Sau
                                     khi bấm
                                     nút ở dưới, vui lòng làm theo hướng dẫn sau đó
                                 </p>
-                                <a href="https://github.com/AimKey/BeeHappy-Extension" target="_blank"
+                                <a href="@extensionLink"
                                    class="bg-primary hover:bg-primary-dark px-6 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">
-                                    Bấm vào đây để truy cập
+                                    Bấm vào đây để tải
                                 </a>
-                            </div>
-
-                            <div class="flex-1">
-                                <img src="/images/InstallationGuide/Installation_1.png" alt="Tải xuống file tiện ích 1"
-                                     class="w-full object-cover"/>
-                                <p class="text-sm text-gray-300 mt-2 text-center">Truy cập vào trang web của
-                                    extension</p>
-                            </div>
-
-                            <div class="flex-1">
-                                <img src="/images/InstallationGuide/Installation_2.png" alt="Tải xuống file tiện ích 2"
-                                     class="w-full object-cover"/>
-                                <p class="text-sm text-gray-300 mt-2 text-center">Tải xuống file</p>
                             </div>
                         </div>
                     </div>
@@ -326,36 +315,12 @@
                         <div class="flex-1">
                             <h3 class="text-2xl font-bold mb-4">Truy cập YouTube và mở tiện ích</h3>
                             <p class="text-gray-400 mb-4">
-                                Sau khi cài đặt thành công, truy cập YouTube và tìm biểu tượng BeeHappy trên thanh công
-                                cụ trình
-                                duyệt.
-                                Nhấp vào biểu tượng để mở giao diện tiện ích.
+                                Sau khi cài đặt thành công, truy cập một trang YouTube live stream bất kỳ. Tiện ích sẽ tự động hiển thị một khung cổ sửa nhỏ gần khung chat
+                                của YouTube.
                             </p>
-                            <img src="/images/InstallationGuide/Use_1.png" alt="Truy cập YouTube và mở tiện ích"
-                                 class="w-full object-cover rounded-lg"/>
-                            <p class="text-sm text-gray-300 mt-2 text-center">Nơi bật tiện ích của BeeHappy</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    class="bg-dark-surface border border-dark-border rounded-xl p-8 mb-8 hover:border-primary/60 hover:bg-dark-hover transition-all shadow-lg hover:shadow-xl">
-                    <div class="flex flex-col md:flex-row gap-6">
-                        <div class="flex-shrink-0">
-                            <div
-                                class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-lg">
-                                <span class="text-3xl font-bold">2</span>
-                            </div>
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-bold mb-4">Bật hoặc tắt BeeHappy Overlay chat</h3>
-                            <p class="text-gray-400 mb-4">
-                                Bấm vào nút Toggle overlay để bật hoặc tắt BeeHappy Overlay chat.
-                            </p>
-                            <img src="/images/InstallationGuide/Use_2.png" alt="Bật/tắt BeeHappy Overlay chat"
-                                 class="w-full object-cover rounded-lg"/>
-                            <p class="text-sm text-gray-300 mt-2 text-center">Bấm vào nút Toggle overlay để bật hoặc
-                                tắt</p>
+                            <i class="text-gray-400 mb-4 text-sm">
+                                Nếu bạn không thấy khung cửa sổ của BeeHappy, hãy thử reload lại trang, hoặc bật thủ công bằng cách bấm vào biểu tượng tiện ích trên thanh công cụ trình duyệt.
+                            </i>
                         </div>
                     </div>
                 </div>
@@ -366,21 +331,18 @@
                         <div class="flex-shrink-0">
                             <div
                                 class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-xl flex items-center justify-center shadow-lg">
-                                <span class="text-3xl font-bold">3</span>
+                                <span class="text-3xl font-bold">2</span>
                             </div>
                         </div>
                         <div class="flex-1">
                             <h3 class="text-2xl font-bold mb-4">Các thành phần cơ bản của BeeHappy</h3>
                             <p class="text-gray-400 mb-4">
-                                Giao diện tiện ích bao gồm các thành phần chính như: nút mở bảng emote, nút làm mới dữ
-                                liệu
-                                emote.
+                                Giao diện tiện ích bao gồm các thành phần chính như: nút mở bảng emote, nút làm mới dữ liệu emote.
                             </p>
                             <p class="text-gray-400 mb-4">
-                                Bạn sẽ chat tại vùng chat của Youtube, BeeHappy sẽ tự động thay thế các chữ cái thành
-                                emote.
+                                Bạn sẽ chat tại vùng chat của Youtube, BeeHappy sẽ tự động thay thế các chữ cái thành emote.
                             </p>
-                            <img src="/images/InstallationGuide/Use_3.png" alt="Các thành phần cơ bản của BeeHappy"
+                            <img src="/images/InstallationGuide/Use_3_NEW.png" alt="Các thành phần cơ bản của BeeHappy"
                                  class="w-full object-cover rounded-lg"/>
                             <p class="text-sm text-gray-300 mt-2 text-center">Giao diện BeeHappy Chat</p>
                         </div>
@@ -393,7 +355,7 @@
                         <div class="flex-shrink-0">
                             <div
                                 class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-xl flex items-center justify-center shadow-lg">
-                                <span class="text-3xl font-bold">4</span>
+                                <span class="text-3xl font-bold">3</span>
                             </div>
                         </div>
                         <div class="flex-1">
@@ -403,7 +365,7 @@
                                 thời
                                 (clipboard). Sau đó bạn chỉ cần dán (Ctrl+V) vào ô chat của YouTube để sử dụng emote.
                             </p>
-                            <img src="/images/InstallationGuide/Use_4.png" alt="Quá trình sử dụng emote"
+                            <img src="/images/InstallationGuide/Use_4_New.png" alt="Quá trình sử dụng emote"
                                  class="w-full object-cover rounded-lg"/>
                             <p class="text-sm text-gray-300 mt-2 text-center">Flow dùng emote đơn giản</p>
                         </div>
@@ -416,7 +378,7 @@
                         <div class="flex-shrink-0">
                             <div
                                 class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-xl flex items-center justify-center shadow-lg">
-                                <span class="text-3xl font-bold">5</span>
+                                <span class="text-3xl font-bold">4</span>
                             </div>
                         </div>
                         <div class="flex-1">
@@ -430,7 +392,7 @@
                                 phần
                                 header của nó.
                             </p>
-                            <img src="/images/InstallationGuide/Use_5.png" alt="Kiểm tra kết quả emote"
+                            <img src="/images/InstallationGuide/Use_5_New.png" alt="Kiểm tra kết quả emote"
                                  class="w-full object-cover rounded-lg"/>
                             <p class="text-sm text-gray-300 mt-2 text-center">Emote đã được áp dụng thành công trên
                                 YouTube</p>
@@ -466,7 +428,7 @@
                     <ul class="space-y-2 text-gray-400">
                         <li class="flex items-start gap-2">
                             <span class="text-primary-light text-lg leading-none">•</span>
-                            <span>Bạn có thể thay đổi emote set bất cứ lúc nào mà không cần tải lại trang YouTube.</span>
+                            <span>Bạn có thể thay đổi emote set / emote bất cứ lúc nào mà không cần tải lại trang YouTube.</span>
                         </li>
                         <li class="flex items-start gap-2">
                             <span class="text-primary-light text-lg leading-none">•</span>
