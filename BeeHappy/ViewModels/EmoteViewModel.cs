@@ -22,6 +22,7 @@ namespace BeeHappy.ViewModels
         public List<string> Visibility { get; set; } = new();
         public List<string> Status { get; set; } = new();
         public bool IsOverlaying { get; set; }
+        //public bool IsPrivate { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public int TotalChannels { get; set; }

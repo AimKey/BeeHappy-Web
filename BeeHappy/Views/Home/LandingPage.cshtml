@@ -31,20 +31,20 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button
+                <a href="https://github.com/AimKey/BeeHappy-Extension" target="_blank"
                     class="bg-primary hover:bg-primary-dark px-8 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl hover:scale-105">
                     Tải xuống
-                </button>
-                <button
-                    class="border border-gray-600 hover:border-gray-400 px-8 py-3 rounded-lg font-semibold transition-all hover:bg-dark-hover">
+                </a>
+                <a asp-controller="Home" asp-action="HelpPage"
+                   class="border border-gray-600 hover:border-gray-400 px-8 py-3 rounded-lg font-semibold transition-all hover:bg-dark-hover text-center">
                     Tìm hiểu thêm
-                </button>
+                </a>
             </div>
         </div>
 
         <div class="flex justify-center lg:justify-end">
             <div class="relative">
-                <img src="~/images/landing-page-placeholder.webp" alt="3D Crystal Decoration"
+                <img src="~/images/newlogo.png" alt="3D Crystal Decoration"
                      class="w-80 h-80 object-contain">
                 <div
                     class="absolute inset-0 bg-gradient-to-r from-primary/40 to-secondary/40 rounded-full blur-3xl"></div>
@@ -63,14 +63,14 @@
             bắt đầu.
         </p>
         <div class="flex flex-wrap justify-center gap-4">
-            <button
+            <a asp-controller="Home" asp-action="HelpPage"
                 class="bg-dark-surface border border-dark-border px-6 py-2 rounded-lg hover:border-primary/60 hover:bg-dark-hover transition-all flex items-center space-x-2 shadow-md">
                 <span>🌐</span>
                 <span>Tiện ích trình duyệt</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
-            </button>
+            </a>
             @* <button class="bg-dark-surface border border-dark-border px-6 py-2 rounded-lg hover:border-primary/60 hover:bg-dark-hover transition-all flex items-center space-x-2 shadow-md">
                     <span>💬</span>
                     <span>Chatterino</span>
@@ -183,7 +183,7 @@
                     <span class="text-2xl">👥</span>
                 </div>
                 <h3 class="text-2xl font-bold mb-4">Cộng đồng lớn</h3>
-                <p class="text-gray-400 mb-6 text-pretty">BeeTV phục vụ hơn 2.000.000 người dùng mỗi ngày và có thư viện
+                <p class="text-gray-400 mb-6 text-pretty">BeeHappy phục vụ hơn 2.000.000 người dùng mỗi ngày và có thư viện
                     hơn 1.000.000 emote công khai.</p>
                 <button
                     class="text-primary hover:text-primary-light font-semibold flex items-center space-x-2 transition-colors">
@@ -231,10 +231,10 @@
             Toàn bộ mã nguồn của chúng tôi có trên GitHub với giấy phép source-available. Bất kỳ ai cũng có thể xem và
             đóng góp.
         </p>
-        <button
+        <a href="https://github.com/AimKey/BeeHappy-Extension" target="_blank"
             class="bg-white text-dark-bg px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:scale-105">
             Đóng góp
-        </button>
+        </a>
     </div>
 </section>
 
