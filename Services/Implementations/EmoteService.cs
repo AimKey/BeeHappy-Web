@@ -155,7 +155,9 @@ namespace Services.Implementations
             var emotes = await emoteRepository.GetAllAsync();
             if (filter != null)
             {
-                emotes = emotes.Where(filter).ToList();
+                emotes = emotes.Where(filter)
+                    .OrderByDescending(e => e.CreatedAt)
+                    .ToList();
             }
             
             // TODO: Optimize this by make an mongo db aggeration query to join with users collection
